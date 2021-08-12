@@ -7,6 +7,7 @@
     tools:context=".view.fragments.OneDayWeatherInformationFragment">
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/weatherRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center" />
