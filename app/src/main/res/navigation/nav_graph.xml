@@ -18,7 +18,7 @@
         android:id="@+id/weatherInformationByDayFragment"
         android:name="com.rob.weather.view.fragments.AllDaysWeatherInformationFragment"
         android:label="fragment_weather_information_by_day"
-        tools:layout="@layout/fragment_weather_information_by_day" >
+        tools:layout="@layout/fragment_weather_information_all_days" >
         <action
             android:id="@+id/action_weatherInformationByDayFragment_to_oneDayWeatherInformationFragment"
             app:destination="@id/oneDayWeatherInformationFragment" />
