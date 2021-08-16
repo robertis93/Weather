@@ -7,16 +7,18 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:layout_margin="5dp"
+    android:layout_margin="4dp"
     android:foreground="@drawable/custom_rounded_corners"
-    app:cardCornerRadius="20dp"
+    app:cardCornerRadius="8dp"
     app:cardElevation="5dp"
+    android:theme="@style/Theme.MaterialComponents.Light"
     app:strokeColor="@color/white"
     app:strokeWidth="2dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="16dp"
         android:gravity="center"
         android:orientation="vertical"
         tools:ignore="MissingConstraints">

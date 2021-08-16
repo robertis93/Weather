@@ -5,11 +5,15 @@ import android.os.Bundle
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.rob.weather.R
+import com.rob.weather.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(getLayoutInflater())
+        val view = binding.getRoot()
+        setContentView(view)
             //        setupActionBarWithNavController(findNavController(R.id.fragmentContainer))
     }
 

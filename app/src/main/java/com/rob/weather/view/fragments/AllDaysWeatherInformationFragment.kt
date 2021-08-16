@@ -4,12 +4,41 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.AppBarLayout.OnOffsetChangedListener
+import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.rob.weather.R
 import com.rob.weather.databinding.FragmentWeatherInformationAllDaysBinding
+import com.rob.weather.model.Main
+import com.rob.weather.model.WeatherForecastResult
+import com.rob.weather.view.adapters.AllDaysWeatherListAdapter
+import com.rob.weather.viewmodel.Retrofit.Common
+import com.rob.weather.viewmodel.Retrofit.RemoteDataSource
+import com.rob.weather.viewmodel.repository.Repository
+import com.rob.weather.viewmodel.viewmodels.AllDaysWeatherInformationViewModel
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+
 
 class AllDaysWeatherInformationFragment : BaseFragment<FragmentWeatherInformationAllDaysBinding>() {
+    lateinit var repository: Repository
+    lateinit var service: RemoteDataSource.RetrofitServices
+    lateinit var layoutManager: LinearLayoutManager
+    val allDaysWeatherListAdapter = AllDaysWeatherListAdapter()
+
+    companion object {
+        var AppId = "2e65127e909e178d0af311a81f39948c"
+        var city = "moscow"
+    }
+
+    private val viewModel: AllDaysWeatherInformationViewModel by lazy {
+        ViewModelProvider(this).get(AllDaysWeatherInformationViewModel::class.java)
+    }
 
     private val menu: Menu? = null
     override fun inflate(inflater: LayoutInflater): FragmentWeatherInformationAllDaysBinding =
@@ -23,14 +52,32 @@ class AllDaysWeatherInformationFragment : BaseFragment<FragmentWeatherInformatio
         val toolbar = binding.toolbar
         activity?.actionBar?.subtitle = "Vova"
 
+//        repository = Repository(RemoteDataSource())
+//        repository.refreshAll()
 
 
-        //collapsingToolbar.title = "This is the title"
-//        val allDaysWeatherListAdapter = AllDaysWeatherListAdapter()
-//        val recyclerView = binding.recyclerview
-//        recyclerView.adapter = allDaysWeatherListAdapter
-//        recyclerView.layoutManager =
-//            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        service = Common.retrofitService
+        // binding.recyclerMovieList.setHasFixedSize(true)
+        // layoutManager = LinearLayoutManager(this)
+        //  binding.recyclerMovieList.layoutManager = layoutManager
+        // dialog = SpotsDialog.Builder().setCancelable(true).setContext(this).build()
+
+        getAllMovieList()
+
+
+       // allDaysWeatherListAdapter = AllDaysWeatherListAdapter()
+        val recyclerView = binding.recyclerView
+        recyclerView.adapter = allDaysWeatherListAdapter
+        recyclerView.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+
+//        val toolBar: Toolbar = view.findViewById(R.id.toolbar)
+//        (activity as AppCompatActivity?)!!.setSupportActionBar(toolBar)
+//        (activity as AppCompatActivity?)!!.supportActionBar!!.setTitle("title")
+//
+//        val collapsingToolbarLayout: CollapsingToolbarLayout =
+//            view.findViewById(R.id.toolbar_layout)
+//        collapsingToolbarLayout.title = city
 
         //binding.text.setOnClickListener{Navigation.findNavController(view).navigate(R.id.action_weatherInformationByDayFragment_to_oneDayWeatherInformationFragment)}
 //        binding.appBar.addOnOffsetChangedListener(OnOffsetChangedListener { appBarLayout, verticalOffset ->
@@ -64,17 +111,39 @@ class AllDaysWeatherInformationFragment : BaseFragment<FragmentWeatherInformatio
                 if (scrollRange + verticalOffset == 0) {
                     isShow = true
                     binding.toolbarToday.visibility = View.GONE
-                   // binding.toolbar.setBackgroundColor(R.color.purple_700)
+                    // binding.toolbar.setBackgroundColor(R.color.purple_700)
                 } else if (isShow) {
                     isShow = false
                     binding.toolbarToday.visibility = View.VISIBLE
-                   // binding.toolbar.setBackgroundColor(R.color.white)
+                    // binding.toolbar.setBackgroundColor(R.color.white)
                 }
             }
         })
     }
 
-    private fun showOption(id : Int) {
+    private fun getAllMovieList() {
+//        dialog.show()
+        service.geWeatherForecastResponse(city, AppId)
+            .enqueue(object : Callback<WeatherForecastResult> {
+                @SuppressLint("SetTextI18n")
+                override fun onFailure(call: Call<WeatherForecastResult>, t: Throwable) {
+                    binding.todayTemperatureTextView.text = "Error"
+                    binding.weatherTextView.text = "Error"
+                }
+
+                override fun onResponse(
+                    call: Call<WeatherForecastResult>,
+                    response: Response<WeatherForecastResult>
+                ) {
+                  //  binding.todayTemperatureTextView.text = response.body()?.list.map { mainList.lastIndex.toString() }
+                    binding.toolbarLayout.title = response.body()?.city?.name.toString()
+                    response.body()?.let { allDaysWeatherListAdapter.setData(it.list) }
+                }
+
+            })
+    }
+
+    private fun showOption(id: Int) {
         val item: MenuItem? = menu?.findItem(id)
         if (item != null) {
             item.isVisible = false
