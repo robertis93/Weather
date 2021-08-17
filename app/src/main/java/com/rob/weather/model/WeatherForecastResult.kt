@@ -70,5 +70,5 @@ data class Wind (
 
 data class SortedByDateWeatherForecastResult(
     val date: String,
-    val measureList: List<ForecastResponse>
+    val forecastResponseList: List<ForecastResponse>
 )
