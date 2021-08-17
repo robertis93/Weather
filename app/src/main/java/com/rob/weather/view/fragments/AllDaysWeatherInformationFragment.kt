@@ -137,10 +137,19 @@ class AllDaysWeatherInformationFragment : BaseFragment<FragmentWeatherInformatio
                     call: Call<WeatherForecastResult>,
                     response: Response<WeatherForecastResult>
                 ) {
+
+                    binding.currentDateTextView.text = "${" Сегодня, "}" + response.body()?.list?.first()?.date?.let {
+                        changeDateFormat(
+                            it
+                        )
+                    }
                     //  HashMap<String, ArrayList<Integer>>()
-                    //  binding.todayTemperatureTextView.text = response.body()?.list.map { mainList.lastIndex.toString() }
-                 //   binding.toolbarLayout.title = response.body()?.city?.name.toString()
-                   // response.body()?.let { allDaysWeatherListAdapter.setData(it.list) }
+                      binding.currentTemperatureTextView.text = response.body()?.list?.first()?.main?.temp?.toInt()
+                          .toString() + "${"°"}"
+                   binding.currentWeatherTextView.text = response.body()?.list?.first()?.weather?.first()?.description + "${", ощущается как  "}" + response.body()?.list?.first()?.main?.temp_max?.toInt()
+                       .toString() + "${"°"}"
+
+                    // response.body()?.let { allDaysWeatherListAdapter.setData(it.list) }
 
 
                     fun geWeatherForecastResponseGroupByDate(): List<SortedByDateWeatherForecastResult> {

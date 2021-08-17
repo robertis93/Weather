@@ -28,7 +28,7 @@ class AllDaysWeatherListAdapter :
         //TODO : неправильно отображается min, max температура, отображается в заданный час, не за день
         holder.binding.weekDayTextView.text = returnDayOfWeek(currentItem.date)
         holder.binding.minTemperatureTextView.text =
-            Math.round(currentItem.forecastResponseList.first().main.temp_min).toString() + "${"°"}"
+            Math.round(currentItem.forecastResponseList.last().main.temp_min).toString() + "${"°"}"
         holder.binding.maxTemperatureTextView.text =
             Math.round(currentItem.forecastResponseList.first().main.temp_max).toString() + "${"°"}"
 //        holder.binding.pressureValueTextView.text = currentItem.measureList.first().main.pressure.toString()

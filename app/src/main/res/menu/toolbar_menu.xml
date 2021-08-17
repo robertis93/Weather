@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/action_loader"
-        android:icon="@drawable/ic_loader_1"
+        android:icon="@drawable/ic_my_city_btn"
         android:title="search"
         app:showAsAction="always" />
 
