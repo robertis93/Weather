@@ -4,16 +4,15 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.AppBarLayout.OnOffsetChangedListener
-import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.rob.weather.R
+import com.rob.weather.Utils.changeDateFormat
 import com.rob.weather.databinding.FragmentWeatherInformationAllDaysBinding
-import com.rob.weather.model.Main
+import com.rob.weather.model.ForecastResponse
+import com.rob.weather.model.SortedByDateWeatherForecastResult
 import com.rob.weather.model.WeatherForecastResult
 import com.rob.weather.view.adapters.AllDaysWeatherListAdapter
 import com.rob.weather.viewmodel.Retrofit.Common
@@ -30,6 +29,9 @@ class AllDaysWeatherInformationFragment : BaseFragment<FragmentWeatherInformatio
     lateinit var service: RemoteDataSource.RetrofitServices
     lateinit var layoutManager: LinearLayoutManager
     val allDaysWeatherListAdapter = AllDaysWeatherListAdapter()
+
+    //val measureGroup: Map<String, List<WeatherForecastResult>>()
+    var valuesMap: Map<String, List<ForecastResponse>> = HashMap()
 
     companion object {
         var AppId = "2e65127e909e178d0af311a81f39948c"
@@ -65,7 +67,7 @@ class AllDaysWeatherInformationFragment : BaseFragment<FragmentWeatherInformatio
         getAllMovieList()
 
 
-       // allDaysWeatherListAdapter = AllDaysWeatherListAdapter()
+        // allDaysWeatherListAdapter = AllDaysWeatherListAdapter()
         val recyclerView = binding.recyclerView
         recyclerView.adapter = allDaysWeatherListAdapter
         recyclerView.layoutManager =
@@ -135,11 +137,23 @@ class AllDaysWeatherInformationFragment : BaseFragment<FragmentWeatherInformatio
                     call: Call<WeatherForecastResult>,
                     response: Response<WeatherForecastResult>
                 ) {
-                  //  binding.todayTemperatureTextView.text = response.body()?.list.map { mainList.lastIndex.toString() }
+                    //  HashMap<String, ArrayList<Integer>>()
+                    //  binding.todayTemperatureTextView.text = response.body()?.list.map { mainList.lastIndex.toString() }
                     binding.toolbarLayout.title = response.body()?.city?.name.toString()
-                    response.body()?.let { allDaysWeatherListAdapter.setData(it.list) }
-                }
+                   // response.body()?.let { allDaysWeatherListAdapter.setData(it.list) }
 
+
+                    fun geWeatherForecastResponseGroupByDate(): List<SortedByDateWeatherForecastResult> {
+                        val weatherForecastGroup = response.body()!!.list.groupBy { changeDateFormat(it.date) }
+                        return (weatherForecastGroup.keys).map { date ->
+                            val forecasts = weatherForecastGroup[date] ?: emptyList()
+                            SortedByDateWeatherForecastResult(date, forecasts)
+                        }
+                    }
+                    val z = geWeatherForecastResponseGroupByDate()
+
+                    allDaysWeatherListAdapter.setData(z)
+                }
             })
     }
 

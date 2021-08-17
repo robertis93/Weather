@@ -6,12 +6,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.rob.weather.Utils.changeDateFormat
 import com.rob.weather.databinding.DayWeatherRowBinding
 import com.rob.weather.model.ForecastResponse
+import com.rob.weather.model.SortedByDateWeatherForecastResult
 import com.squareup.picasso.Picasso
 
 class AllDaysWeatherListAdapter :
     RecyclerView.Adapter<AllDaysWeatherListAdapter.WeatherViewHolder>() {
 
-    private var allDaysWeatherList = emptyList<ForecastResponse>()
+    private var allDaysWeatherList = emptyList<SortedByDateWeatherForecastResult>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WeatherViewHolder {
         val binding =
@@ -22,14 +23,14 @@ class AllDaysWeatherListAdapter :
     override fun onBindViewHolder(holder: WeatherViewHolder, position: Int) {
         val currentItem = allDaysWeatherList[position]
 
-        holder.binding.dayTextView.text = changeDateFormat(currentItem.date)
-        holder.binding.precipitation.text = currentItem.weather.first().description
-        holder.binding.precipitationValueTextView.text = currentItem.main.temp_kf.toString()
-        holder.binding.pressureValueTextView.text = currentItem.main.pressure.toString()
+        holder.binding.dayTextView.text = currentItem.date
+        holder.binding.precipitation.text = currentItem.measureList.first().weather.first().description
+        holder.binding.precipitationValueTextView.text = currentItem.measureList.first().main.temp_kf.toString()
+        holder.binding.pressureValueTextView.text = currentItem.measureList.first().main.pressure.toString()
         holder.binding.temperatureValueTextView.text =
-            (Math.round(currentItem.main.temp)).toString() + "${" °C"}"
-        holder.binding.windValueTextView.text = currentItem.wind.speed.toString()
-        val iconCode = currentItem.weather.first().icon
+            (Math.round(currentItem.measureList.first().main.temp)).toString() + "${" °C"}"
+        holder.binding.windValueTextView.text = currentItem.measureList.first().wind.speed.toString()
+        val iconCode = currentItem.measureList.first().weather.first().icon
         val iconUrl = "https://openweathermap.org/img/w/" + iconCode + ".png"
         Picasso.get().load(iconUrl).into(holder.binding.weatherIcon);
     }
@@ -38,7 +39,7 @@ class AllDaysWeatherListAdapter :
         return allDaysWeatherList.size
     }
 
-    fun setData(forecastResponse: List<ForecastResponse>) {
+    fun setData(forecastResponse: List<SortedByDateWeatherForecastResult>) {
         this.allDaysWeatherList = forecastResponse
         notifyDataSetChanged()
     }

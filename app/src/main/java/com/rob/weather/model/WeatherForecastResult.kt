@@ -67,3 +67,8 @@ data class Wind (
     @SerializedName("deg") var deg : Double,
     @SerializedName("gust") var gust : Double
 )
+
+data class SortedByDateWeatherForecastResult(
+    val date: String,
+    val measureList: List<ForecastResponse>
+)
