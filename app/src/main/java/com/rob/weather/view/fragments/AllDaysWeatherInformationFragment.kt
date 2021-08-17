@@ -49,7 +49,7 @@ class AllDaysWeatherInformationFragment : BaseFragment<FragmentWeatherInformatio
     @SuppressLint("ResourceAsColor")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val collapsingToolbar = binding.toolbarLayout
+       // val collapsingToolbar = binding.toolbarLayout
         val appBar = binding.appBar
         val toolbar = binding.toolbar
         activity?.actionBar?.subtitle = "Vova"
@@ -129,8 +129,8 @@ class AllDaysWeatherInformationFragment : BaseFragment<FragmentWeatherInformatio
             .enqueue(object : Callback<WeatherForecastResult> {
                 @SuppressLint("SetTextI18n")
                 override fun onFailure(call: Call<WeatherForecastResult>, t: Throwable) {
-                    binding.todayTemperatureTextView.text = "Error"
-                    binding.weatherTextView.text = "Error"
+//                    binding.todayTemperatureTextView.text = "Error"
+//                    binding.weatherTextView.text = "Error"
                 }
 
                 override fun onResponse(
@@ -139,7 +139,7 @@ class AllDaysWeatherInformationFragment : BaseFragment<FragmentWeatherInformatio
                 ) {
                     //  HashMap<String, ArrayList<Integer>>()
                     //  binding.todayTemperatureTextView.text = response.body()?.list.map { mainList.lastIndex.toString() }
-                    binding.toolbarLayout.title = response.body()?.city?.name.toString()
+                 //   binding.toolbarLayout.title = response.body()?.city?.name.toString()
                    // response.body()?.let { allDaysWeatherListAdapter.setData(it.list) }
 
 
