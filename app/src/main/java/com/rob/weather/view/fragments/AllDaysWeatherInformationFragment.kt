@@ -19,6 +19,7 @@ import com.rob.weather.viewmodel.Retrofit.Common
 import com.rob.weather.viewmodel.Retrofit.RemoteDataSource
 import com.rob.weather.viewmodel.repository.Repository
 import com.rob.weather.viewmodel.viewmodels.AllDaysWeatherInformationViewModel
+import com.squareup.picasso.Picasso
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -50,7 +51,7 @@ class AllDaysWeatherInformationFragment : BaseFragment<FragmentWeatherInformatio
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
        // val collapsingToolbar = binding.toolbarLayout
-        val appBar = binding.appBar
+       // val appBar = binding.appBar
         val toolbar = binding.toolbar
         activity?.actionBar?.subtitle = "Vova"
 
@@ -73,54 +74,6 @@ class AllDaysWeatherInformationFragment : BaseFragment<FragmentWeatherInformatio
         recyclerView.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
-//        val toolBar: Toolbar = view.findViewById(R.id.toolbar)
-//        (activity as AppCompatActivity?)!!.setSupportActionBar(toolBar)
-//        (activity as AppCompatActivity?)!!.supportActionBar!!.setTitle("title")
-//
-//        val collapsingToolbarLayout: CollapsingToolbarLayout =
-//            view.findViewById(R.id.toolbar_layout)
-//        collapsingToolbarLayout.title = city
-
-        //binding.text.setOnClickListener{Navigation.findNavController(view).navigate(R.id.action_weatherInformationByDayFragment_to_oneDayWeatherInformationFragment)}
-//        binding.appBar.addOnOffsetChangedListener(OnOffsetChangedListener { appBarLayout, verticalOffset ->
-//            if (Math.abs(verticalOffset) - appBarLayout.totalScrollRange == 0) {
-//                //  Collapsed
-//                Toast.makeText(context, "full", Toast.LENGTH_SHORT).show()
-//            } else {
-//                //Expanded
-//                Toast.makeText(context, "full", Toast.LENGTH_SHORT).show()
-//            }
-//        })
-
-//        binding.appBar.addOnOffsetChangedListener(OnOffsetChangedListener { appBarLayout, verticalOffset ->
-//            if (collapsingToolbar.height + verticalOffset < 2 * ViewCompat.getMinimumHeight(
-//                    collapsingToolbar
-//                )
-//            ) {
-//                toolbar.setBackgroundColor(R.color.purple_700)
-//            } else {
-//                toolbar.setBackgroundColor(R.color.white)
-//                   // .setColorFilter(resources.getColor(R.color.black), PorterDuff.Mode.SRC_ATOP)
-//            }
-//        })
-        appBar.addOnOffsetChangedListener(object : OnOffsetChangedListener {
-            var isShow = false
-            var scrollRange = -1
-            override fun onOffsetChanged(appBarLayout: AppBarLayout, verticalOffset: Int) {
-                if (scrollRange == -1) {
-                    scrollRange = appBarLayout.totalScrollRange
-                }
-                if (scrollRange + verticalOffset == 0) {
-                    isShow = true
-                    binding.toolbarToday.visibility = View.GONE
-                    // binding.toolbar.setBackgroundColor(R.color.purple_700)
-                } else if (isShow) {
-                    isShow = false
-                    binding.toolbarToday.visibility = View.VISIBLE
-                    // binding.toolbar.setBackgroundColor(R.color.white)
-                }
-            }
-        })
     }
 
     private fun getAllMovieList() {
@@ -148,6 +101,10 @@ class AllDaysWeatherInformationFragment : BaseFragment<FragmentWeatherInformatio
                           .toString() + "${"°"}"
                    binding.currentWeatherTextView.text = response.body()?.list?.first()?.weather?.first()?.description + "${", ощущается как  "}" + response.body()?.list?.first()?.main?.temp_max?.toInt()
                        .toString() + "${"°"}"
+
+                    val iconCode = response.body()?.list?.first()?.weather?.first()?.icon
+                    val iconUrl = "https://openweathermap.org/img/w/" + iconCode + ".png"
+                    Picasso.get().load(iconUrl).into(binding.weatherIcon)
 
                     // response.body()?.let { allDaysWeatherListAdapter.setData(it.list) }
 
