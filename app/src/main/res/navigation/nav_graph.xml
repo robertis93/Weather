@@ -22,5 +22,16 @@
         <action
             android:id="@+id/action_weatherInformationByDayFragment_to_oneDayWeatherInformationFragment"
             app:destination="@id/oneDayWeatherInformationFragment" />
+        <action
+            android:id="@+id/action_weatherInformationByDayFragment_to_chooseDayFragment"
+            app:destination="@id/chooseDayFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/chooseDayFragment"
+        android:name="com.rob.weather.view.fragments.ChooseDayFragment"
+        android:label="ChooseDayFragment" >
+        <action
+            android:id="@+id/action_chooseDayFragment_to_weatherInformationByDayFragment"
+            app:destination="@id/weatherInformationByDayFragment" />
     </fragment>
 </navigation>

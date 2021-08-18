@@ -30,4 +30,18 @@
         <item name="android:fontFamily">@font/manrope_regular</item>
         <item name="android:textColor">#2A2D33</item>
     </style>
+
+    <style name="Text.Manrope14">
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">@font/manrope_regular</item>
+        <item name="android:textColor">#E2F1FF</item>
+    </style>
+
+
+    <style name="Text.Manrope32">
+        <item name="android:textSize">32sp</item>
+        <item name="android:fontFamily">@font/manrope_regular</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
 </resources>

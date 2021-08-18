@@ -73,7 +73,6 @@ class AllDaysWeatherInformationFragment : BaseFragment<FragmentWeatherInformatio
         recyclerView.adapter = allDaysWeatherListAdapter
         recyclerView.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-
     }
 
     private fun getAllMovieList() {
