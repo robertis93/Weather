@@ -3,8 +3,9 @@ package com.rob.weather.view.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.rob.weather.Utils.dateStringToDayTimeStamp
 import com.rob.weather.Utils.returnTime
-import com.rob.weather.databinding.TimeWeatherItemBinding
+import com.rob.weather.databinding.TimeTemperatureItemBinding
 import com.rob.weather.model.ForecastResponse
 import com.squareup.picasso.Picasso
 
@@ -13,14 +14,15 @@ class TimeAndTemperatureAdapter(private val allDaysWeatherList: List<ForecastRes
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WeatherViewHolder {
         val binding =
-            TimeWeatherItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            TimeTemperatureItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return WeatherViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: WeatherViewHolder, position: Int) {
         val currentItem = allDaysWeatherList[position]
+            // TODO : почему вместо 12:00 отображается 00:00
 
-        holder.binding.timeTextView.text = returnTime(currentItem.date)
+        holder.binding.timeTextView.text = dateStringToDayTimeStamp(currentItem.date)
         holder.binding.temperatureTextView.text = Math.round(currentItem.main.temp).toString()+ "${"°"}"
 
         val iconCode = currentItem.weather.first().icon
@@ -32,6 +34,6 @@ class TimeAndTemperatureAdapter(private val allDaysWeatherList: List<ForecastRes
         return allDaysWeatherList.size
     }
 
-    class WeatherViewHolder(val binding: TimeWeatherItemBinding) :
+    class WeatherViewHolder(val binding: TimeTemperatureItemBinding) :
         RecyclerView.ViewHolder(binding.root)
 }

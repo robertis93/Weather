@@ -7,7 +7,7 @@
     android:background="@color/white"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
-    tools:context=".view.fragments.AllDaysWeatherInformationFragment">
+    tools:context=".view.fragments.GeneralDayTodayFragment">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -51,15 +51,15 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="390dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp">
 
         <View
-            android:id="@+id/view"
+            android:id="@+id/blueRectangleView"
             android:layout_width="match_parent"
             android:layout_height="386dp"
-            android:layout_marginStart="16dp"
             android:layout_marginTop="4dp"
-            android:layout_marginEnd="16dp"
             android:background="@drawable/ic_rectangle_16__2_"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
@@ -83,18 +83,18 @@
 
         <View
             android:id="@+id/view2"
-            android:layout_width="411dp"
-            android:layout_height="190dp"
-            android:layout_marginStart="16dp"
+            android:layout_width="369dp"
+            android:layout_height="170dp"
             android:layout_marginTop="108dp"
             android:background="@drawable/ic_intersect"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/blueRectangleView"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/view"
+            app:layout_constraintTop_toTopOf="@+id/blueRectangleView"
             app:layout_constraintVertical_bias="0.0" />
 
         <TextView
-            android:id="@+id/currentWeatherTextView"
+            android:id="@+id/currentWeatherDescriptionTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
@@ -113,7 +113,7 @@
             android:layout_marginStart="120dp"
             android:layout_marginTop="28dp"
             android:layout_marginEnd="123dp"
-            app:layout_constraintEnd_toEndOf="@+id/view"
+            app:layout_constraintEnd_toEndOf="@+id/blueRectangleView"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/currentDateTextView"
             app:srcCompat="@drawable/ic_group_7" />
@@ -130,7 +130,7 @@
             android:textColor="@color/white"
             android:textSize="48sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/view"
+            app:layout_constraintStart_toStartOf="@+id/blueRectangleView"
             app:layout_constraintTop_toBottomOf="@+id/weatherIcon" />
 
         <TextView
@@ -141,8 +141,8 @@
             android:layout_marginStart="28dp"
             android:layout_marginBottom="74dp"
             android:text="Ветер"
-            app:layout_constraintBottom_toBottomOf="@+id/view"
-            app:layout_constraintStart_toStartOf="@+id/view" />
+            app:layout_constraintBottom_toBottomOf="@+id/blueRectangleView"
+            app:layout_constraintStart_toStartOf="@+id/blueRectangleView" />
 
         <TextView
             android:id="@+id/textView2"
@@ -152,8 +152,8 @@
             android:layout_marginStart="28dp"
             android:layout_marginBottom="32dp"
             android:text="5"
-            app:layout_constraintBottom_toBottomOf="@+id/view"
-            app:layout_constraintStart_toStartOf="@+id/view" />
+            app:layout_constraintBottom_toBottomOf="@+id/blueRectangleView"
+            app:layout_constraintStart_toStartOf="@+id/blueRectangleView" />
 
         <TextView
             android:id="@+id/textView4"
@@ -164,8 +164,8 @@
             android:layout_marginEnd="131dp"
             android:layout_marginBottom="74dp"
             android:text="Влажность"
-            app:layout_constraintBottom_toBottomOf="@+id/view"
-            app:layout_constraintEnd_toEndOf="@+id/view"
+            app:layout_constraintBottom_toBottomOf="@+id/blueRectangleView"
+            app:layout_constraintEnd_toEndOf="@+id/blueRectangleView"
             app:layout_constraintStart_toStartOf="@+id/view2" />
 
         <TextView
@@ -176,8 +176,8 @@
             android:layout_marginEnd="27dp"
             android:layout_marginBottom="74dp"
             android:text="Осадки"
-            app:layout_constraintBottom_toBottomOf="@+id/view"
-            app:layout_constraintEnd_toEndOf="@+id/view" />
+            app:layout_constraintBottom_toBottomOf="@+id/blueRectangleView"
+            app:layout_constraintEnd_toEndOf="@+id/blueRectangleView" />
 
         <TextView
             android:id="@+id/textView6"
@@ -189,7 +189,7 @@
             android:paddingBottom="4dp"
             android:text="м/с"
             android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="@+id/view"
+            app:layout_constraintBottom_toBottomOf="@+id/blueRectangleView"
             app:layout_constraintStart_toEndOf="@+id/textView2" />
 
         <TextView
@@ -202,9 +202,9 @@
             android:layout_marginBottom="32dp"
             android:gravity="center"
             android:text="20"
-            app:layout_constraintBottom_toBottomOf="@+id/view"
-            app:layout_constraintEnd_toEndOf="@+id/view"
-            app:layout_constraintStart_toStartOf="@+id/view" />
+            app:layout_constraintBottom_toBottomOf="@+id/blueRectangleView"
+            app:layout_constraintEnd_toEndOf="@+id/blueRectangleView"
+            app:layout_constraintStart_toStartOf="@+id/blueRectangleView" />
 
         <TextView
             android:id="@+id/textView8"
@@ -214,16 +214,20 @@
             android:layout_marginEnd="27dp"
             android:layout_marginBottom="32dp"
             android:text="34"
-            app:layout_constraintBottom_toBottomOf="@+id/view"
-            app:layout_constraintEnd_toEndOf="@+id/view" />
+            app:layout_constraintBottom_toBottomOf="@+id/blueRectangleView"
+            app:layout_constraintEnd_toEndOf="@+id/blueRectangleView" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     <com.github.aachartmodel.aainfographics.aachartcreator.AAChartView
         android:id="@+id/aa_chart_view"
+        android:layout_marginTop="20dp"
         android:layout_width="match_parent"
-        android:layout_height="200dp">
+        android:layout_height="match_parent"
+        android:layout_marginStart="25dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="25dp">
 
     </com.github.aachartmodel.aainfographics.aachartcreator.AAChartView>
 

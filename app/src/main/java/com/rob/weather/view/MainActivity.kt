@@ -1,9 +1,9 @@
 package com.rob.weather.view
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
-import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.fragment.NavHostFragment
 import com.rob.weather.R
 import com.rob.weather.databinding.ActivityMainBinding
 
@@ -11,10 +11,12 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(getLayoutInflater())
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.fragmentContainer) as NavHostFragment
+        val navController = navHostFragment.navController
         val view = binding.getRoot()
         setContentView(view)
-            //        setupActionBarWithNavController(findNavController(R.id.fragmentContainer))
     }
 
     override fun onSupportNavigateUp(): Boolean {

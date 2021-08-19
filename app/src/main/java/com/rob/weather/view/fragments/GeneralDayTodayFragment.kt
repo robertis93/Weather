@@ -4,54 +4,54 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
+import androidx.compose.ui.text.capitalize
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.appbar.AppBarLayout
-import com.google.android.material.appbar.AppBarLayout.OnOffsetChangedListener
 import com.rob.weather.R
 import com.rob.weather.Utils.changeDateFormat
-import com.rob.weather.databinding.FragmentWeatherInformationAllDaysBinding
+import com.rob.weather.databinding.FragmentGeneralDayTodayBinding
 import com.rob.weather.model.ForecastResponse
 import com.rob.weather.model.SortedByDateWeatherForecastResult
 import com.rob.weather.model.WeatherForecastResult
-import com.rob.weather.view.adapters.AllDaysWeatherListAdapter
+import com.rob.weather.view.adapters.GeneralDayTodayAdapter
 import com.rob.weather.viewmodel.Retrofit.Common
 import com.rob.weather.viewmodel.Retrofit.RemoteDataSource
 import com.rob.weather.viewmodel.repository.Repository
-import com.rob.weather.viewmodel.viewmodels.AllDaysWeatherInformationViewModel
+import com.rob.weather.viewmodel.viewmodels.GeneralDayTodayViewModel
 import com.squareup.picasso.Picasso
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 
-class AllDaysWeatherInformationFragment : BaseFragment<FragmentWeatherInformationAllDaysBinding>() {
+class GeneralDayTodayFragment : BaseFragment<FragmentGeneralDayTodayBinding>() {
     lateinit var repository: Repository
     lateinit var service: RemoteDataSource.RetrofitServices
     lateinit var layoutManager: LinearLayoutManager
-    val allDaysWeatherListAdapter = AllDaysWeatherListAdapter()
+    val allDaysWeatherListAdapter = GeneralDayTodayAdapter()
 
     //val measureGroup: Map<String, List<WeatherForecastResult>>()
     var valuesMap: Map<String, List<ForecastResponse>> = HashMap()
 
     companion object {
         var AppId = "2e65127e909e178d0af311a81f39948c"
-        var city = "moscow"
+        var city = "ufa"
     }
 
-    private val viewModel: AllDaysWeatherInformationViewModel by lazy {
-        ViewModelProvider(this).get(AllDaysWeatherInformationViewModel::class.java)
+    private val viewModel: GeneralDayTodayViewModel by lazy {
+        ViewModelProvider(this).get(GeneralDayTodayViewModel::class.java)
     }
 
     private val menu: Menu? = null
-    override fun inflate(inflater: LayoutInflater): FragmentWeatherInformationAllDaysBinding =
-        FragmentWeatherInformationAllDaysBinding.inflate(inflater)
+    override fun inflate(inflater: LayoutInflater): FragmentGeneralDayTodayBinding =
+        FragmentGeneralDayTodayBinding.inflate(inflater)
 
     @SuppressLint("ResourceAsColor")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-       // val collapsingToolbar = binding.toolbarLayout
-       // val appBar = binding.appBar
+        // val collapsingToolbar = binding.toolbarLayout
+        // val appBar = binding.appBar
         val toolbar = binding.toolbar
         activity?.actionBar?.subtitle = "Vova"
 
@@ -65,7 +65,7 @@ class AllDaysWeatherInformationFragment : BaseFragment<FragmentWeatherInformatio
         //  binding.recyclerMovieList.layoutManager = layoutManager
         // dialog = SpotsDialog.Builder().setCancelable(true).setContext(this).build()
 
-        getAllMovieList()
+        getWeatherForecastList()
 
 
         // allDaysWeatherListAdapter = AllDaysWeatherListAdapter()
@@ -73,9 +73,13 @@ class AllDaysWeatherInformationFragment : BaseFragment<FragmentWeatherInformatio
         recyclerView.adapter = allDaysWeatherListAdapter
         recyclerView.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+
+        binding.blueRectangleView.setOnClickListener {
+            findNavController().navigate(R.id.action_weatherInformationByDayFragment_to_chooseDayFragment)
+        }
     }
 
-    private fun getAllMovieList() {
+    private fun getWeatherForecastList() {
 //        dialog.show()
         service.geWeatherForecastResponse(city, AppId)
             .enqueue(object : Callback<WeatherForecastResult> {
@@ -90,16 +94,18 @@ class AllDaysWeatherInformationFragment : BaseFragment<FragmentWeatherInformatio
                     response: Response<WeatherForecastResult>
                 ) {
 
-                    binding.currentDateTextView.text = "${" Сегодня, "}" + response.body()?.list?.first()?.date?.let {
-                        changeDateFormat(
-                            it
-                        )
-                    }
-                    //  HashMap<String, ArrayList<Integer>>()
-                      binding.currentTemperatureTextView.text = response.body()?.list?.first()?.main?.temp?.toInt()
-                          .toString() + "${"°"}"
-                   binding.currentWeatherTextView.text = response.body()?.list?.first()?.weather?.first()?.description + "${", ощущается как  "}" + response.body()?.list?.first()?.main?.temp_max?.toInt()
-                       .toString() + "${"°"}"
+                    binding.currentDateTextView.text =
+                        "${" Сегодня, "}" + response.body()?.list?.first()?.date?.let {
+                            changeDateFormat(
+                                it
+                            )
+                        }
+                    binding.currentTemperatureTextView.text =
+                        response.body()?.list?.first()?.main?.temp?.toInt()
+                            .toString() + "${"°"}"
+                    binding.currentWeatherDescriptionTextView.text =
+                        response.body()?.list?.first()?.weather?.first()?.description.toString().capitalize() + "${", ощущается как  "}" + response.body()?.list?.first()?.main?.temp_max?.toInt()
+                            .toString() + "${"°"}"
 
                     val iconCode = response.body()?.list?.first()?.weather?.first()?.icon
                     val iconUrl = "https://openweathermap.org/img/w/" + iconCode + ".png"
@@ -109,15 +115,21 @@ class AllDaysWeatherInformationFragment : BaseFragment<FragmentWeatherInformatio
 
 
                     fun geWeatherForecastResponseGroupByDate(): List<SortedByDateWeatherForecastResult> {
-                        val weatherForecastGroup = response.body()!!.list.groupBy { changeDateFormat(it.date) }
+                        val weatherForecastGroup =
+                            response.body()!!.list.groupBy { changeDateFormat(it.date) }
                         return (weatherForecastGroup.keys).map { date ->
                             val forecasts = weatherForecastGroup[date] ?: emptyList()
                             SortedByDateWeatherForecastResult(date, forecasts)
                         }
                     }
-                    val z = geWeatherForecastResponseGroupByDate()
 
-                    allDaysWeatherListAdapter.setData(z)
+                    val sortedByDateForecastResponseList = geWeatherForecastResponseGroupByDate()
+                    val withoutFirstElementSortedByDateForecastResponseList =
+                        sortedByDateForecastResponseList.toMutableList()
+                            .subList(1, sortedByDateForecastResponseList.size)
+                    allDaysWeatherListAdapter.setData(
+                        withoutFirstElementSortedByDateForecastResponseList
+                    )
                 }
             })
     }
