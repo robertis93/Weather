@@ -54,7 +54,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageButton
-                android:id="@+id/crossImageButton"
+                android:id="@+id/crossImageBtn"
                 android:layout_width="22dp"
                 android:layout_height="22dp"
                 android:layout_marginTop="9dp"

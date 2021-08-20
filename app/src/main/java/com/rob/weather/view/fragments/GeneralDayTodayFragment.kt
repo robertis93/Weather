@@ -6,12 +6,12 @@ import android.util.Log
 import android.view.*
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.rob.weather.R
 import com.rob.weather.Utils.DateUtil.changeDateFormat
 import com.rob.weather.databinding.FragmentGeneralDayTodayBinding
 import com.rob.weather.databinding.SearchCityDialogBinding
-import com.rob.weather.model.ForecastResponse
 import com.rob.weather.model.SortedByDateWeatherForecastResult
 import com.rob.weather.model.WeatherForecastResult
 import com.rob.weather.view.adapters.GeneralDayTodayAdapter
@@ -23,21 +23,20 @@ import com.squareup.picasso.Picasso
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.*
 
 
 class GeneralDayTodayFragment : BaseFragment<FragmentGeneralDayTodayBinding>() {
     lateinit var repository: Repository
     lateinit var service: RemoteDataSource.RetrofitServices
-    lateinit var layoutManager: LinearLayoutManager
     val allDaysWeatherListAdapter = GeneralDayTodayAdapter()
-
-    //val measureGroup: Map<String, List<WeatherForecastResult>>()
-    var valuesMap: Map<String, List<ForecastResponse>> = HashMap()
 
     companion object {
         var AppId = "2e65127e909e178d0af311a81f39948c"
-        var city = "ufa"
     }
+
+    var city = "ufa"
+
 
     private val viewModel: GeneralDayTodayViewModel by lazy {
         ViewModelProvider(this).get(GeneralDayTodayViewModel::class.java)
@@ -52,7 +51,6 @@ class GeneralDayTodayFragment : BaseFragment<FragmentGeneralDayTodayBinding>() {
         // val collapsingToolbar = binding.toolbarLayout
         // val appBar = binding.appBar
         val toolbar = binding.toolbar
-        activity?.actionBar?.subtitle = "Vova"
 
         toolbar.setOnMenuItemClickListener {
             when (it.itemId) {
@@ -82,10 +80,9 @@ class GeneralDayTodayFragment : BaseFragment<FragmentGeneralDayTodayBinding>() {
         recyclerView.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
-        // binding.blueRectangleView.setOnClickListener
-//        {
-//            findNavController().navigate(R.id.action_weatherInformationByDayFragment_to_chooseDayFragment)
-//        }
+        binding.blueRectangleView.setOnClickListener {
+            findNavController().navigate(R.id.action_weatherInformationByDayFragment_to_chooseDayFragment)
+        }
 
     }
 
@@ -98,11 +95,24 @@ class GeneralDayTodayFragment : BaseFragment<FragmentGeneralDayTodayBinding>() {
         val alertDialog = builder.show()
 
         dialogFragment.addBtn.setOnClickListener {
+            city = dialogFragment.searchCityEditText.text.toString()
+            binding.toolbarToday.text = city.replaceFirstChar {
+                if (it.isLowerCase()) it.titlecase(
+                    Locale.getDefault()
+                ) else it.toString()
+            }
+            getWeatherForecastList()
+            alertDialog.dismiss()
 
         }
-        dialogFragment.crossImageButton.setOnClickListener {
+        dialogFragment.crossImageBtn.setOnClickListener {
             alertDialog.dismiss()
         }
+
+        dialogFragment.cancelBtn.setOnClickListener {
+            alertDialog.dismiss()
+        }
+
         alertDialog.window?.setBackgroundDrawableResource(android.R.color.transparent);
     }
 
@@ -131,7 +141,7 @@ class GeneralDayTodayFragment : BaseFragment<FragmentGeneralDayTodayBinding>() {
                             .toString() + "${"°"}"
                     binding.currentWeatherDescriptionTextView.text =
                         response.body()?.list?.first()?.weather?.first()?.description.toString()
-                            .capitalize() + "${", ощущается как  "}" + response.body()?.list?.first()?.main?.temp_max?.toInt()
+                            .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() } + "${", ощущается как  "}" + response.body()?.list?.first()?.main?.temp_max?.toInt()
                             .toString() + "${"°"}"
 
                     val iconCode = response.body()?.list?.first()?.weather?.first()?.icon
