@@ -6,7 +6,6 @@ import android.util.Log
 import android.view.*
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.rob.weather.R
 import com.rob.weather.Utils.DateUtil.changeDateFormat
@@ -83,7 +82,7 @@ class GeneralDayTodayFragment : BaseFragment<FragmentGeneralDayTodayBinding>() {
         recyclerView.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
-       // binding.blueRectangleView.setOnClickListener
+        // binding.blueRectangleView.setOnClickListener
 //        {
 //            findNavController().navigate(R.id.action_weatherInformationByDayFragment_to_chooseDayFragment)
 //        }
@@ -99,15 +98,12 @@ class GeneralDayTodayFragment : BaseFragment<FragmentGeneralDayTodayBinding>() {
         val alertDialog = builder.show()
 
         dialogFragment.addBtn.setOnClickListener {
-//            alertDialog.dismiss()
-//            val timeHour = dialogFragment.timePicker.hour
-//            val timeMinute = dialogFragment.timePicker.minute
-//            val measureWithPeakFlowMeter = dialogFragment.measureDialog.text.toString().toInt()
-//            viewModel.onAddMeasureClick(timeHour, timeMinute, measureWithPeakFlowMeter)
+
         }
         dialogFragment.crossImageButton.setOnClickListener {
             alertDialog.dismiss()
         }
+        alertDialog.window?.setBackgroundDrawableResource(android.R.color.transparent);
     }
 
     private fun getWeatherForecastList() {

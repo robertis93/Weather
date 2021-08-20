@@ -3,31 +3,28 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/rowLayout"
-    android:layout_width="343dp"
-    android:layout_height="180dp"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:layout_margin="6dp"
-    android:background="@color/grey_light"
-    android:foreground="@drawable/custom_rounded_corners"
-    android:theme="@style/Theme.MaterialComponents.Light"
     app:cardCornerRadius="24dp"
-    app:cardElevation="5dp"
-    app:strokeColor="@color/gray"
-    app:strokeWidth="2dp">
+    android:theme="@style/MyThemeOverlay.MaterialComponents.MaterialAlertDialog">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/gray"
-        android:orientation="vertical">
-        
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        >
+
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout"
             android:layout_width="311dp"
             android:layout_height="40dp"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/search_city_rounded_corners"
             android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp">
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/search_city_rounded_corners"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
                 android:id="@+id/searchImageView"
@@ -45,14 +42,13 @@
                 android:id="@+id/searchCityEditText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
-                android:textSize="14sp"
-                android:textFontWeight="500"
-                android:text="33333"
                 android:fontFamily="@font/manrope_regular"
+                android:gravity="center"
+                android:textFontWeight="500"
+                android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/searchImageView"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -63,72 +59,78 @@
                 android:layout_height="22dp"
                 android:layout_marginTop="9dp"
                 android:layout_marginEnd="8dp"
+                android:backgroundTint="@color/grey_light"
                 android:layout_marginBottom="9dp"
-                android:src="@drawable/ic_plus"
+                android:src="@drawable/ic_cross_icon"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            android:background="@color/grey_lineral" />
+<!--        <View-->
+<!--            android:id="@+id/view"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="2dp"-->
+<!--            android:background="@color/grey_lineral"-->
+<!--            tools:layout_editor_absoluteX="20dp" />-->
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="0dp"
-            android:layout_height="16dp"
-            android:layout_marginTop="16dp"/>
+            android:layout_height="24dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="12dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
+<!--        <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_marginTop="32dp"-->
+<!--            android:layout_height="wrap_content">-->
+
+
+<!--        </androidx.constraintlayout.widget.ConstraintLayout>-->
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/cancelBtn"
+            android:layout_width="151dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="32dp"
-            android:layout_height="wrap_content">
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="#F3F5F8"
+            android:fontFamily="@font/manrope_regular"
+            android:gravity="center"
+            android:text="Отменить"
+            android:textColor="#707782"
+            android:textFontWeight="700"
+            android:textSize="14sp"
+            app:cornerRadius="12dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/recyclerView" />
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/addBtn"
+            android:layout_width="151dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="#3599FF"
+            android:fontFamily="@font/manrope_regular"
+            android:gravity="center"
+            android:text="Добавить"
+            android:textColor="#FFFFFF"
+            android:textFontWeight="700"
+            android:textSize="14sp"
+            app:cornerRadius="12dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/recyclerView"
+            app:strokeColor="#3599FF" />
 
-            <com.google.android.material.button.MaterialButton
-                android:layout_width="151dp"
-                android:id="@+id/cancelBtn"
-                android:layout_height="40dp"
-                android:background="#F3F5F8"
-                android:fillColor="#F3F5F8"
-                app:cornerRadius="12dp"
-                android:fontFamily="@font/manrope_regular"
-                android:gravity="center"
-                android:text="Отменить"
-                android:textColor="#707782"
-                android:textFontWeight="700"
-                android:textSize="14sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/addBtn"
-                android:layout_width="151dp"
-                android:layout_height="40dp"
-                android:layout_marginEnd="16dp"
-                android:background="#3599FF"
-                android:fillColor="#3599FF"
-                app:strokeColor="#3599FF"
-                android:fontFamily="@font/manrope_regular"
-                android:gravity="center"
-                android:text="Добавить"
-                android:textColor="#FFFFFF"
-                android:textFontWeight="700"
-                android:textSize="14sp"
-                app:cornerRadius="12dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>
