@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.rob.weather.Utils.returnDayOfWeek
 import com.rob.weather.databinding.DayWeatherItemBinding
 import com.rob.weather.model.SortedByDateWeatherForecastResult
 import com.squareup.picasso.Picasso
@@ -22,13 +21,15 @@ class GeneralDayTodayAdapter :
 
     override fun onBindViewHolder(holder: WeatherViewHolder, position: Int) {
         val currentItem = allDaysWeatherList[position]
-        //TODO : неправильно отображается min, max температура, отображается в заданный час, не за день
         holder.binding.dayTextView.text = currentItem.date.substringBefore(",") + ","
         holder.binding.weekDayTextView.text = currentItem.date.substringAfter(",")
-        holder.binding.minTemperatureTextView.text =
-            Math.round(currentItem.forecastResponseList.last().main.temp_min).toString() + "${"°"}"
-        holder.binding.maxTemperatureTextView.text =
-            Math.round(currentItem.forecastResponseList.first().main.temp_max).toString() + "${"°"}"
+        val minTemperatureForDay =   currentItem.forecastResponseList.stream().min { o1, o2 ->
+           compareValues ((o1.main.temp_min), (o2.main.temp_min) )
+        }.map { it.main.temp_min }.get().toInt().toString()
+        holder.binding.minTemperatureTextView.text = minTemperatureForDay
+        val maxTemperatureForDay =   currentItem.forecastResponseList.stream().max { o1, o2 ->
+            compareValues ((o1.main.temp_min), (o2.main.temp_min) )}.map { it.main.temp_max }.get().toInt().toString()
+        holder.binding.maxTemperatureTextView.text = maxTemperatureForDay
         val iconCode = currentItem.forecastResponseList.first().weather.first().icon
         val iconUrl = "https://openweathermap.org/img/w/" + iconCode + ".png"
         Picasso.get().load(iconUrl).into(holder.binding.imageView)

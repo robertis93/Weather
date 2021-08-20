@@ -3,8 +3,7 @@ package com.rob.weather.view.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.rob.weather.Utils.dateStringToDayTimeStamp
-import com.rob.weather.Utils.returnTime
+import com.rob.weather.Utils.DateUtil.dateStringToDayTimeStamp
 import com.rob.weather.databinding.TimeTemperatureItemBinding
 import com.rob.weather.model.ForecastResponse
 import com.squareup.picasso.Picasso
@@ -23,7 +22,7 @@ class TimeAndTemperatureAdapter(private val allDaysWeatherList: List<ForecastRes
             // TODO : почему вместо 12:00 отображается 00:00
 
         holder.binding.timeTextView.text = dateStringToDayTimeStamp(currentItem.date)
-        holder.binding.temperatureTextView.text = Math.round(currentItem.main.temp).toString()+ "${"°"}"
+        holder.binding.temperatureTextView.text = currentItem.main.temp.toInt().toString()+ "${"°"}"
 
         val iconCode = currentItem.weather.first().icon
         val iconUrl = "https://openweathermap.org/img/w/" + iconCode + ".png"

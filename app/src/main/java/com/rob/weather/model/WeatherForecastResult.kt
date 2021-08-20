@@ -31,7 +31,15 @@ data class ForecastResponse (
     @SerializedName("rain") var rain : Rain,
     @SerializedName("sys") var sys : Sys,
     @SerializedName("dt_txt") var date : String
-) : Parcelable
+) : Parcelable, Comparable<ForecastResponse> {
+    override fun compareTo(response: ForecastResponse): Int {
+      var result = this.main.temp_min.compareTo(response.main.temp_min)
+        if (result == 0) {
+            result = this.main.temp_min.compareTo(response.main.temp_min);
+        }
+        return result
+    }
+}
 
 @Parcelize
 data class Сoordinates (

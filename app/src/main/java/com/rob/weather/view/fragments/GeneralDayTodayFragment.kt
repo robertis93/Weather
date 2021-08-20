@@ -2,15 +2,16 @@ package com.rob.weather.view.fragments
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.*
-import android.widget.Toast
-import androidx.compose.ui.text.capitalize
+import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.rob.weather.R
-import com.rob.weather.Utils.changeDateFormat
+import com.rob.weather.Utils.DateUtil.changeDateFormat
 import com.rob.weather.databinding.FragmentGeneralDayTodayBinding
+import com.rob.weather.databinding.SearchCityDialogBinding
 import com.rob.weather.model.ForecastResponse
 import com.rob.weather.model.SortedByDateWeatherForecastResult
 import com.rob.weather.model.WeatherForecastResult
@@ -43,7 +44,6 @@ class GeneralDayTodayFragment : BaseFragment<FragmentGeneralDayTodayBinding>() {
         ViewModelProvider(this).get(GeneralDayTodayViewModel::class.java)
     }
 
-    private val menu: Menu? = null
     override fun inflate(inflater: LayoutInflater): FragmentGeneralDayTodayBinding =
         FragmentGeneralDayTodayBinding.inflate(inflater)
 
@@ -55,27 +55,58 @@ class GeneralDayTodayFragment : BaseFragment<FragmentGeneralDayTodayBinding>() {
         val toolbar = binding.toolbar
         activity?.actionBar?.subtitle = "Vova"
 
+        toolbar.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.action_search -> {
+                    changeCity()
+                    true
+                }
+                R.id.action_loader -> {
+                    // TODO : action
+                    true
+                }
+                else -> onOptionsItemSelected(it)
+            }
+
+        }
+
 //        repository = Repository(RemoteDataSource())
 //        repository.refreshAll()
 
 
         service = Common.retrofitService
-        // binding.recyclerMovieList.setHasFixedSize(true)
-        // layoutManager = LinearLayoutManager(this)
-        //  binding.recyclerMovieList.layoutManager = layoutManager
-        // dialog = SpotsDialog.Builder().setCancelable(true).setContext(this).build()
 
         getWeatherForecastList()
 
-
-        // allDaysWeatherListAdapter = AllDaysWeatherListAdapter()
         val recyclerView = binding.recyclerView
         recyclerView.adapter = allDaysWeatherListAdapter
         recyclerView.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
-        binding.blueRectangleView.setOnClickListener {
-            findNavController().navigate(R.id.action_weatherInformationByDayFragment_to_chooseDayFragment)
+       // binding.blueRectangleView.setOnClickListener
+//        {
+//            findNavController().navigate(R.id.action_weatherInformationByDayFragment_to_chooseDayFragment)
+//        }
+
+    }
+
+    private fun changeCity() {
+        val builder = AlertDialog.Builder(requireContext())
+        val layoutInflater = LayoutInflater.from(requireContext())
+        val dialogFragment = SearchCityDialogBinding.inflate(layoutInflater)
+        builder.setView(dialogFragment.root)
+
+        val alertDialog = builder.show()
+
+        dialogFragment.addBtn.setOnClickListener {
+//            alertDialog.dismiss()
+//            val timeHour = dialogFragment.timePicker.hour
+//            val timeMinute = dialogFragment.timePicker.minute
+//            val measureWithPeakFlowMeter = dialogFragment.measureDialog.text.toString().toInt()
+//            viewModel.onAddMeasureClick(timeHour, timeMinute, measureWithPeakFlowMeter)
+        }
+        dialogFragment.crossImageButton.setOnClickListener {
+            alertDialog.dismiss()
         }
     }
 
@@ -85,8 +116,7 @@ class GeneralDayTodayFragment : BaseFragment<FragmentGeneralDayTodayBinding>() {
             .enqueue(object : Callback<WeatherForecastResult> {
                 @SuppressLint("SetTextI18n")
                 override fun onFailure(call: Call<WeatherForecastResult>, t: Throwable) {
-//                    binding.todayTemperatureTextView.text = "Error"
-//                    binding.weatherTextView.text = "Error"
+                    binding.currentTemperatureTextView.text = "Error"
                 }
 
                 override fun onResponse(
@@ -104,15 +134,13 @@ class GeneralDayTodayFragment : BaseFragment<FragmentGeneralDayTodayBinding>() {
                         response.body()?.list?.first()?.main?.temp?.toInt()
                             .toString() + "${"°"}"
                     binding.currentWeatherDescriptionTextView.text =
-                        response.body()?.list?.first()?.weather?.first()?.description.toString().capitalize() + "${", ощущается как  "}" + response.body()?.list?.first()?.main?.temp_max?.toInt()
+                        response.body()?.list?.first()?.weather?.first()?.description.toString()
+                            .capitalize() + "${", ощущается как  "}" + response.body()?.list?.first()?.main?.temp_max?.toInt()
                             .toString() + "${"°"}"
 
                     val iconCode = response.body()?.list?.first()?.weather?.first()?.icon
                     val iconUrl = "https://openweathermap.org/img/w/" + iconCode + ".png"
                     Picasso.get().load(iconUrl).into(binding.weatherIcon)
-
-                    // response.body()?.let { allDaysWeatherListAdapter.setData(it.list) }
-
 
                     fun geWeatherForecastResponseGroupByDate(): List<SortedByDateWeatherForecastResult> {
                         val weatherForecastGroup =
@@ -134,12 +162,12 @@ class GeneralDayTodayFragment : BaseFragment<FragmentGeneralDayTodayBinding>() {
             })
     }
 
-    private fun showOption(id: Int) {
-        val item: MenuItem? = menu?.findItem(id)
-        if (item != null) {
-            item.isVisible = false
-        }
-    }
+//    private fun showOption(id: Int) {
+//        val item: MenuItem? = menu?.findItem(id)
+//        if (item != null) {
+//            item.isVisible = false
+//        }
+//    }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.toolbar_menu, menu)
@@ -148,12 +176,15 @@ class GeneralDayTodayFragment : BaseFragment<FragmentGeneralDayTodayBinding>() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.action_search -> Toast.makeText(
-                context,
-                "Clicked search button",
-                Toast.LENGTH_SHORT
-            ).show()
+            R.id.action_search -> {
+                changeCity()
+                Log.i("myLogs", "clicked menu")
+                return true
+            }
+            R.id.action_loader -> binding.currentDateTextView.text = "Пиздетс"
+
         }
-        return true
+        return super.onOptionsItemSelected(item)
+
     }
 }
