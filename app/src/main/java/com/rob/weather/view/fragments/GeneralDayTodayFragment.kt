@@ -30,13 +30,11 @@ class GeneralDayTodayFragment : BaseFragment<FragmentGeneralDayTodayBinding>() {
     lateinit var repository: Repository
     lateinit var service: RemoteDataSource.RetrofitServices
     val allDaysWeatherListAdapter = GeneralDayTodayAdapter()
+    var city = "Тамбов"
 
     companion object {
         var AppId = "2e65127e909e178d0af311a81f39948c"
     }
-
-    var city = "ufa"
-
 
     private val viewModel: GeneralDayTodayViewModel by lazy {
         ViewModelProvider(this).get(GeneralDayTodayViewModel::class.java)
