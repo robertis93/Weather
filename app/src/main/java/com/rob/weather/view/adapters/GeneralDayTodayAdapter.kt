@@ -8,7 +8,7 @@ import com.rob.weather.databinding.DayWeatherItemBinding
 import com.rob.weather.model.SortedByDateWeatherForecastResult
 import com.squareup.picasso.Picasso
 
-class GeneralDayTodayAdapter :
+class  GeneralDayTodayAdapter :
     RecyclerView.Adapter<GeneralDayTodayAdapter.WeatherViewHolder>() {
 
     private var allDaysWeatherList = emptyList<SortedByDateWeatherForecastResult>()

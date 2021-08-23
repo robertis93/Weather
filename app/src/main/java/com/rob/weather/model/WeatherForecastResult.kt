@@ -92,3 +92,12 @@ data class SortedByDateWeatherForecastResult(
     val date: String,
     val forecastResponseList: List<ForecastResponse>
 ) : Parcelable
+
+@Parcelize
+data class WeatherToday(
+    val date: String,
+    var city : String,
+    val temperature: String,
+    val description: String,
+    val icon: String
+) : Parcelable

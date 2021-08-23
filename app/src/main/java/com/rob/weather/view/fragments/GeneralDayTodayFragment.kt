@@ -2,42 +2,30 @@ package com.rob.weather.view.fragments
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.rob.weather.R
-import com.rob.weather.Utils.DateUtil.changeDateFormat
 import com.rob.weather.databinding.FragmentGeneralDayTodayBinding
 import com.rob.weather.databinding.SearchCityDialogBinding
-import com.rob.weather.model.SortedByDateWeatherForecastResult
-import com.rob.weather.model.WeatherForecastResult
 import com.rob.weather.view.adapters.GeneralDayTodayAdapter
-import com.rob.weather.viewmodel.Retrofit.Common
-import com.rob.weather.viewmodel.Retrofit.RemoteDataSource
+import com.rob.weather.viewmodel.Retrofit.RetrofitServices
 import com.rob.weather.viewmodel.repository.Repository
 import com.rob.weather.viewmodel.viewmodels.GeneralDayTodayViewModel
 import com.squareup.picasso.Picasso
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import java.util.*
 
-
 class GeneralDayTodayFragment : BaseFragment<FragmentGeneralDayTodayBinding>() {
-    lateinit var repository: Repository
-    lateinit var service: RemoteDataSource.RetrofitServices
-    val allDaysWeatherListAdapter = GeneralDayTodayAdapter()
+    lateinit var viewModel: GeneralDayTodayViewModel
     var city = "Тамбов"
 
     companion object {
         var AppId = "2e65127e909e178d0af311a81f39948c"
-    }
-
-    private val viewModel: GeneralDayTodayViewModel by lazy {
-        ViewModelProvider(this).get(GeneralDayTodayViewModel::class.java)
     }
 
     override fun inflate(inflater: LayoutInflater): FragmentGeneralDayTodayBinding =
@@ -46,8 +34,38 @@ class GeneralDayTodayFragment : BaseFragment<FragmentGeneralDayTodayBinding>() {
     @SuppressLint("ResourceAsColor")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // val collapsingToolbar = binding.toolbarLayout
-        // val appBar = binding.appBar
+
+        viewModel = ViewModelProvider(
+            this,
+            GeneralDayTodayViewModel.MyViewModelFactory(Repository(RetrofitServices.getClient("https://api.openweathermap.org/")))
+        ).get(GeneralDayTodayViewModel::class.java)
+
+        val allDaysWeatherListAdapter = GeneralDayTodayAdapter()
+        val recyclerView = binding.recyclerView
+        recyclerView.adapter = allDaysWeatherListAdapter
+        recyclerView.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        viewModel.sortedWeatherForecastResult.observe(viewLifecycleOwner) { list ->
+            allDaysWeatherListAdapter.setData(list)
+        }
+
+        viewModel.weatherTodayLiveData.observe(viewLifecycleOwner) { it ->
+            with(binding) {
+                currentDateTextView.text = it.date
+                currentTemperatureTextView.text = it.temperature
+                currentWeatherDescriptionTextView.text = it.description
+                toolbarToday.text = it.city.replaceFirstChar {
+                    if (it.isLowerCase()) it.titlecase(
+                        Locale.getDefault()
+                    ) else it.toString()
+                }
+                val iconCode = it.icon
+                val iconUrl = "https://openweathermap.org/img/w/" + iconCode + ".png"
+                Picasso.get().load(iconUrl).into(weatherIcon)
+            }
+        }
+
+        viewModel.getAllWeatherForecast(city, AppId)
         val toolbar = binding.toolbar
 
         toolbar.setOnMenuItemClickListener {
@@ -62,26 +80,11 @@ class GeneralDayTodayFragment : BaseFragment<FragmentGeneralDayTodayBinding>() {
                 }
                 else -> onOptionsItemSelected(it)
             }
-
         }
-
-//        repository = Repository(RemoteDataSource())
-//        repository.refreshAll()
-
-
-        service = Common.retrofitService
-
-        getWeatherForecastList()
-
-        val recyclerView = binding.recyclerView
-        recyclerView.adapter = allDaysWeatherListAdapter
-        recyclerView.layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
         binding.blueRectangleView.setOnClickListener {
             findNavController().navigate(R.id.action_weatherInformationByDayFragment_to_chooseDayFragment)
         }
-
     }
 
     private fun changeCity() {
@@ -94,12 +97,9 @@ class GeneralDayTodayFragment : BaseFragment<FragmentGeneralDayTodayBinding>() {
 
         dialogFragment.addBtn.setOnClickListener {
             city = dialogFragment.searchCityEditText.text.toString()
-            binding.toolbarToday.text = city.replaceFirstChar {
-                if (it.isLowerCase()) it.titlecase(
-                    Locale.getDefault()
-                ) else it.toString()
-            }
-            getWeatherForecastList()
+            viewModel.getAllWeatherForecast(city, AppId)
+           // viewModel.changeCity(city)
+
             alertDialog.dismiss()
 
         }
@@ -114,58 +114,6 @@ class GeneralDayTodayFragment : BaseFragment<FragmentGeneralDayTodayBinding>() {
         alertDialog.window?.setBackgroundDrawableResource(android.R.color.transparent);
     }
 
-    private fun getWeatherForecastList() {
-//        dialog.show()
-        service.geWeatherForecastResponse(city, AppId)
-            .enqueue(object : Callback<WeatherForecastResult> {
-                @SuppressLint("SetTextI18n")
-                override fun onFailure(call: Call<WeatherForecastResult>, t: Throwable) {
-                    binding.currentTemperatureTextView.text = "Error"
-                }
-
-                override fun onResponse(
-                    call: Call<WeatherForecastResult>,
-                    response: Response<WeatherForecastResult>
-                ) {
-
-                    binding.currentDateTextView.text =
-                        "${" Сегодня, "}" + response.body()?.list?.first()?.date?.let {
-                            changeDateFormat(
-                                it
-                            )
-                        }
-                    binding.currentTemperatureTextView.text =
-                        response.body()?.list?.first()?.main?.temp?.toInt()
-                            .toString() + "${"°"}"
-                    binding.currentWeatherDescriptionTextView.text =
-                        response.body()?.list?.first()?.weather?.first()?.description.toString()
-                            .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() } + "${", ощущается как  "}" + response.body()?.list?.first()?.main?.temp_max?.toInt()
-                            .toString() + "${"°"}"
-
-                    val iconCode = response.body()?.list?.first()?.weather?.first()?.icon
-                    val iconUrl = "https://openweathermap.org/img/w/" + iconCode + ".png"
-                    Picasso.get().load(iconUrl).into(binding.weatherIcon)
-
-                    fun geWeatherForecastResponseGroupByDate(): List<SortedByDateWeatherForecastResult> {
-                        val weatherForecastGroup =
-                            response.body()!!.list.groupBy { changeDateFormat(it.date) }
-                        return (weatherForecastGroup.keys).map { date ->
-                            val forecasts = weatherForecastGroup[date] ?: emptyList()
-                            SortedByDateWeatherForecastResult(date, forecasts)
-                        }
-                    }
-
-                    val sortedByDateForecastResponseList = geWeatherForecastResponseGroupByDate()
-                    val withoutFirstElementSortedByDateForecastResponseList =
-                        sortedByDateForecastResponseList.toMutableList()
-                            .subList(1, sortedByDateForecastResponseList.size)
-                    allDaysWeatherListAdapter.setData(
-                        withoutFirstElementSortedByDateForecastResponseList
-                    )
-                }
-            })
-    }
-
 //    private fun showOption(id: Int) {
 //        val item: MenuItem? = menu?.findItem(id)
 //        if (item != null) {
@@ -177,18 +125,5 @@ class GeneralDayTodayFragment : BaseFragment<FragmentGeneralDayTodayBinding>() {
         inflater.inflate(R.menu.toolbar_menu, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.action_search -> {
-                changeCity()
-                Log.i("myLogs", "clicked menu")
-                return true
-            }
-            R.id.action_loader -> binding.currentDateTextView.text = "Пиздетс"
-
-        }
-        return super.onOptionsItemSelected(item)
-
-    }
 }
+
