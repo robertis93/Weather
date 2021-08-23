@@ -5,10 +5,12 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 object DateUtil {
-    private val fullDateFormat = SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.getDefault())
+    private val fullDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
     private val shortDateFormat = SimpleDateFormat("dd MMMM, EEE", Locale.getDefault())
     val dayMonthFormat = SimpleDateFormat("dd MMMM,", Locale.getDefault())
+    @SuppressLint("ConstantLocale")
     val weekDayFormat = SimpleDateFormat("EEE", Locale.getDefault())
+    @SuppressLint("SimpleDateFormat")
     val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
 
     fun changeDateFormat(date: String): String {

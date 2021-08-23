@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.rob.weather.Utils.DateUtil.dateStringToDayTimeStamp
+import com.rob.weather.Utils.DateUtil.returnTime
 import com.rob.weather.databinding.TimeTemperatureItemBinding
 import com.rob.weather.model.ForecastResponse
 import com.squareup.picasso.Picasso
@@ -21,7 +22,8 @@ class TimeAndTemperatureAdapter(private val allDaysWeatherList: List<ForecastRes
         val currentItem = allDaysWeatherList[position]
             // TODO : почему вместо 12:00 отображается 00:00
 
-        holder.binding.timeTextView.text = dateStringToDayTimeStamp(currentItem.date)
+        holder.binding.timeTextView.text =
+            returnTime(currentItem.date)
         holder.binding.temperatureTextView.text = currentItem.main.temp.toInt().toString()+ "${"°"}"
 
         val iconCode = currentItem.weather.first().icon
