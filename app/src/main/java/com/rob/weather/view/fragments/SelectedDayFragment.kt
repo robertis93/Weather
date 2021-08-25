@@ -10,7 +10,7 @@ import com.rob.weather.R
 import com.rob.weather.databinding.FragmetChooseDayBinding
 
 
-class SelectedDayFragment : BaseFragment<FragmetChooseDayBinding>() {
+class SelectedDayFragment : BaseFragment<FragmetChooseDayBinding>(FragmetChooseDayBinding::inflate) {
 
     //TODO : этот фрагемент пока что не готов
     // private val args by navArgs<ChooseDayFragmentArgs>()
@@ -25,8 +25,6 @@ class SelectedDayFragment : BaseFragment<FragmetChooseDayBinding>() {
     }
 
     private val menu: Menu? = null
-    override fun inflate(inflater: LayoutInflater): FragmetChooseDayBinding =
-        FragmetChooseDayBinding.inflate(inflater)
 
     @SuppressLint("ResourceAsColor")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

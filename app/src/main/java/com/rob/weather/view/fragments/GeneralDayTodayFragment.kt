@@ -20,16 +20,14 @@ import com.rob.weather.viewmodel.viewmodels.GeneralDayTodayViewModel
 import com.squareup.picasso.Picasso
 import java.util.*
 
-class GeneralDayTodayFragment : BaseFragment<FragmentGeneralDayTodayBinding>() {
+class GeneralDayTodayFragment :
+    BaseFragment<FragmentGeneralDayTodayBinding>(FragmentGeneralDayTodayBinding::inflate) {
     lateinit var viewModel: GeneralDayTodayViewModel
     private var city = "Тамбов"
 
     companion object {
         var AppId = "2e65127e909e178d0af311a81f39948c"
     }
-
-    override fun inflate(inflater: LayoutInflater): FragmentGeneralDayTodayBinding =
-        FragmentGeneralDayTodayBinding.inflate(inflater)
 
     @SuppressLint("ResourceAsColor")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
