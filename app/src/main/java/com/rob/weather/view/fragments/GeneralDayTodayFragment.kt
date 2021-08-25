@@ -22,7 +22,7 @@ import java.util.*
 
 class GeneralDayTodayFragment : BaseFragment<FragmentGeneralDayTodayBinding>() {
     lateinit var viewModel: GeneralDayTodayViewModel
-    var city = "Тамбов"
+    private var city = "Тамбов"
 
     companion object {
         var AppId = "2e65127e909e178d0af311a81f39948c"
@@ -98,10 +98,7 @@ class GeneralDayTodayFragment : BaseFragment<FragmentGeneralDayTodayBinding>() {
         dialogFragment.addBtn.setOnClickListener {
             city = dialogFragment.searchCityEditText.text.toString()
             viewModel.getAllWeatherForecast(city, AppId)
-           // viewModel.changeCity(city)
-
             alertDialog.dismiss()
-
         }
         dialogFragment.crossImageBtn.setOnClickListener {
             alertDialog.dismiss()

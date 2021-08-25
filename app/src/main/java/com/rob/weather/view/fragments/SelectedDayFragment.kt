@@ -4,12 +4,15 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
+import androidx.navigation.fragment.findNavController
 import com.github.aachartmodel.aainfographics.aachartcreator.*
 import com.rob.weather.R
 import com.rob.weather.databinding.FragmetChooseDayBinding
 
 
 class SelectedDayFragment : BaseFragment<FragmetChooseDayBinding>() {
+
+    //TODO : этот фрагемент пока что не готов
     // private val args by navArgs<ChooseDayFragmentArgs>()
 //    private val viewModel: AllDaysWeatherInformationViewModel by lazy {
 //        ViewModelProvider(this).get(AllDaysWeatherInformationViewModel::class.java)
@@ -28,6 +31,11 @@ class SelectedDayFragment : BaseFragment<FragmetChooseDayBinding>() {
     @SuppressLint("ResourceAsColor")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.arrowBackImageView.setOnClickListener {
+            findNavController().navigate(R.id.action_chooseDayFragment_to_weatherInformationByDayFragment)
+
+        }
 
         binding.aaChartView.aa_drawChartWithChartOptions(configureChartOptions1())
 
