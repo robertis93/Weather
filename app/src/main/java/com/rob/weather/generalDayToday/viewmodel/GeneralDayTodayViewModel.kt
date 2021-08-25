@@ -1,15 +1,12 @@
-package com.rob.weather.viewmodel.viewmodels
+package com.rob.weather.generalDayToday.viewmodel
 
 import android.annotation.SuppressLint
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.rob.weather.Utils.DateUtil
+import com.rob.weather.generalDayToday.repository.Repository
 import com.rob.weather.model.SortedByDateWeatherForecastResult
 import com.rob.weather.model.WeatherForecastResult
 import com.rob.weather.model.WeatherToday
-import com.rob.weather.viewmodel.repository.Repository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Call
@@ -19,9 +16,14 @@ import java.util.*
 
 class GeneralDayTodayViewModel constructor(private val repository: Repository) : ViewModel() {
 
-    var errorMessage = MutableLiveData<String>()
-    val sortedWeatherForecastResult = MutableLiveData<List<SortedByDateWeatherForecastResult>>()
-    val weatherTodayLiveData = MutableLiveData<WeatherToday>()
+    private val errorMessage = MutableLiveData<String>()
+    val errorMessageLiveData: LiveData<String> = errorMessage
+    private val sortedWeatherForecastResult =
+        MutableLiveData<List<SortedByDateWeatherForecastResult>>()
+    val sortedWeatherForecastResultLiveData: LiveData<List<SortedByDateWeatherForecastResult>> =
+        sortedWeatherForecastResult
+    private val weatherToday = MutableLiveData<WeatherToday>()
+    val weatherTodayLiveData: LiveData<WeatherToday> = weatherToday
 
     fun getAllWeatherForecast(city: String, id: String) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -64,7 +66,7 @@ class GeneralDayTodayViewModel constructor(private val repository: Repository) :
                                 )
                             }
                         if (todayWeather != null) {
-                            weatherTodayLiveData.value = todayWeather!!
+                            weatherToday.value = todayWeather!!
                         }
 
                         fun geWeatherForecastResponseGroupByDate(): List<SortedByDateWeatherForecastResult> {
@@ -87,7 +89,7 @@ class GeneralDayTodayViewModel constructor(private val repository: Repository) :
                     }
                 }
             }
-           )
+            )
         }
     }
 

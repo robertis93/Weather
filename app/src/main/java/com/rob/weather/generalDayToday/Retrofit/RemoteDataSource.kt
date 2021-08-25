@@ -1,4 +1,4 @@
-package com.rob.weather.viewmodel.Retrofit
+package com.rob.weather.generalDayToday.Retrofit
 
 import com.rob.weather.model.WeatherForecastResult
 import retrofit2.Call

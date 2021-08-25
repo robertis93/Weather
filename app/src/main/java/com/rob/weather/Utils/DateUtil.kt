@@ -5,6 +5,8 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 object DateUtil {
+    var city = "Тамбов"
+    var AppId = "2e65127e909e178d0af311a81f39948c"
     private val fullDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
     private val shortDateFormat = SimpleDateFormat("dd MMMM, EEE", Locale.getDefault())
     val dayMonthFormat = SimpleDateFormat("dd MMMM,", Locale.getDefault())

@@ -1,9 +1,8 @@
-package com.rob.weather.view.adapters
+package com.rob.weather.generalDayToday.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.rob.weather.Utils.DateUtil.dateStringToDayTimeStamp
 import com.rob.weather.Utils.DateUtil.returnTime
 import com.rob.weather.databinding.TimeTemperatureItemBinding
 import com.rob.weather.model.ForecastResponse
@@ -14,27 +13,28 @@ class TimeAndTemperatureAdapter(private val allDaysWeatherList: List<ForecastRes
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WeatherViewHolder {
         val binding =
-            TimeTemperatureItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            TimeTemperatureItemBinding.inflate(LayoutInflater.from(parent.context), parent,
+                false)
         return WeatherViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: WeatherViewHolder, position: Int) {
         val currentItem = allDaysWeatherList[position]
-            // TODO : почему вместо 12:00 отображается 00:00
-
-        holder.binding.timeTextView.text =
-            returnTime(currentItem.date)
-        holder.binding.temperatureTextView.text = currentItem.main.temp.toInt().toString()+ "${"°"}"
-
-        val iconCode = currentItem.weather.first().icon
-        val iconUrl = "https://openweathermap.org/img/w/" + iconCode + ".png"
-        Picasso.get().load(iconUrl).into(holder.binding.weatherIcon)
+        holder.bind(currentItem)
     }
 
     override fun getItemCount(): Int {
         return allDaysWeatherList.size
     }
 
-    class WeatherViewHolder(val binding: TimeTemperatureItemBinding) :
-        RecyclerView.ViewHolder(binding.root)
+    class WeatherViewHolder(private val binding: TimeTemperatureItemBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(item: ForecastResponse) {
+            binding.timeTextView.text = returnTime(item.date)
+            binding.temperatureTextView.text = item.main.temp.toInt().toString() + "${"°"}"
+            val iconCode = item.weather.first().icon
+            val iconUrl = "https://openweathermap.org/img/w/" + iconCode + ".png"
+            Picasso.get().load(iconUrl).into(binding.weatherIcon)
+        }
+    }
 }

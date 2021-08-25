@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/weatherInformationByDayFragment"
-        android:name="com.rob.weather.view.fragments.GeneralDayTodayFragment"
+        android:name="com.rob.weather.generalDayToday.fragment.GeneralDayTodayFragment"
         android:label="fragment_weather_information_by_day"
         tools:layout="@layout/fragment_general_day_today" >
         <action
@@ -16,7 +16,7 @@
     </fragment>
     <fragment
         android:id="@+id/chooseDayFragment"
-        android:name="com.rob.weather.view.fragments.SelectedDayFragment"
+        android:name="com.rob.weather.selectedDay.SelectedDayFragment"
         android:label="ChooseDayFragment" >
         <action
             android:id="@+id/action_chooseDayFragment_to_weatherInformationByDayFragment"

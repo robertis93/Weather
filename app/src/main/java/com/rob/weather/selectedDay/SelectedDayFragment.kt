@@ -1,14 +1,15 @@
-package com.rob.weather.view.fragments
+package com.rob.weather.selectedDay
 
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.github.aachartmodel.aainfographics.aachartcreator.*
 import com.rob.weather.R
+import com.rob.weather.Utils.BaseFragment
 import com.rob.weather.databinding.FragmetChooseDayBinding
-
 
 class SelectedDayFragment : BaseFragment<FragmetChooseDayBinding>(FragmetChooseDayBinding::inflate) {
 
@@ -157,3 +158,5 @@ class SelectedDayFragment : BaseFragment<FragmetChooseDayBinding>(FragmetChooseD
 //    var offset: LinkedTreeMap<*, *>? = null
 //    var index: Double? = null
 //}
+
+

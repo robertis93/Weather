@@ -1,4 +1,4 @@
-package com.rob.weather.view
+package com.rob.weather
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

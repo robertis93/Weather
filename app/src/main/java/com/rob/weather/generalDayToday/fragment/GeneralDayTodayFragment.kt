@@ -1,4 +1,4 @@
-package com.rob.weather.view.fragments
+package com.rob.weather.generalDayToday.fragment
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -7,44 +7,43 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.View
 import androidx.appcompat.app.AlertDialog
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.rob.weather.R
+import com.rob.weather.Utils.BaseFragment
+import com.rob.weather.Utils.DateUtil.AppId
+import com.rob.weather.Utils.DateUtil.city
 import com.rob.weather.databinding.FragmentGeneralDayTodayBinding
 import com.rob.weather.databinding.SearchCityDialogBinding
-import com.rob.weather.view.adapters.GeneralDayTodayAdapter
-import com.rob.weather.viewmodel.Retrofit.RetrofitServices
-import com.rob.weather.viewmodel.repository.Repository
-import com.rob.weather.viewmodel.viewmodels.GeneralDayTodayViewModel
+import com.rob.weather.generalDayToday.Retrofit.RetrofitServices
+import com.rob.weather.generalDayToday.adapters.GeneralDayTodayAdapter
+import com.rob.weather.generalDayToday.repository.Repository
+import com.rob.weather.generalDayToday.viewmodel.GeneralDayTodayViewModel
 import com.squareup.picasso.Picasso
 import java.util.*
 
 class GeneralDayTodayFragment :
     BaseFragment<FragmentGeneralDayTodayBinding>(FragmentGeneralDayTodayBinding::inflate) {
-    lateinit var viewModel: GeneralDayTodayViewModel
-    private var city = "Тамбов"
-
-    companion object {
-        var AppId = "2e65127e909e178d0af311a81f39948c"
+    private val viewModel: GeneralDayTodayViewModel by viewModels {
+        GeneralDayTodayViewModel.MyViewModelFactory(Repository(RetrofitServices.getClient("https://api.openweathermap.org/")))
     }
 
     @SuppressLint("ResourceAsColor")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel = ViewModelProvider(
-            this,
-            GeneralDayTodayViewModel.MyViewModelFactory(Repository(RetrofitServices.getClient("https://api.openweathermap.org/")))
-        ).get(GeneralDayTodayViewModel::class.java)
-
         val allDaysWeatherListAdapter = GeneralDayTodayAdapter()
         val recyclerView = binding.recyclerView
         recyclerView.adapter = allDaysWeatherListAdapter
         recyclerView.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        viewModel.sortedWeatherForecastResult.observe(viewLifecycleOwner) { list ->
+        viewModel.sortedWeatherForecastResultLiveData.observe(viewLifecycleOwner) { list ->
             allDaysWeatherListAdapter.setData(list)
+        }
+
+        viewModel.errorMessageLiveData.observe(viewLifecycleOwner) { error ->
+            binding.currentTemperatureTextView.text = error
         }
 
         viewModel.weatherTodayLiveData.observe(viewLifecycleOwner) { it ->
@@ -73,7 +72,7 @@ class GeneralDayTodayFragment :
                     true
                 }
                 R.id.action_loader -> {
-                    // TODO : action
+
                     true
                 }
                 else -> onOptionsItemSelected(it)
@@ -101,20 +100,11 @@ class GeneralDayTodayFragment :
         dialogFragment.crossImageBtn.setOnClickListener {
             alertDialog.dismiss()
         }
-
         dialogFragment.cancelBtn.setOnClickListener {
             alertDialog.dismiss()
         }
-
-        alertDialog.window?.setBackgroundDrawableResource(android.R.color.transparent);
+        alertDialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
     }
-
-//    private fun showOption(id: Int) {
-//        val item: MenuItem? = menu?.findItem(id)
-//        if (item != null) {
-//            item.isVisible = false
-//        }
-//    }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.toolbar_menu, menu)
