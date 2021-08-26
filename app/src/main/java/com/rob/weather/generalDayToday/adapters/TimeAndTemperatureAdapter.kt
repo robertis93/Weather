@@ -3,7 +3,8 @@ package com.rob.weather.generalDayToday.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.rob.weather.Utils.DateUtil.returnTime
+import com.rob.weather.Utils.Utils
+import com.rob.weather.Utils.Utils.returnTime
 import com.rob.weather.databinding.TimeTemperatureItemBinding
 import com.rob.weather.model.ForecastResponse
 import com.squareup.picasso.Picasso
@@ -30,7 +31,7 @@ class TimeAndTemperatureAdapter(private val allDaysWeatherList: List<ForecastRes
     class WeatherViewHolder(private val binding: TimeTemperatureItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: ForecastResponse) {
-            binding.timeTextView.text = returnTime(item.date)
+            binding.timeTextView.text = (item.date).returnTime()
             binding.temperatureTextView.text = item.main.temp.toInt().toString() + "${"°"}"
             val iconCode = item.weather.first().icon
             val iconUrl = "https://openweathermap.org/img/w/" + iconCode + ".png"

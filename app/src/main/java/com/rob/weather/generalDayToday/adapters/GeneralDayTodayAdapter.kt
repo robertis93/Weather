@@ -2,7 +2,6 @@ package com.rob.weather.generalDayToday.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.rob.weather.databinding.DayWeatherItemBinding
 import com.rob.weather.model.SortedByDateWeatherForecastResult
@@ -54,11 +53,6 @@ class GeneralDayTodayAdapter :
                 TimeAndTemperatureAdapter(item.forecastResponseList)
             val recyclerView = binding.recyclerView
             recyclerView.adapter = timeAndTemperatureAdapter
-            recyclerView.layoutManager = LinearLayoutManager(
-                binding.root.context,
-                LinearLayoutManager.HORIZONTAL,
-                false
-            )
         }
     }
 }
