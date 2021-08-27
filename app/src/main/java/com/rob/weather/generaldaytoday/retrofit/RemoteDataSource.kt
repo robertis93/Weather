@@ -1,7 +1,6 @@
-package com.rob.weather.generalDayToday.Retrofit
+package com.rob.weather.generaldaytoday.retrofit
 
 import com.rob.weather.model.WeatherForecastResult
-import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET

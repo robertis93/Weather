@@ -1,14 +1,14 @@
-package com.rob.weather.generalDayToday.fragment
+package com.rob.weather.generaldaytoday.fragment
 
 import android.content.Context
 import android.view.LayoutInflater
 import androidx.appcompat.app.AlertDialog
-import com.rob.weather.Utils.Utils
+import com.rob.weather.utils.Utils
 import com.rob.weather.databinding.SearchCityDialogBinding
-import com.rob.weather.generalDayToday.viewmodel.GeneralDayTodayViewModel
+import com.rob.weather.generaldaytoday.viewmodel.GeneralDayTodayViewModel
 
-class SearchCityDialog() {
-    fun changeCity(context: Context, viewModel: GeneralDayTodayViewModel) {
+class ShowDialogForChangingCity() {
+    fun showDialog(context: Context, viewModel: GeneralDayTodayViewModel) {
         val builder = AlertDialog.Builder(context)
         val layoutInflater = LayoutInflater.from(context)
         val dialogFragment = SearchCityDialogBinding.inflate(layoutInflater)

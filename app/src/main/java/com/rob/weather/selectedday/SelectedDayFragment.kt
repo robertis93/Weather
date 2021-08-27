@@ -1,4 +1,4 @@
-package com.rob.weather.selectedDay
+package com.rob.weather.selectedday
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -8,20 +8,12 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
-import com.github.aachartmodel.aainfographics.aachartcreator.*
 import com.rob.weather.R
-import com.rob.weather.Utils.BaseFragment
+import com.rob.weather.utils.BaseFragment
 import com.rob.weather.databinding.FragmetChooseDayBinding
 
 class SelectedDayFragment :
     BaseFragment<FragmetChooseDayBinding>(FragmetChooseDayBinding::inflate) {
-
-    interface AAChartViewCallBack {
-        fun chartViewMoveOverEventMessage(
-            aaChartView: AAChartView,
-            messageModel: AAMoveOverEventMessageModel
-        )
-    }
 
     private val menu: Menu? = null
 
@@ -34,32 +26,32 @@ class SelectedDayFragment :
 
         }
 
-        binding.aaChartView.aa_drawChartWithChartOptions(configureChartOptions1())
+            //binding.aaChartView.aa_drawChartWithChartOptions(configureChartOptions1())
     }
 
-    private fun configureChartOptions1(): AAOptions {
-        val aaChartModel: AAChartModel = AAChartModel()
-            .chartType(AAChartType.Line)
-            .markerRadius(0f)
-            .tooltipEnabled(false)
-            .zoomType(AAChartZoomType.XY)
-            .yAxisVisible(false)
-            .backgroundColor("#4D63780D")
-            .series(
-                arrayOf(
-                    AASeriesElement()
-                        .color("#45A2FF")
-                        .data(
-                            arrayOf(7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9)
-                        ),
-                )
-            )
-
-        val aaOptions: AAOptions =
-            aaChartModel.aa_toAAOptions()
-        aaOptions.plotOptions?.column?.groupPadding = 0f
-        return aaOptions
-    }
+//    private fun configureChartOptions1(): AAOptions {
+//        val aaChartModel: AAChartModel = AAChartModel()
+//            .chartType(AAChartType.Line)
+//            .markerRadius(0f)
+//            .tooltipEnabled(false)
+//            .zoomType(AAChartZoomType.XY)
+//            .yAxisVisible(false)
+//            .backgroundColor("#4D63780D")
+//            .series(
+//                arrayOf(
+//                    AASeriesElement()
+//                        .color("#45A2FF")
+//                        .data(
+//                            arrayOf(7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9)
+//                        ),
+//                )
+//            )
+//
+//        val aaOptions: AAOptions =
+//            aaChartModel.aa_toAAOptions()
+//        aaOptions.plotOptions?.column?.groupPadding = 0f
+//        return aaOptions
+//    }
 
     private fun showOption(id: Int) {
         val item: MenuItem? = menu?.findItem(id)

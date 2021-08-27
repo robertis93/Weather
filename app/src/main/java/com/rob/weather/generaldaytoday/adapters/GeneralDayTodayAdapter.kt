@@ -1,4 +1,4 @@
-package com.rob.weather.generalDayToday.adapters
+package com.rob.weather.generaldaytoday.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

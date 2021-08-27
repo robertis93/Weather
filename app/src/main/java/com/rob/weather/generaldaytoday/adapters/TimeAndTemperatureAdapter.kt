@@ -1,10 +1,9 @@
-package com.rob.weather.generalDayToday.adapters
+package com.rob.weather.generaldaytoday.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.rob.weather.Utils.Utils
-import com.rob.weather.Utils.Utils.returnTime
+import com.rob.weather.utils.Utils.returnTime
 import com.rob.weather.databinding.TimeTemperatureItemBinding
 import com.rob.weather.model.ForecastResponse
 import com.squareup.picasso.Picasso

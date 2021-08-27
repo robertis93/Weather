@@ -7,7 +7,7 @@
     android:background="@color/white"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
-    tools:context=".generalDayToday.fragment.GeneralDayTodayFragment">
+    tools:context=".generaldaytoday.fragment.GeneralDayTodayFragment">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"

@@ -1,4 +1,4 @@
-package com.rob.weather.Utils
+package com.rob.weather.utils
 
 import android.os.Bundle
 import android.view.LayoutInflater

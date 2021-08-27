@@ -7,7 +7,7 @@
     android:background="@color/white"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
-    tools:context=".generalDayToday.fragment.GeneralDayTodayFragment">
+    tools:context=".generaldaytoday.fragment.GeneralDayTodayFragment">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -221,16 +221,6 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-    <com.github.aachartmodel.aainfographics.aachartcreator.AAChartView
-        android:id="@+id/aa_chart_view"
-        android:layout_marginTop="20dp"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginStart="25dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="25dp">
-
-    </com.github.aachartmodel.aainfographics.aachartcreator.AAChartView>
 
     <!--    <androidx.core.widget.NestedScrollView-->
     <!--        android:layout_width="match_parent"-->
