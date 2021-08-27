@@ -14,8 +14,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.*
+import javax.inject.Inject
 
-class GeneralDayTodayViewModel constructor(private val repository: Repository) : ViewModel() {
+class GeneralDayTodayViewModel @Inject constructor(private val repository: Repository) : ViewModel() {
     private val errorMessage = MutableLiveData<String>()
     val errorMessageLiveData: LiveData<String> = errorMessage
     private val sortedWeatherForecastResult =

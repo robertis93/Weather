@@ -18,6 +18,7 @@ import com.rob.weather.generalDayToday.adapters.GeneralDayTodayAdapter
 import com.rob.weather.generalDayToday.repository.Repository
 import com.rob.weather.generalDayToday.viewmodel.GeneralDayTodayViewModel
 import com.squareup.picasso.Picasso
+import javax.inject.Inject
 
 class GeneralDayTodayFragment :
     BaseFragment<FragmentGeneralDayTodayBinding>(FragmentGeneralDayTodayBinding::inflate) {
