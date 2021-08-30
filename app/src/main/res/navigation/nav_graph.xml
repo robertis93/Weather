@@ -10,16 +10,21 @@
         android:name="com.rob.weather.generaldaytoday.fragment.GeneralDayTodayFragment"
         android:label="fragment_weather_information_by_day"
         tools:layout="@layout/fragment_general_day_today" >
+
         <action
-            android:id="@+id/action_weatherInformationByDayFragment_to_chooseDayFragment"
+            android:id="@+id/action_weatherInformationByDayFragment_to_chooseDayFragment3"
             app:destination="@id/chooseDayFragment" />
     </fragment>
     <fragment
         android:id="@+id/chooseDayFragment"
         android:name="com.rob.weather.selectedday.SelectedDayFragment"
         android:label="ChooseDayFragment" >
+
         <action
-            android:id="@+id/action_chooseDayFragment_to_weatherInformationByDayFragment"
+            android:id="@+id/action_chooseDayFragment_to_weatherInformationByDayFragment4"
             app:destination="@id/weatherInformationByDayFragment" />
+        <argument
+            android:name="today_weather"
+            app:argType="com.rob.weather.model.FullWeatherToday" />
     </fragment>
 </navigation>

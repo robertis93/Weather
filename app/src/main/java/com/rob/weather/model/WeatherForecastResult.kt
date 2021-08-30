@@ -15,25 +15,25 @@ data class WeatherForecastResult(
 
 @Parcelize
 data class City(
-    @SerializedName("id") var id : Int,
-    @SerializedName("name") var name : String,
-    @SerializedName("coord") var coordinates : Сoordinates,
-    @SerializedName("country") var country : String
+    @SerializedName("id") var id: Int,
+    @SerializedName("name") var name: String,
+    @SerializedName("coord") var coordinates: Сoordinates,
+    @SerializedName("country") var country: String
 ) : Parcelable
 
 @Parcelize
-data class ForecastResponse (
-    @SerializedName("dt") var dt : Int,
-    @SerializedName("main") var main : Main,
-    @SerializedName("weather") var weather : List<Weather>,
-    @SerializedName("clouds") var clouds : Clouds,
-    @SerializedName("wind") var wind : Wind,
-    @SerializedName("rain") var rain : Rain,
-    @SerializedName("sys") var sys : Sys,
-    @SerializedName("dt_txt") var date : String
+data class ForecastResponse(
+    @SerializedName("dt") var dt: Int,
+    @SerializedName("main") var main: Main,
+    @SerializedName("weather") var weather: List<Weather>,
+    @SerializedName("clouds") var clouds: Clouds,
+    @SerializedName("wind") var wind: Wind,
+    @SerializedName("rain") var rain: Rain?,
+    @SerializedName("sys") var sys: Sys,
+    @SerializedName("dt_txt") var date: String
 ) : Parcelable, Comparable<ForecastResponse> {
     override fun compareTo(response: ForecastResponse): Int {
-      var result = this.main.temp_min.compareTo(response.main.temp_min)
+        var result = this.main.temp_min.compareTo(response.main.temp_min)
         if (result == 0) {
             result = this.main.temp_min.compareTo(response.main.temp_min);
         }
@@ -42,14 +42,14 @@ data class ForecastResponse (
 }
 
 @Parcelize
-data class Сoordinates (
-    @SerializedName("lat") var latitude : Double,
-    @SerializedName("lon") var longitude : Double
+data class Сoordinates(
+    @SerializedName("lat") var latitude: Double,
+    @SerializedName("lon") var longitude: Double
 ) : Parcelable
 
 @Parcelize
-data class Clouds (
-    @SerializedName("all") var all : Int
+data class Clouds(
+    @SerializedName("all") var all: Int
 ) : Parcelable
 
 @Parcelize
@@ -65,26 +65,26 @@ data class Main(
 ) : Parcelable
 
 @Parcelize
-class Rain () : Parcelable
+class Rain() : Parcelable
 
 @Parcelize
-data class Sys (
-    @SerializedName("pod") var pod : String
+data class Sys(
+    @SerializedName("pod") var pod: String
 ) : Parcelable
 
 @Parcelize
-data class Weather (
-    @SerializedName("id") var id : Int,
-    @SerializedName("main") var main : String,
-    @SerializedName("description") var description : String,
-    @SerializedName("icon") var icon : String
+data class Weather(
+    @SerializedName("id") var id: Int,
+    @SerializedName("main") var main: String,
+    @SerializedName("description") var description: String,
+    @SerializedName("icon") var icon: String
 ) : Parcelable
 
 @Parcelize
-data class Wind (
-    @SerializedName("speed") var speed : Double,
-    @SerializedName("deg") var deg : Double,
-    @SerializedName("gust") var gust : Double
+data class Wind(
+    @SerializedName("speed") var speed: Double,
+    @SerializedName("deg") var deg: Double,
+    @SerializedName("gust") var gust: Double
 ) : Parcelable
 
 @Parcelize
@@ -96,8 +96,44 @@ data class SortedByDateWeatherForecastResult(
 @Parcelize
 data class WeatherToday(
     val date: String,
-    var city : String,
+    var city: String,
     val temperature: String,
     val description: String,
     val icon: String
 ) : Parcelable
+
+@Parcelize
+data class FullWeatherToday(
+    val date: String,
+    var city: String,
+    val temperature: String,
+    val description: String,
+    val icon: String,
+    val windSpeed: Int,
+    val humidity: Int,
+    val clouds: Int,
+    val forecastResponseList: List<ForecastResponse>
+) : Parcelable
+
+@Parcelize
+data class FullWeatherRightToday(
+    val date: String,
+    var city: String,
+    val temperature: String,
+    val description: String,
+    val icon: String,
+    val windSpeed: Int,
+    val humidity: Int,
+    val clouds: Clouds,
+    val list: List<TemperatureByTime>
+) : Parcelable
+
+@Parcelize
+class TemperatureByTime (
+    var date: String,
+    val temperature: Int,
+    var icon: String
+) : Parcelable
+
+
+

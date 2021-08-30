@@ -129,7 +129,7 @@
             android:layout_marginStart="32dp"
             android:layout_marginTop="20dp"
             android:layout_marginEnd="32dp"
-            android:fontFamily="@font/manrope_bold"
+            android:fontFamily="@font/manrope_regular"
             android:text="30°"
             android:textFontWeight="800"
             android:textColor="@color/white"
@@ -247,12 +247,14 @@
             style="@style/Text.Manrope32"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="90dp"
             android:layout_marginEnd="40dp"
             android:layout_marginBottom="32dp"
             android:text="34"
             android:textFontWeight="800"
             app:layout_constraintBottom_toBottomOf="@+id/blueRectangleView"
-            app:layout_constraintEnd_toEndOf="@+id/blueRectangleView" />
+            app:layout_constraintEnd_toEndOf="@+id/blueRectangleView"
+            app:layout_constraintStart_toEndOf="@+id/humidity_value_textview" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

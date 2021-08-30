@@ -5,8 +5,9 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
+import javax.inject.Inject
 
-class RemoteDataSource {
+class RemoteDataSource @Inject constructor(){
     interface RetrofitServices {
         @GET("data/2.5/forecast?")
         suspend fun geWeatherForecastResponse(

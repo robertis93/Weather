@@ -3,9 +3,9 @@ package com.rob.weather.generaldaytoday.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.rob.weather.utils.Utils.returnTime
 import com.rob.weather.databinding.TimeTemperatureItemBinding
 import com.rob.weather.model.ForecastResponse
+import com.rob.weather.utils.Utils
 import com.squareup.picasso.Picasso
 
 class TimeAndTemperatureAdapter(private val allDaysWeatherList: List<ForecastResponse>) :
@@ -13,8 +13,10 @@ class TimeAndTemperatureAdapter(private val allDaysWeatherList: List<ForecastRes
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WeatherViewHolder {
         val binding =
-            TimeTemperatureItemBinding.inflate(LayoutInflater.from(parent.context), parent,
-                false)
+            TimeTemperatureItemBinding.inflate(
+                LayoutInflater.from(parent.context), parent,
+                false
+            )
         return WeatherViewHolder(binding)
     }
 
@@ -37,4 +39,9 @@ class TimeAndTemperatureAdapter(private val allDaysWeatherList: List<ForecastRes
             Picasso.get().load(iconUrl).into(binding.weatherIcon)
         }
     }
+}
+
+fun String.returnTime(): String {
+    val changedDate = Utils.fullDateFormat.parse(this)
+    return Utils.timeFormat.format(changedDate)
 }

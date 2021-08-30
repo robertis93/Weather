@@ -5,30 +5,43 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.View
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.rob.weather.R
-import com.rob.weather.utils.BaseFragment
-import com.rob.weather.utils.Utils.id_key
-import com.rob.weather.utils.Utils.city
 import com.rob.weather.databinding.FragmentGeneralDayTodayBinding
-import com.rob.weather.generaldaytoday.retrofit.RemoteDataSource
 import com.rob.weather.generaldaytoday.adapters.GeneralDayTodayAdapter
 import com.rob.weather.generaldaytoday.repository.WeatherForecastRepository
+import com.rob.weather.generaldaytoday.retrofit.RemoteDataSource
 import com.rob.weather.generaldaytoday.viewmodel.GeneralDayTodayViewModel
+import com.rob.weather.model.FullWeatherToday
+import com.rob.weather.model.WeatherForecastResult
+import com.rob.weather.utils.BaseFragment
+import com.rob.weather.utils.Utils.city
+import com.rob.weather.utils.Utils.id_key
 import com.squareup.picasso.Picasso
+import javax.inject.Inject
 
 class GeneralDayTodayFragment :
     BaseFragment<FragmentGeneralDayTodayBinding>(FragmentGeneralDayTodayBinding::inflate) {
-    private val viewModel: GeneralDayTodayViewModel by viewModels {
-        MyViewModelFactory(WeatherForecastRepository(id_key, RemoteDataSource.RetrofitServices.getClient("https://api.openweathermap.org/")))
-    }
+
+   lateinit var todayWeather : FullWeatherToday
+    @Inject
+    lateinit var viewModel: GeneralDayTodayViewModel
+
     private val dialog = ShowDialogForChangingCity()
+    lateinit var picasso : Picasso
 
     @SuppressLint("ResourceAsColor")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        (context)
         super.onViewCreated(view, savedInstanceState)
+
+        viewModel = ViewModelProvider(this, GeneralDayTodayViewModelFactory(WeatherForecastRepository(id_key,
+            RemoteDataSource.RetrofitServices.getClient("https://api.openweathermap.org/")))
+        ).get(GeneralDayTodayViewModel::class.java)
+
+        picasso = Picasso.Builder(requireContext()).build()
 
         viewModel.getAllWeatherForecast(city)
         val allDaysWeatherListAdapter = GeneralDayTodayAdapter()
@@ -41,14 +54,18 @@ class GeneralDayTodayFragment :
         }
 
         viewModel.errorMessage.observe(viewLifecycleOwner) { error ->
-            binding.currentTemperatureTextView.text = error
+            binding.currentTemperatureTextview.text = error
+        }
+
+        viewModel.fullWeatherTodayResponse.observe(viewLifecycleOwner){
+            todayWeather = it
         }
 
         viewModel.weatherToday.observe(viewLifecycleOwner) {
             with(binding) {
                 currentDateTextView.text = it.date
-                currentTemperatureTextView.text = it.temperature
-                currentWeatherDescriptionTextView.text = it.description
+                currentTemperatureTextview.text = it.temperature
+                currentWeatherDescriptionTextview.text = it.description
                 toolbarToday.text = it.city
                 val iconCode = it.icon
                 val iconUrl = "https://openweathermap.org/img/w/" + iconCode + ".png"
@@ -72,7 +89,8 @@ class GeneralDayTodayFragment :
         }
 
         binding.blueRectangleView.setOnClickListener {
-            findNavController().navigate(R.id.action_weatherInformationByDayFragment_to_chooseDayFragment)
+            val action = GeneralDayTodayFragmentDirections.actionWeatherInformationByDayFragmentToChooseDayFragment3(todayWeather)
+            findNavController().navigate(action)
         }
     }
 

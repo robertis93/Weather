@@ -60,7 +60,6 @@
                 android:layout_marginTop="18dp"
                 android:layout_marginEnd="20dp"
                 android:layout_marginBottom="18dp"
-                android:src="@drawable/sun_clouds"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
