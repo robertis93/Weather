@@ -44,14 +44,11 @@ class GeneralDayTodayViewModel @Inject constructor(
                     _errorMessage.value = R.string.error.toString()
                     weatherForecastResult?.let { getShortAndFullWeatherToday(it) }
                     weatherForecastResult?.let {
-                        getWithoutFirstElementSortedByDateForecastResponseList(
+                        getWithoutFirstElementAndUpdateFirstElementSortedByDateForecastResponseList(
                             it
                         )
                     }
                 }
-
-                // _errorMessage.value = R.string.error.toString()
-
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
                     _errorMessage.value = "Ошибка сервера"
@@ -110,7 +107,7 @@ class GeneralDayTodayViewModel @Inject constructor(
         }
     }
 
-    private fun getWithoutFirstElementSortedByDateForecastResponseList(
+    private fun getWithoutFirstElementAndUpdateFirstElementSortedByDateForecastResponseList(
         weatherForecastResult:
         WeatherForecastResult
     ) {
@@ -120,6 +117,9 @@ class GeneralDayTodayViewModel @Inject constructor(
             sortedByDateForecastResponseList.toMutableList()
                 .subList(1, sortedByDateForecastResponseList.size)
         _sortedWeatherForecastResult.postValue(withoutFirstElementSortedByDateForecastResponseList)
+        val firstElementWeatherForecastResponse = geWeatherForecastResponseGroupByDate(weatherForecastResult)[0]
+        val todayForecastResponseList = firstElementWeatherForecastResponse.forecastResponseList
+        _fullWeatherTodayResponse.value?.forecastResponseList = todayForecastResponseList
     }
 }
 

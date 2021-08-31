@@ -8,10 +8,12 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.github.aachartmodel.aainfographics.aachartcreator.*
 import com.github.aachartmodel.aainfographics.aaoptionsmodel.AAStyle
+import com.github.aachartmodel.aainfographics.aaoptionsmodel.AATooltip
+import com.google.android.play.core.internal.br
 import com.google.gson.internal.LinkedTreeMap
 import com.rob.weather.R
-import com.rob.weather.utils.BaseFragment
 import com.rob.weather.databinding.FragmetChooseDayBinding
+import com.rob.weather.utils.BaseFragment
 import com.squareup.picasso.Picasso
 
 class SelectedDayFragment :
@@ -43,7 +45,17 @@ class SelectedDayFragment :
             Picasso.get().load(iconUrl).into(weatherIcon)
             val list = (args.todayWeather.forecastResponseList)
 
+            val z = args.todayWeather
 
+val array = args.todayWeather.forecastResponseList.first().main.temp
+val array1 = args.todayWeather.forecastResponseList.last().main.temp
+          val listTime = mutableListOf<Int>()
+            for (element in args.todayWeather.forecastResponseList)
+                listTime.add(element.main.temp.toInt())
+
+            currentWeatherDescriptionTextview.text = listTime.size.toString()
+
+            for (element in args.todayWeather.forecastResponseList)
 
 
             arrowBackImageView.setOnClickListener {
@@ -70,6 +82,8 @@ class SelectedDayFragment :
             .zoomType(AAChartZoomType.XY)
             .touchEventEnabled(true)
             .yAxisVisible(false)
+            .legendEnabled(false)
+            .xAxisVisible(true)
             .backgroundColor("#4D63780D")
             .borderRadius(24f)
           //  .yAxisTitle("")
@@ -89,31 +103,30 @@ class SelectedDayFragment :
                 )
             )
 
-        val aaOptions: AAOptions =
-            aaChartModel.aa_toAAOptions()
-        aaOptions.plotOptions?.column?.groupPadding = 0f
+//        val aaOptions: AAOptions =
+//            aaChartModel.aa_toAAOptions()
+//        aaOptions.plotOptions?.column?.groupPadding = 0f
+//        return aaOptions
+
+        val aaTooltip = AATooltip()
+            .useHTML(true)
+            .formatter("""
+function () {
+        return ' 🌑  ${"https://openweathermap.org/img/w/" + args.todayWeather.icon + ".png" } < br /> '
+        + ' 25 ° ' 
+        }
+""")
+            .valueDecimals(2)//设置取值精确到小数点后几位//设置取值精确到小数点后几位
+            .backgroundColor("#FFFFFF")
+            .borderColor("#FFFFFF")
+            .style(AAStyle()
+                .color("#2A2D33")
+                .fontSize(16f))
+        val aaOptions = aaChartModel.aa_toAAOptions()
+        aaOptions.tooltip = aaTooltip
         return aaOptions
 
-        aaOptions.tooltip
-            ?.formatter("""
-        function () {
-                return ' 🌕 🌖 🌗 🌘 🌑 🌒 🌓 🌔 <br/> '
-                + ' Support JavaScript Function Just Right Now !!! <br/> '
-                + ' The Gold Price For <b>2020 '
-                +  this.x
-                + ' </b> Is <b> '
-                +  this.y
-                + ' </b> Dollars ';
-                }
-        """)
-            ?.valueDecimals(2)//设置取值精确到小数点后几位//设置取值精确到小数点后几位
-            ?.backgroundColor("#000000")
-            ?.borderColor("#000000")
-            ?.style(
-                AAStyle()
-                .color("#FFD700")
-                .fontSize(12f)
-            )
+
     }
 
 

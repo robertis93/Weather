@@ -112,7 +112,7 @@ data class FullWeatherToday(
     val windSpeed: Int,
     val humidity: Int,
     val clouds: Int,
-    val forecastResponseList: List<ForecastResponse>
+    var forecastResponseList: List<ForecastResponse>
 ) : Parcelable
 
 @Parcelize
