@@ -6,7 +6,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rob.weather.R
 import com.rob.weather.generaldaytoday.repository.WeatherForecastRepository
-import com.rob.weather.model.*
+import com.rob.weather.model.FullWeatherToday
+import com.rob.weather.model.SortedByDateWeatherForecastResult
+import com.rob.weather.model.WeatherForecastResult
+import com.rob.weather.model.WeatherToday
 import com.rob.weather.utils.Utils.fullDateFormat
 import com.rob.weather.utils.Utils.shortDateFormat
 import kotlinx.coroutines.Dispatchers
@@ -35,15 +38,24 @@ class GeneralDayTodayViewModel @Inject constructor(
 
     fun getAllWeatherForecast(city: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            val weatherForecastResult = weatherForecastRepository.getWeatherForecast(city)
-            if (weatherForecastResult != null) {
+            try {
+                val weatherForecastResult = weatherForecastRepository.getWeatherForecast(city)
                 withContext(Dispatchers.Main) {
                     _errorMessage.value = R.string.error.toString()
-                    getShortAndFullWeatherToday(weatherForecastResult)
-                    getWithoutFirstElementSortedByDateForecastResponseList(weatherForecastResult)
+                    weatherForecastResult?.let { getShortAndFullWeatherToday(it) }
+                    weatherForecastResult?.let {
+                        getWithoutFirstElementSortedByDateForecastResponseList(
+                            it
+                        )
+                    }
                 }
-            } else {
-                _errorMessage.value = R.string.error.toString()
+
+                // _errorMessage.value = R.string.error.toString()
+
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    _errorMessage.value = "Ошибка сервера"
+                }
             }
         }
     }
@@ -68,7 +80,17 @@ class GeneralDayTodayViewModel @Inject constructor(
         val forecastResponseList = weatherForecastResult.list
 
         val todayWeather = WeatherToday(date, cityName, temperature, description, iconCode)
-        val fullTodayWeather =  FullWeatherToday(date, cityName, temperature, description, iconCode, windSpeed.toInt(), humidity, precipitation, forecastResponseList)
+        val fullTodayWeather = FullWeatherToday(
+            date,
+            cityName,
+            temperature,
+            description,
+            iconCode,
+            windSpeed.toInt(),
+            humidity,
+            precipitation,
+            forecastResponseList
+        )
         _weatherToday.value = todayWeather
         _fullWeatherTodayResponse.value = fullTodayWeather
         _weatherToday.value!!.city = _weatherToday.value!!.city.replaceFirstChar {

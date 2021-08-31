@@ -54,7 +54,7 @@ class GeneralDayTodayFragment :
         }
 
         viewModel.errorMessage.observe(viewLifecycleOwner) { error ->
-            binding.currentTemperatureTextview.text = error
+            binding.currentWeatherDescriptionTextview.text = error
         }
 
         viewModel.fullWeatherTodayResponse.observe(viewLifecycleOwner){

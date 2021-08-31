@@ -2,13 +2,13 @@ package com.rob.weather.selectedday
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
+import android.view.*
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.github.aachartmodel.aainfographics.aachartcreator.*
+import com.github.aachartmodel.aainfographics.aaoptionsmodel.AAStyle
+import com.google.gson.internal.LinkedTreeMap
 import com.rob.weather.R
 import com.rob.weather.utils.BaseFragment
 import com.rob.weather.databinding.FragmetChooseDayBinding
@@ -16,9 +16,16 @@ import com.squareup.picasso.Picasso
 
 class SelectedDayFragment :
     BaseFragment<FragmetChooseDayBinding>(FragmetChooseDayBinding::inflate) {
+
+
+
     private val args by navArgs<SelectedDayFragmentArgs>()
 
     private val menu: Menu? = null
+
+    interface AAChartViewCallBack {
+        fun chartViewMoveOverEventMessage(aaChartView: AAChartView, messageModel: AAMoveOverEventMessageModel)
+    }
 
     @SuppressLint("ResourceAsColor")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -34,39 +41,83 @@ class SelectedDayFragment :
             val iconCode = args.todayWeather.icon
             val iconUrl = "https://openweathermap.org/img/w/" + iconCode + ".png"
             Picasso.get().load(iconUrl).into(weatherIcon)
+            val list = (args.todayWeather.forecastResponseList)
+
+
+
 
             arrowBackImageView.setOnClickListener {
                  findNavController().navigate(R.id.action_chooseDayFragment_to_weatherInformationByDayFragment4)
-
             }
 
-            //binding.aaChartView.aa_drawChartWithChartOptions(configureChartOptions1())
+            binding.aaChartView.aa_drawChartWithChartOptions(configureChartOptions1())
+//            binding.aaChartView.touchDelegate.onTouchEvent(MotionEvent.obtain())
+//            aaChartView!.delegate = self as AAChartViewDelegate
+            //Set AAChartView events delegate
+//            aaChartView!!.touchDelegate = self as AAChartViewDelegate
+//            //set AAChartModel support user touch event
+//            aaChartModel = aaChartModel!.touchEventEnabled(true)
         }
+
     }
 
-//    private fun configureChartOptions1(): AAOptions {
-//        val aaChartModel: AAChartModel = AAChartModel()
-//            .chartType(AAChartType.Line)
-//            .markerRadius(0f)
-//            .tooltipEnabled(false)
-//            .zoomType(AAChartZoomType.XY)
-//            .yAxisVisible(false)
-//            .backgroundColor("#4D63780D")
-//            .series(
-//                arrayOf(
-//                    AASeriesElement()
-//                        .color("#45A2FF")
-//                        .data(
-//                            arrayOf(7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9)
-//                        ),
-//                )
-//            )
-//
-//        val aaOptions: AAOptions =
-//            aaChartModel.aa_toAAOptions()
-//        aaOptions.plotOptions?.column?.groupPadding = 0f
-//        return aaOptions
-//    }
+    private fun configureChartOptions1(): AAOptions {
+        val aaChartModel: AAChartModel = AAChartModel()
+            .chartType(AAChartType.Spline)
+            .markerRadius(0f)
+         //   .dataLabelsEnabled(false)
+            .tooltipEnabled(false)
+            .zoomType(AAChartZoomType.XY)
+            .touchEventEnabled(true)
+            .yAxisVisible(false)
+            .backgroundColor("#4D63780D")
+            .borderRadius(24f)
+          //  .yAxisTitle("")
+            .series(
+                arrayOf(
+                    AASeriesElement()
+                        .color("#45A2FF")
+                        .data(
+                            arrayOf(
+                                arrayOf(9, 25),
+                                arrayOf(12, 20),
+                                arrayOf(15, 25),
+                                arrayOf(18, 20),
+                                arrayOf(21, 35)
+                            )
+                        ),
+                )
+            )
+
+        val aaOptions: AAOptions =
+            aaChartModel.aa_toAAOptions()
+        aaOptions.plotOptions?.column?.groupPadding = 0f
+        return aaOptions
+
+        aaOptions.tooltip
+            ?.formatter("""
+        function () {
+                return ' 🌕 🌖 🌗 🌘 🌑 🌒 🌓 🌔 <br/> '
+                + ' Support JavaScript Function Just Right Now !!! <br/> '
+                + ' The Gold Price For <b>2020 '
+                +  this.x
+                + ' </b> Is <b> '
+                +  this.y
+                + ' </b> Dollars ';
+                }
+        """)
+            ?.valueDecimals(2)//设置取值精确到小数点后几位//设置取值精确到小数点后几位
+            ?.backgroundColor("#000000")
+            ?.borderColor("#000000")
+            ?.style(
+                AAStyle()
+                .color("#FFD700")
+                .fontSize(12f)
+            )
+    }
+
+
+
 
     private fun showOption(id: Int) {
         val item: MenuItem? = menu?.findItem(id)
@@ -90,3 +141,12 @@ class SelectedDayFragment :
         return true
     }
 }
+class AAMoveOverEventMessageModel {
+    var name: String? = null
+    var x: Double? = null
+    var y: Double? = null
+    var category: String? = null
+    var offset: LinkedTreeMap<*, *>? = null
+    var index: Double? = null
+}
+
