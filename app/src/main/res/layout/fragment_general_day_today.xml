@@ -142,20 +142,24 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="20dp"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="16dp"
         android:fillViewport="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:context="com.example.myapplication.MainActivity">
 
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+
+
 
     </androidx.core.widget.NestedScrollView>
 </LinearLayout>

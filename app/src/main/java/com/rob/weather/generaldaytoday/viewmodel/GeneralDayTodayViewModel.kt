@@ -88,9 +88,10 @@ class GeneralDayTodayViewModel @Inject constructor(
             precipitation,
             forecastResponseList
         )
-        _weatherToday.value = todayWeather
         _fullWeatherTodayResponse.value = fullTodayWeather
-        _weatherToday.value!!.city = _weatherToday.value!!.city.replaceFirstChar {
+
+        _weatherToday.value = todayWeather
+              _weatherToday.value!!.city = _weatherToday.value!!.city.replaceFirstChar {
             if (it.isLowerCase()) it.titlecase(
                 Locale.getDefault()
             ) else it.toString()

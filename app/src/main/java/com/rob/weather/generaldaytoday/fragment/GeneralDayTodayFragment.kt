@@ -1,13 +1,19 @@
 package com.rob.weather.generaldaytoday.fragment
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.View
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
 import com.rob.weather.R
 import com.rob.weather.databinding.FragmentGeneralDayTodayBinding
 import com.rob.weather.generaldaytoday.adapters.GeneralDayTodayAdapter
@@ -15,7 +21,7 @@ import com.rob.weather.generaldaytoday.repository.WeatherForecastRepository
 import com.rob.weather.generaldaytoday.retrofit.RemoteDataSource
 import com.rob.weather.generaldaytoday.viewmodel.GeneralDayTodayViewModel
 import com.rob.weather.model.FullWeatherToday
-import com.rob.weather.model.WeatherForecastResult
+import com.rob.weather.selectedday.CustomMarker
 import com.rob.weather.utils.BaseFragment
 import com.rob.weather.utils.Utils.city
 import com.rob.weather.utils.Utils.id_key
@@ -34,8 +40,8 @@ class GeneralDayTodayFragment :
 
     @SuppressLint("ResourceAsColor")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        (context)
         super.onViewCreated(view, savedInstanceState)
+
 
         viewModel = ViewModelProvider(this, GeneralDayTodayViewModelFactory(WeatherForecastRepository(id_key,
             RemoteDataSource.RetrofitServices.getClient("https://api.openweathermap.org/")))
@@ -59,7 +65,9 @@ class GeneralDayTodayFragment :
 
         viewModel.fullWeatherTodayResponse.observe(viewLifecycleOwner){
             todayWeather = it
+            Log.i("myLogs", "initChart")
         }
+
 
         viewModel.weatherToday.observe(viewLifecycleOwner) {
             with(binding) {
@@ -72,6 +80,9 @@ class GeneralDayTodayFragment :
                 Picasso.get().load(iconUrl).into(weatherIcon)
             }
         }
+
+
+
 
         val toolbar = binding.toolbar
         toolbar.setOnMenuItemClickListener {
@@ -93,6 +104,8 @@ class GeneralDayTodayFragment :
             findNavController().navigate(action)
         }
     }
+
+
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.toolbar_menu, menu)

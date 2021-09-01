@@ -258,29 +258,13 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <com.github.aachartmodel.aainfographics.aachartcreator.AAChartView
-        android:id="@+id/aa_chart_view"
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/linecharttt"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginStart="24dp"
         android:layout_marginTop="20dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="25dp">
+        android:layout_marginBottom="24dp"
+        android:layout_marginStart="25dp"
+        android:layout_marginEnd="25dp"/>
 
-    </com.github.aachartmodel.aainfographics.aachartcreator.AAChartView>
-    <!--    <androidx.core.widget.NestedScrollView-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="match_parent"-->
-    <!--        android:layout_marginTop="20dp"-->
-    <!--        android:fillViewport="true"-->
-    <!--        app:layout_behavior="@string/appbar_scrolling_view_behavior"-->
-    <!--        tools:context="com.example.myapplication.MainActivity">-->
-
-    <!--        <androidx.recyclerview.widget.RecyclerView-->
-    <!--            android:id="@+id/recyclerView"-->
-    <!--            android:layout_width="match_parent"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:layout_margin="4dp" />-->
-
-    <!--    </androidx.core.widget.NestedScrollView>-->
 </LinearLayout>
