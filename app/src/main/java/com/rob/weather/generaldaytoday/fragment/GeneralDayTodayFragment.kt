@@ -21,7 +21,6 @@ import com.rob.weather.generaldaytoday.repository.WeatherForecastRepository
 import com.rob.weather.generaldaytoday.retrofit.RemoteDataSource
 import com.rob.weather.generaldaytoday.viewmodel.GeneralDayTodayViewModel
 import com.rob.weather.model.FullWeatherToday
-import com.rob.weather.selectedday.CustomMarker
 import com.rob.weather.utils.BaseFragment
 import com.rob.weather.utils.Utils.city
 import com.rob.weather.utils.Utils.id_key

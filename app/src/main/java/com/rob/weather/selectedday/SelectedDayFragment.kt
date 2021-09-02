@@ -7,22 +7,30 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.components.MarkerView
+import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.utils.MPPointF
-import com.google.gson.internal.LinkedTreeMap
 import com.rob.weather.R
 import com.rob.weather.databinding.FragmetChooseDayBinding
 import com.rob.weather.model.FullWeatherToday
 import com.rob.weather.utils.BaseFragment
 import com.rob.weather.utils.Utils
+import com.rob.weather.utils.Utils.fullDateFormat
 import com.squareup.picasso.Picasso
+import java.util.*
+import kotlin.collections.ArrayList
+
 
 class SelectedDayFragment :
     BaseFragment<FragmetChooseDayBinding>(FragmetChooseDayBinding::inflate) {
@@ -52,25 +60,71 @@ class SelectedDayFragment :
         }
     }
 
+    @SuppressLint("ResourceAsColor")
     private fun initSecChart(context: Context, todayWeather: FullWeatherToday) {
         val entries = ArrayList<Entry>()
+        val image: ImageView
+        val someResource = resources.getDrawable(R.drawable.ic_sun)
+        val iconCode = args.todayWeather.icon
+        val iconUrl = "https://openweathermap.org/img/w/" + iconCode + ".png"
+
+//        val bitmap: Bitmap = Glide
+//            .with(context)
+//            .asBitmap()
+//            .load("https://openweathermap.org/img/w/" + iconCode + ".png")
+//            .submit()
+//            .get()
+        // val k =  Picasso.get().load(iconUrl).into(bitmap)
+        val picasso = Picasso.get()
+
+
+        //val mTarget : Target()
+
+        val xValsDateLabel = ArrayList<String>()
+        val xValsOriginalMillis = ArrayList<Long>()
+        //test list
+//        xValsOriginalMillis.add(1554875423736L)
+//        xValsOriginalMillis.add(1555275494836L)
+//        xValsOriginalMillis.add(1585578525900L)
+//        xValsOriginalMillis.add(1596679626245L)
+//        xValsOriginalMillis.add(1609990727820L)
+
+              //  val listTime = mutableListOf<Int>()
+        for (element in todayWeather.forecastResponseList) {
+           xValsOriginalMillis.add(dateStringToDayTimeStamp(element.date))
+        }
 
         val listTime = mutableListOf<Int>()
         for (element in todayWeather.forecastResponseList) {
+            val iconCode = element.weather.first().icon
             listTime.add(element.main.temp.toInt())
-            entries.add(Entry((element.date).returnHour().toFloat(), element.main.temp.toFloat()))
+            entries.add(
+                Entry(
+                    (((element.date).returnHour())).toFloat(),
+                    element.main.temp.toFloat(),
+                    iconCode
+                )
+            )
         }
+        //testlist
+//        entries.add(Entry(0f, 5f))
+//        entries.add(Entry(1f, 10f))
+//        entries.add(Entry(2f, 15f))
+//        entries.add(Entry(3f, 20f))
+//        entries.add(Entry(4f, 5f))
+//        entries.add(Entry(5f, 10f))
 
         val vl = LineDataSet(entries, "")
+        vl.setDrawIcons(false)
 
         vl.mode = LineDataSet.Mode.CUBIC_BEZIER
-        vl.fillColor = R.color.design_default_color_on_secondary
         //  vl.color = R.color.line_blue
         vl.setDrawValues(false)
+        // vl.setValueTextColors()
         //  vl.setDrawFilled(true)
         vl.lineWidth = 3f
-        vl.fillColor = R.color.line_back
-        //vl.fillAlpha = R.color.material_on_background_emphasis_medium
+        vl.fillColor = R.color.line_blue
+
 
         // draw points as solid circles
         // vl.setCircleRadius(3f)
@@ -84,6 +138,8 @@ class SelectedDayFragment :
         lineChart.axisRight.isEnabled = false
         lineChart.axisLeft.isEnabled = false
         lineChart.setDrawGridBackground(false)
+        lineChart.setBackgroundResource(R.drawable.chart_rounded_corners)
+
         val j = 10f
         //  lineChart.xAxis.axisMaximum = j+0.1f
 
@@ -91,21 +147,60 @@ class SelectedDayFragment :
         lineChart.setPinchZoom(true)
 
 
+        //  val xAxisFormatter: AxisValueFormatter = HourAxisValueFormatter()
+        //  val xAxis: XAxis = lineChart.getXAxis()
+
+
+//        val xAxisFormatter: HourAxisValueFormatter = HourAxisValueFormatter()
+//        val xAxisss: XAxis = lineChart.xAxis
+        // xAxisss.valueFormatter = xAxisFormatter
+
+        // chart.setDrawYLabels(false);
+        // val xAxisFormatter: IAxisValueFormatter = DayAxisValueFormatter(lineChart)
+
         // if disabled, scaling can be done on x- and y-axis separately
 //        lineChart.setPinchZoom(false)
 //        lineChart.getLegend().setEnabled(false)
 //
 //        lineChart.setDrawGridBackground(false)
-//        val y: YAxis = lineChart.axisLeft
+        // chart.setDrawYLabels(false);
+       // val xAxisFormatter: ValueFormatter = CustomYAxisValueFormatter()
+        val xAxis: XAxis = lineChart.xAxis
+        xAxis.position = XAxis.XAxisPosition.BOTTOM
+        xAxis.setDrawGridLines(false)
+        xAxis.textSize = 12f
+        xAxis.setDrawAxisLine(false)
+        xAxis.gridDashPathEffect
+
+
+        for (i in xValsOriginalMillis.indices) {
+            val mm = xValsOriginalMillis[i] / 60 % 60
+            val hh = xValsOriginalMillis[i] / (60 * 60) % 24
+            val mDateTime = "$hh:$mm"
+            xValsDateLabel.add(mDateTime)
+        }
+        xAxis.valueFormatter = (MyValueFormatter(xValsDateLabel))
+
+        // xAxis.enableGridDashedLine(10f, 10f, 10f)
+        // CustomYAxisValueFormatter().getFormattedValue(100f, xAxis)
+        //xAxis.setValueFormatter(CustomYAxisValueFormatter().getFormattedValue(100f, xAxis))
+
+
+        // lineChart.setMarkerView(myMarkerView)
+//        xAxis.valueFormatter = MyXAxisValueFormatter()
+//        xAxis.setLabelsToSkip(0)
+
 //        y.setLabelCount(6, false)
 //        y.textColor = Color.WHITE
 //        y.setPosition(YAxis.YAxisLabelPosition.INSIDE_CHART)
-//        y.setDrawGridLines(false)
+        // x.setDrawGridLines(false)
 //        y.axisLineColor = Color.WHITE
 
         // no description text
         lineChart.description.isEnabled = false
         lineChart.setNoDataText("No forex yet!")
+        lineChart.legend
+        lineChart.solidColor
 
 //Part10
         //  lineChart.animateX(1800, Easing.EaseInExpo)
@@ -113,64 +208,8 @@ class SelectedDayFragment :
 //Part11
         val markerView = CustomMarker(context, R.layout.marker_view)
         lineChart.marker = markerView
+       // xAxis.valueFormatter = xAxisFormatter
     }
-
-    //
-
-//    private fun configureChartOptions1(): AAOptions {
-//        val aaChartModel: AAChartModel = AAChartModel()
-//            .chartType(AAChartType.Spline)
-//            .markerRadius(0f)
-//         //   .dataLabelsEnabled(false)
-//            .tooltipEnabled(false)
-//            .zoomType(AAChartZoomType.XY)
-//            .touchEventEnabled(true)
-//            .yAxisVisible(false)
-//            .legendEnabled(false)
-//            .xAxisVisible(true)
-//            .backgroundColor("#4D63780D")
-//            .borderRadius(24f)
-//          //  .yAxisTitle("")
-//            .series(
-//                arrayOf(
-//                    AASeriesElement()
-//                        .color("#45A2FF")
-//                        .data(
-//                            arrayOf(
-//                                arrayOf(9, 25),
-//                                arrayOf(12, 20),
-//                                arrayOf(15, 25),
-//                                arrayOf(18, 20),
-//                                arrayOf(21, 35)
-//                            )
-//                        ),
-//                )
-//            )
-//
-////        val aaOptions: AAOptions =
-////            aaChartModel.aa_toAAOptions()
-////        aaOptions.plotOptions?.column?.groupPadding = 0f
-////        return aaOptions
-//
-//        val aaTooltip = AATooltip()
-//            .useHTML(true)
-//            .formatter("""
-//function () {
-//        return ' 🌑  ${"https://openweathermap.org/img/w/" + args.todayWeather.icon + ".png" } < br /> '
-//        + ' 25 ° '
-//        }
-//""")
-//            .valueDecimals(2)//设置取值精确到小数点后几位//设置取值精确到小数点后几位
-//            .backgroundColor("#FFFFFF")
-//            .borderColor("#FFFFFF")
-//            .style(AAStyle()
-//                .color("#2A2D33")
-//                .fontSize(16f))
-//        val aaOptions = aaChartModel.aa_toAAOptions()
-//        aaOptions.tooltip = aaTooltip
-//        return aaOptions
-//    }
-
 
     private fun showOption(id: Int) {
         val item: MenuItem? = menu?.findItem(id)
@@ -195,34 +234,95 @@ class SelectedDayFragment :
     }
 }
 
-class AAMoveOverEventMessageModel {
-    var name: String? = null
-    var x: Double? = null
-    var y: Double? = null
-    var category: String? = null
-    var offset: LinkedTreeMap<*, *>? = null
-    var index: Double? = null
+//This one
+class CustomYAxisValueFormatter : ValueFormatter() {
+
+    override fun getFormattedValue(value: Float, axis: AxisBase?): String {
+        axis?.setLabelCount(2, true)
+        return ("$value$")
+    }
+
+    class MyAxisValueParametr : com.rob.weather.selectedday.IAxisValueFormatter {
+        override fun getFormattedValue(value: Float, axis: AxisBase?): String {
+            axis?.setLabelCount(3, true)
+            return "Day" + value
+        }
+    }
 }
+
+//class MyValueFormatter(private val xValsDateLabel: ArrayList<String>) : ValueFormatter() {
+//
+//    override fun getFormattedValue(value: Float): String {
+//        return value.toString()
+//    }
+//
+//    override fun getAxisLabel(value: Float, axis: AxisBase): String {
+//        if (value.toInt() >= 0 && value.toInt() <= xValsDateLabel.size - 1) {
+//            return xValsDateLabel[value.toInt()]
+//        } else {
+//            return ("").toString()
+//        }
+//    }
+//}
+
+interface IAxisValueFormatter {
+    /**
+     * Called when a value from an axis is to be formatted
+     * before being drawn. For performance reasons, avoid excessive calculations
+     * and memory allocations inside this method.
+     *
+     * @param value the value to be formatted
+     * @param axis  the axis the value belongs to
+     * @return
+     */
+    fun getFormattedValue(value: Float, axis: AxisBase?): String?
+}
+
 
 class CustomMarker(context: Context, layoutResource: Int) : MarkerView(context, layoutResource) {
     override fun refreshContent(entry: Entry?, highlight: Highlight?) {
+        val weatherIcon = findViewById<ImageView>(R.id.weather_icon)
+        val iconCode = entry?.data
+        val iconUrl = "https://openweathermap.org/img/w/" + iconCode + ".png"
+        Picasso.get().load(iconUrl).into(weatherIcon)
         val value = entry?.y?.toDouble() ?: 0.0
-        var resText = ""
-        if (value.toString().length > 8) {
-            resText = "Val: " + value.toString().substring(0, 7)
-        } else {
-            resText = "Val: " + value.toString()
-        }
-        //tvPrice.text = resText
+        var resText = value.toInt().toString() + "°"
+        findViewById<TextView>(R.id.temperature_textview).text = resText
         super.refreshContent(entry, highlight)
     }
 
     override fun getOffsetForDrawingAtPoint(xpos: Float, ypos: Float): MPPointF {
-        return MPPointF(-width / 2f, -height - 10f)
+        val offset = offset.x
+        val w = width.toFloat()
+        val h = height.toFloat()
+        val a = xpos
+        return if (ypos < 200) {
+            MPPointF(-width + 150f, -height + 200f)
+        } else MPPointF(-width - 20f, -height + 40f)
     }
 }
 
 fun String.returnHour(): String {
     val changedDate = Utils.fullDateFormat.parse(this)
     return Utils.hourFormat.format(changedDate)
+}
+
+class MyValueFormatter(private val xValsDateLabel: ArrayList<String>) : ValueFormatter() {
+
+    override fun getFormattedValue(value: Float): String {
+        return value.toString()
+    }
+
+    override fun getAxisLabel(value: Float, axis: AxisBase): String {
+        if (value.toInt() >= 0 && value.toInt() <= xValsDateLabel.size - 1) {
+            return xValsDateLabel[value.toInt()]
+        } else {
+            return ("").toString()
+        }
+    }
+}
+
+fun dateStringToDayTimeStamp(date: String): Long {
+    val day: Date = fullDateFormat.parse(date)
+    return day.time
 }
