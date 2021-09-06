@@ -1,38 +1,34 @@
 package com.rob.weather.generaldaytoday.fragment
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.View
-import androidx.core.content.ContentProviderCompat.requireContext
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.github.mikephil.charting.data.Entry
-import com.github.mikephil.charting.data.LineData
-import com.github.mikephil.charting.data.LineDataSet
 import com.rob.weather.R
 import com.rob.weather.databinding.FragmentGeneralDayTodayBinding
 import com.rob.weather.generaldaytoday.adapters.GeneralDayTodayAdapter
-import com.rob.weather.generaldaytoday.repository.WeatherForecastRepository
-import com.rob.weather.generaldaytoday.retrofit.RemoteDataSource
 import com.rob.weather.generaldaytoday.viewmodel.GeneralDayTodayViewModel
 import com.rob.weather.model.FullWeatherToday
 import com.rob.weather.utils.BaseFragment
 import com.rob.weather.utils.Utils.city
-import com.rob.weather.utils.Utils.id_key
 import com.squareup.picasso.Picasso
-import javax.inject.Inject
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class GeneralDayTodayFragment :
     BaseFragment<FragmentGeneralDayTodayBinding>(FragmentGeneralDayTodayBinding::inflate) {
+/*    @Inject
+    lateinit var generalDayTodayViewModelFactory: GeneralDayTodayViewModelFactory*/
 
-   lateinit var todayWeather : FullWeatherToday
-    @Inject
-    lateinit var viewModel: GeneralDayTodayViewModel
+    val viewModel: GeneralDayTodayViewModel by viewModels()
+
+    lateinit var todayWeather : FullWeatherToday
+
 
     private val dialog = ShowDialogForChangingCity()
     lateinit var picasso : Picasso
@@ -41,10 +37,15 @@ class GeneralDayTodayFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+//        viewModel = ViewModelProvider(
+//            this,
+//            generalDayTodayViewModelFactory
+//        ).get(GeneralDayTodayViewModel::class.java)
 
-        viewModel = ViewModelProvider(this, GeneralDayTodayViewModelFactory(WeatherForecastRepository(id_key,
+
+/*        viewModel = ViewModelProvider(this, GeneralDayTodayViewModelFactory(WeatherForecastRepository(id_key,
             RemoteDataSource.RetrofitServices.getClient("https://api.openweathermap.org/")))
-        ).get(GeneralDayTodayViewModel::class.java)
+        ).get(GeneralDayTodayViewModel::class.java)*/
 
         picasso = Picasso.Builder(requireContext()).build()
 

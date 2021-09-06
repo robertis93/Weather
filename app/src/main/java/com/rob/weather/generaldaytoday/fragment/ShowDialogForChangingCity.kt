@@ -6,8 +6,11 @@ import androidx.appcompat.app.AlertDialog
 import com.rob.weather.utils.Utils
 import com.rob.weather.databinding.SearchCityDialogBinding
 import com.rob.weather.generaldaytoday.viewmodel.GeneralDayTodayViewModel
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class ShowDialogForChangingCity() {
+@Singleton
+class ShowDialogForChangingCity @Inject constructor() {
     fun showDialog(context: Context, viewModel: GeneralDayTodayViewModel) {
         val builder = AlertDialog.Builder(context)
         val layoutInflater = LayoutInflater.from(context)

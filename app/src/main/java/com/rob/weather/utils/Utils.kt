@@ -13,7 +13,7 @@ object Utils {
     @SuppressLint("ConstantLocale")
     val shortDateFormat = SimpleDateFormat("dd MMMM, EEE", Locale.getDefault())
     @SuppressLint("ConstantLocale", "SimpleDateFormat")
-    val timeFormat = SimpleDateFormat("HH:mm")
+    val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
     val hourFormat = SimpleDateFormat("HH", Locale.getDefault())
 
 }

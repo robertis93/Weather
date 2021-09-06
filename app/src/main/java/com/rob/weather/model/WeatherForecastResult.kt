@@ -1,11 +1,15 @@
 package com.rob.weather.model
 
 import android.os.Parcelable
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 
+@Entity
 @Parcelize
 data class WeatherForecastResult(
+    @PrimaryKey
     val city: City,
     val cnt: Int,
     val cod: String,
@@ -23,7 +27,7 @@ data class City(
 
 @Parcelize
 data class ForecastResponse(
-    @SerializedName("dt") var dt: Int,
+    @SerializedName("dt") var dt: Long,
     @SerializedName("main") var main: Main,
     @SerializedName("weather") var weather: List<Weather>,
     @SerializedName("clouds") var clouds: Clouds,

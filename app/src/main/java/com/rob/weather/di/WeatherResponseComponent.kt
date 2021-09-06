@@ -1,9 +1,6 @@
-package com.rob.weather.generaldaytoday.fragment
+package com.rob.weather.di
 
-import com.rob.weather.generaldaytoday.repository.WeatherForecastRepository
-import com.rob.weather.generaldaytoday.retrofit.RemoteDataSource
-import com.rob.weather.generaldaytoday.viewmodel.GeneralDayTodayViewModel
-import com.squareup.picasso.Picasso
+import com.rob.weather.generaldaytoday.fragment.GeneralDayTodayFragment
 import dagger.Component
 import javax.inject.Singleton
 

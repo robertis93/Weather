@@ -1,15 +1,9 @@
-package com.rob.weather.generaldaytoday.fragment
+package com.rob.weather.di
 
-import android.content.Context
-import com.rob.weather.generaldaytoday.repository.WeatherForecastRepository
-import com.rob.weather.generaldaytoday.retrofit.RemoteDataSource
+import com.rob.weather.repository.WeatherForecastRepository
 import com.rob.weather.generaldaytoday.viewmodel.GeneralDayTodayViewModel
-import com.squareup.picasso.OkHttp3Downloader
-import com.squareup.picasso.Picasso
 import dagger.Module
 import dagger.Provides
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 
