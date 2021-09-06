@@ -6,10 +6,8 @@ import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 
-@Entity
 @Parcelize
 data class WeatherForecastResult(
-    @PrimaryKey
     val city: City,
     val cnt: Int,
     val cod: String,

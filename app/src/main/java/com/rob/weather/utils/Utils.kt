@@ -7,6 +7,7 @@ import java.util.*
 object Utils {
     var city = "Тамбов"
     var id_key = "2e65127e909e178d0af311a81f39948c"
+    const val BASE_URL = "https://api.openweathermap.org/"
 
     @SuppressLint("ConstantLocale")
     val fullDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())

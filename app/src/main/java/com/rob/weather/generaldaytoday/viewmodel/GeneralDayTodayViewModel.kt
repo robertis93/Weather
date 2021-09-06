@@ -4,13 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.room.Room
 import com.rob.weather.R
-import com.rob.weather.datasource.localdatasource.WeatherDataBase
 import com.rob.weather.datasource.retrofit.DataSource
-import com.rob.weather.datasource.retrofit.FakeDataSource
-import com.rob.weather.datasource.retrofit.RemoteDataSource
-import com.rob.weather.generaldaytoday.fragment.ShowDialogForChangingCity
 import com.rob.weather.model.FullWeatherToday
 import com.rob.weather.model.SortedByDateWeatherForecastResult
 import com.rob.weather.model.WeatherForecastResult
@@ -26,15 +21,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class GeneralDayTodayViewModel @Inject constructor(
-    val dialog: ShowDialogForChangingCity,
     val dataSource: DataSource,
-    val db: WeatherDataBase
-    //private val weatherForecastRepository: WeatherForecastRepository
 ) : ViewModel() {
 
-    //val dataSource: DataSource = FakeDataSource()
-    //private val dialog = ShowDialogForChangingCity()
-    //val repository = WeatherForecastRepository(Utils.id_key, RemoteDataSource.RetrofitServices.getClient())
     private val _errorMessage = MutableLiveData<String>()
     val errorMessage: LiveData<String> = _errorMessage
     private val _sortedWeatherForecastResult =

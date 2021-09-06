@@ -32,10 +32,11 @@ import com.rob.weather.utils.Utils
 import com.rob.weather.utils.Utils.fullDateFormat
 import com.rob.weather.utils.Utils.timeFormat
 import com.squareup.picasso.Picasso
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 import kotlin.collections.ArrayList
 
-
+@AndroidEntryPoint
 class SelectedDayFragment :
     BaseFragment<FragmetChooseDayBinding>(FragmetChooseDayBinding::inflate) {
 
@@ -314,14 +315,4 @@ class MyValueFormatter(private val xValsDateLabel: ArrayList<String>) : ValueFor
             return ""
         }
     }
-}
-
-fun dateStringToDayTimeStamp(date: String): Long {
-    val day: Date = fullDateFormat.parse(date)
-    return day.time
-}
-
-fun timestampToDisplayTime(dayTimeStamp: Int): String {
-    val currentDate = Date(dayTimeStamp.toLong())
-    return timeFormat.format(currentDate)
 }
