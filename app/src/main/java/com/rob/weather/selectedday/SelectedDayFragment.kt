@@ -29,14 +29,9 @@ import com.rob.weather.databinding.FragmetChooseDayBinding
 import com.rob.weather.model.FullWeatherToday
 import com.rob.weather.utils.BaseFragment
 import com.rob.weather.utils.Utils
-import com.rob.weather.utils.Utils.fullDateFormat
-import com.rob.weather.utils.Utils.timeFormat
 import com.squareup.picasso.Picasso
-import dagger.hilt.android.AndroidEntryPoint
-import java.util.*
 import kotlin.collections.ArrayList
 
-@AndroidEntryPoint
 class SelectedDayFragment :
     BaseFragment<FragmetChooseDayBinding>(FragmetChooseDayBinding::inflate) {
 

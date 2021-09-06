@@ -1,27 +1,31 @@
 package com.rob.weather.generaldaytoday.fragment
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.View
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.rob.weather.App
 import com.rob.weather.R
 import com.rob.weather.databinding.FragmentGeneralDayTodayBinding
+import com.rob.weather.di.WeatherAppComponent
 import com.rob.weather.generaldaytoday.adapters.GeneralDayTodayAdapter
 import com.rob.weather.generaldaytoday.viewmodel.GeneralDayTodayViewModel
 import com.rob.weather.model.FullWeatherToday
 import com.rob.weather.utils.BaseFragment
 import com.rob.weather.utils.Utils.city
 import com.squareup.picasso.Picasso
-import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-@AndroidEntryPoint
 class GeneralDayTodayFragment :
     BaseFragment<FragmentGeneralDayTodayBinding>(FragmentGeneralDayTodayBinding::inflate) {
-    val viewModel: GeneralDayTodayViewModel by viewModels()
+    @Inject
+    lateinit var generalDayTodayViewModelFactory: GeneralDayTodayViewModelFactory
+    lateinit var generalDayTodayViewModel: GeneralDayTodayViewModel
     lateinit var todayWeather: FullWeatherToday
     private val dialog = ShowDialogForChangingCity()
     lateinit var picasso: Picasso
@@ -29,26 +33,32 @@ class GeneralDayTodayFragment :
     @SuppressLint("ResourceAsColor")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        generalDayTodayViewModel = ViewModelProvider(
+            this,
+            generalDayTodayViewModelFactory
+        ).get(GeneralDayTodayViewModel::class.java)
+
         picasso = Picasso.Builder(requireContext()).build()
-        viewModel.getAllWeatherForecast(city)
+        generalDayTodayViewModel.getAllWeatherForecast(city)
         val allDaysWeatherListAdapter = GeneralDayTodayAdapter()
         val recyclerView = binding.recyclerView
         recyclerView.adapter = allDaysWeatherListAdapter
         recyclerView.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        viewModel.sortedWeatherForecastResult.observe(viewLifecycleOwner) { list ->
+        generalDayTodayViewModel.sortedWeatherForecastResult.observe(viewLifecycleOwner) { list ->
             allDaysWeatherListAdapter.setData(list)
         }
 
-        viewModel.errorMessage.observe(viewLifecycleOwner) { error ->
+        generalDayTodayViewModel.errorMessage.observe(viewLifecycleOwner) { error ->
             binding.currentWeatherDescriptionTextview.text = error
         }
 
-        viewModel.fullWeatherTodayResponse.observe(viewLifecycleOwner) {
+        generalDayTodayViewModel.fullWeatherTodayResponse.observe(viewLifecycleOwner) {
             todayWeather = it
         }
 
-        viewModel.weatherToday.observe(viewLifecycleOwner) {
+        generalDayTodayViewModel.weatherToday.observe(viewLifecycleOwner) {
             with(binding) {
                 currentDateTextView.text = it.date
                 currentTemperatureTextview.text = it.temperature
@@ -64,7 +74,7 @@ class GeneralDayTodayFragment :
         toolbar.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.action_search -> {
-                    dialog.showDialog(requireContext(), viewModel)
+                    dialog.showDialog(requireContext(), generalDayTodayViewModel)
                     true
                 }
                 R.id.action_loader -> {
@@ -87,6 +97,11 @@ class GeneralDayTodayFragment :
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.toolbar_menu, menu)
         super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        (activity?.application as App).component.inject(this)
     }
 }
 

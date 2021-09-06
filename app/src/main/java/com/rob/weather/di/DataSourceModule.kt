@@ -4,13 +4,12 @@ import com.rob.weather.datasource.retrofit.DataSource
 import com.rob.weather.datasource.retrofit.RemoteDataSource
 import dagger.Module
 import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
-@InstallIn(SingletonComponent::class)
 @Module
 class DataSourceModule {
     @Provides
+    @Singleton
     fun provideDataSource(): DataSource {
         return RemoteDataSource()
     }

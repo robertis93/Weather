@@ -12,14 +12,12 @@ import com.rob.weather.model.WeatherForecastResult
 import com.rob.weather.model.WeatherToday
 import com.rob.weather.utils.Utils.fullDateFormat
 import com.rob.weather.utils.Utils.shortDateFormat
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.*
 import javax.inject.Inject
 
-@HiltViewModel
 class GeneralDayTodayViewModel @Inject constructor(
     val dataSource: DataSource,
 ) : ViewModel() {
