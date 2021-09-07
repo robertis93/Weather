@@ -67,6 +67,8 @@ class GeneralDayTodayFragment :
                 toolbarToday.text = it.city
                 val iconCode = it.icon
                 val iconUrl = "https://openweathermap.org/img/w/" + iconCode + ".png"
+                binding.weatherIcon.visibility = View.VISIBLE
+                binding.progressBar.visibility = View.GONE
                 Picasso.get().load(iconUrl).into(weatherIcon)
             }
         }
@@ -95,7 +97,6 @@ class GeneralDayTodayFragment :
         }
 
         binding.swipeRefresh.setOnRefreshListener(OnRefreshListener {
-
             generalDayTodayViewModel.getAllWeatherForecast(city)
             binding.swipeRefresh.isRefreshing = false
         })

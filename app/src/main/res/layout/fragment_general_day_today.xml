@@ -116,13 +116,24 @@
             android:layout_height="24dp"
             android:layout_marginBottom="24dp"
             android:fontFamily="@font/manrope_regular"
-            android:text="Ясно, ощущается как 32°"
+            android:text=""
             android:textColor="@color/white"
             android:textSize="14sp"
             android:textFontWeight="600"
             app:layout_constraintBottom_toBottomOf="@+id/blueRectangleView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="151dp"
+            android:visibility="visible"
+            android:indeterminateTint="@color/white"
+            app:layout_constraintBottom_toBottomOf="@+id/blueRectangleView"
+            app:layout_constraintEnd_toEndOf="@+id/weather_icon"
+            app:layout_constraintStart_toStartOf="@+id/weather_icon" />
 
         <ImageView
             android:id="@+id/weather_icon"
@@ -131,6 +142,7 @@
             android:layout_marginStart="112dp"
             android:layout_marginEnd="111dp"
             android:scaleType="fitCenter"
+            android:visibility="invisible"
             android:layout_marginBottom="6dp"
             app:layout_constraintBottom_toTopOf="@+id/current_temperature_textview"
             app:layout_constraintEnd_toEndOf="@+id/blueRectangleView"
