@@ -9,10 +9,10 @@ import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
 import com.rob.weather.App
 import com.rob.weather.R
 import com.rob.weather.databinding.FragmentGeneralDayTodayBinding
-import com.rob.weather.di.WeatherAppComponent
 import com.rob.weather.generaldaytoday.adapters.GeneralDayTodayAdapter
 import com.rob.weather.generaldaytoday.viewmodel.GeneralDayTodayViewModel
 import com.rob.weather.model.FullWeatherToday
@@ -20,6 +20,7 @@ import com.rob.weather.utils.BaseFragment
 import com.rob.weather.utils.Utils.city
 import com.squareup.picasso.Picasso
 import javax.inject.Inject
+
 
 class GeneralDayTodayFragment :
     BaseFragment<FragmentGeneralDayTodayBinding>(FragmentGeneralDayTodayBinding::inflate) {
@@ -92,6 +93,12 @@ class GeneralDayTodayFragment :
                 )
             findNavController().navigate(action)
         }
+
+        binding.swipeRefresh.setOnRefreshListener(OnRefreshListener {
+
+            generalDayTodayViewModel.getAllWeatherForecast(city)
+            binding.swipeRefresh.isRefreshing = false
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
