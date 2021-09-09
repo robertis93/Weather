@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rob.weather.R
-import com.rob.weather.datasource.retrofit.DataSource
+import com.rob.weather.datasource.retrofit.WeatherDataSource
 import com.rob.weather.model.FullWeatherToday
 import com.rob.weather.model.SortedByDateWeatherForecastResult
 import com.rob.weather.model.WeatherForecastResult
@@ -16,11 +16,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.*
-import javax.inject.Inject
 
-class GeneralDayTodayViewModel @Inject constructor(
-    val dataSource: DataSource,
-) : ViewModel() {
+class GeneralDayTodayViewModel (val dataSource: WeatherDataSource) : ViewModel() {
 
     private val _errorMessage = MutableLiveData<String>()
     val errorMessage: LiveData<String> = _errorMessage
@@ -41,11 +38,10 @@ class GeneralDayTodayViewModel @Inject constructor(
                 val weatherForecastResult = dataSource.getWeatherForecastResponse(city)
                 withContext(Dispatchers.Main) {
                     _errorMessage.value = R.string.error.toString()
-                    weatherForecastResult?.let { getShortAndFullWeatherToday(it) }
-                    weatherForecastResult?.let {
-                        getWithoutFirstElementAndUpdateFirstElementSortedByDateForecastResponseList(
-                            it
-                        )
+                    weatherForecastResult.let { getShortAndFullWeatherToday(it) }
+                    weatherForecastResult.let {
+                        getWithoutFirstElementSortedByDateForecastResponseList(it)
+                        updateFullWeatherTodayResponse(weatherForecastResult)
                     }
                 }
             } catch (e: Exception) {
@@ -90,7 +86,7 @@ class GeneralDayTodayViewModel @Inject constructor(
         _fullWeatherTodayResponse.value = fullTodayWeather
 
         _weatherToday.value = todayWeather
-              _weatherToday.value!!.city = _weatherToday.value!!.city.replaceFirstChar {
+        _weatherToday.value!!.city = _weatherToday.value!!.city.replaceFirstChar {
             if (it.isLowerCase()) it.titlecase(
                 Locale.getDefault()
             ) else it.toString()
@@ -107,7 +103,7 @@ class GeneralDayTodayViewModel @Inject constructor(
         }
     }
 
-    private fun getWithoutFirstElementAndUpdateFirstElementSortedByDateForecastResponseList(
+    private fun getWithoutFirstElementSortedByDateForecastResponseList(
         weatherForecastResult:
         WeatherForecastResult
     ) {
@@ -117,7 +113,11 @@ class GeneralDayTodayViewModel @Inject constructor(
             sortedByDateForecastResponseList.toMutableList()
                 .subList(1, sortedByDateForecastResponseList.size)
         _sortedWeatherForecastResult.postValue(withoutFirstElementSortedByDateForecastResponseList)
-        val firstElementWeatherForecastResponse = geWeatherForecastResponseGroupByDate(weatherForecastResult)[0]
+    }
+
+    private fun updateFullWeatherTodayResponse(weatherForecastResult: WeatherForecastResult) {
+        val firstElementWeatherForecastResponse =
+            geWeatherForecastResponseGroupByDate(weatherForecastResult)[0]
         val todayForecastResponseList = firstElementWeatherForecastResponse.forecastResponseList
         _fullWeatherTodayResponse.value?.forecastResponseList = todayForecastResponseList
     }

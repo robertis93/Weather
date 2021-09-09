@@ -55,7 +55,7 @@ class SelectedDayFragment :
             Picasso.get().load(iconUrl).into(weatherIcon)
 
             arrowBackImageView.setOnClickListener {
-                findNavController().navigate(R.id.action_chooseDayFragment_to_weatherInformationByDayFragment4)
+                findNavController().popBackStack()
             }
         }
     }
@@ -186,7 +186,7 @@ class SelectedDayFragment :
             val mDateTime = "$hh:$mm" + "0"
             xValsDateLabel.add(mDateTime)
         }
-        xAxis.valueFormatter = (MyValueFormatter(xValsDateLabel))
+       // xAxis.valueFormatter = (MyValueFormatter(xValsDateLabel))
 
 
         // xAxis.enableGridDashedLine(10f, 10f, 10f)

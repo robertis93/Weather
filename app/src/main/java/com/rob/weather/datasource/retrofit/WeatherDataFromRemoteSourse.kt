@@ -10,12 +10,11 @@ import retrofit2.http.Query
 import javax.inject.Inject
 import javax.inject.Singleton
 
-interface DataSource {
+interface WeatherDataSource {
     suspend fun getWeatherForecastResponse(q: String): WeatherForecastResult
 }
 
-@Singleton
-class RemoteDataSource @Inject constructor() : DataSource {
+class WeatherDataFromRemoteSource @Inject constructor() : WeatherDataSource {
     private interface RetrofitServices {
         @GET("data/2.5/forecast?")
         suspend fun getWeatherForecastResponse(

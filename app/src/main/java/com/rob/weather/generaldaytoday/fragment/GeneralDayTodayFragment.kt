@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.View
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
@@ -21,24 +21,23 @@ import com.rob.weather.utils.Utils.city
 import com.squareup.picasso.Picasso
 import javax.inject.Inject
 
-
 class GeneralDayTodayFragment :
     BaseFragment<FragmentGeneralDayTodayBinding>(FragmentGeneralDayTodayBinding::inflate) {
     @Inject
     lateinit var generalDayTodayViewModelFactory: GeneralDayTodayViewModelFactory
-    lateinit var generalDayTodayViewModel: GeneralDayTodayViewModel
+    val generalDayTodayViewModel: GeneralDayTodayViewModel by viewModels{ generalDayTodayViewModelFactory }
     lateinit var todayWeather: FullWeatherToday
     private val dialog = ShowDialogForChangingCity()
     lateinit var picasso: Picasso
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        (activity?.application as App).component.inject(this)
+    }
+
     @SuppressLint("ResourceAsColor")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        generalDayTodayViewModel = ViewModelProvider(
-            this,
-            generalDayTodayViewModelFactory
-        ).get(GeneralDayTodayViewModel::class.java)
 
         picasso = Picasso.Builder(requireContext()).build()
         generalDayTodayViewModel.getAllWeatherForecast(city)
@@ -77,7 +76,8 @@ class GeneralDayTodayFragment :
         toolbar.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.action_search -> {
-                    dialog.showDialog(requireContext(), generalDayTodayViewModel)
+                    findNavController().navigate(R.id.action_weatherInformationByDayFragment_to_cityListFragment)
+                    //dialog.showDialog(requireContext(), generalDayTodayViewModel)
                     true
                 }
                 R.id.action_loader -> {
@@ -107,9 +107,12 @@ class GeneralDayTodayFragment :
         super.onCreateOptionsMenu(menu, inflater)
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        (activity?.application as App).component.inject(this)
+    override fun onStop() {
+        super.onStop()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
     }
 }
 

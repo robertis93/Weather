@@ -14,6 +14,9 @@
         <action
             android:id="@+id/action_weatherInformationByDayFragment_to_chooseDayFragment3"
             app:destination="@id/chooseDayFragment" />
+        <action
+            android:id="@+id/action_weatherInformationByDayFragment_to_cityListFragment"
+            app:destination="@id/cityListFragment" />
     </fragment>
     <fragment
         android:id="@+id/chooseDayFragment"
@@ -26,5 +29,14 @@
         <argument
             android:name="today_weather"
             app:argType="com.rob.weather.model.FullWeatherToday" />
+    </fragment>
+    <fragment
+        android:id="@+id/cityListFragment"
+        android:name="com.rob.weather.citylist.fragment.CityListFragment"
+        android:label="city_list_fragment"
+        tools:layout="@layout/city_list_fragment" >
+        <action
+            android:id="@+id/action_cityListFragment_to_weatherInformationByDayFragment"
+            app:destination="@id/weatherInformationByDayFragment" />
     </fragment>
 </navigation>

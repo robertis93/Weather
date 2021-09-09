@@ -1,16 +1,18 @@
 package com.rob.weather.di
 
-import com.rob.weather.datasource.retrofit.DataSource
-import com.rob.weather.datasource.retrofit.RemoteDataSource
+import com.rob.weather.datasource.retrofit.WeatherDataFromRemoteSource
+import com.rob.weather.datasource.retrofit.WeatherDataSource
 import dagger.Module
 import dagger.Provides
+import dagger.multibindings.IntoSet
 import javax.inject.Singleton
 
 @Module
 class DataSourceModule {
+
+   // @IntoSet
     @Provides
-    @Singleton
-    fun provideDataSource(): DataSource {
-        return RemoteDataSource()
+    fun provideDataSource(): WeatherDataSource {
+        return WeatherDataFromRemoteSource()
     }
 }
