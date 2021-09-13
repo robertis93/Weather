@@ -46,7 +46,7 @@ class CityListFragment :
         val swipeToDeleteCallback = object : SwipeToDeleteCallback() {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val pos = viewHolder.adapterPosition
-                    //viewModel.deleteCity(pos)
+                    viewModel.deleteCity(pos)
                 //  modelList.removeAt(pos)
                 cityAdapter.notifyItemRemoved(pos)
             }
@@ -55,7 +55,7 @@ class CityListFragment :
         val itemTouchHelper = ItemTouchHelper(swipeToDeleteCallback)
         itemTouchHelper.attachToRecyclerView(binding.recyclerview)
 
-        viewModel.cityList.observe(viewLifecycleOwner) { weatherInCities ->
+        viewModel.weatherCityList.observe(viewLifecycleOwner) { weatherInCities ->
             cityAdapter.setData(weatherInCities)
            }
 
