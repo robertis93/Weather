@@ -36,23 +36,6 @@ class CityListViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
-    // var cityDao: CityDao = WeatherDataBase.getDataBase(application).cityDao()
-
-    // val allCities = repository.getAllCities()
-//
-//    init {
-//        getListAlarm()
-//        for(oneCity in cityList.value!!){
-//            getAllWeatherForecast(oneCity.name)
-//        }
-//    }
-
-    fun getListCities() {
-        viewModelScope.launch(Dispatchers.IO) {
-           _cityList.value =  repository.getAllCities()
-        }
-    }
-
     fun getAllWeatherForecast(city: List<City>?) {
         viewModelScope.launch(Dispatchers.IO) {
             if (city != null) {
@@ -99,20 +82,21 @@ class CityListViewModel(application: Application) : AndroidViewModel(application
             _cityList.value = cityMutableList
             viewModelScope.launch {
                 repository.insert(city)
+              //  getAllWeatherForecast(cityList.value)
             }
         }
     }
 
     fun deleteCity(pos: Int) {
-        _cityList.value?.let { listCity ->
+        _weatherCityList.value?.let { listCity ->
             val cityMutableList = listCity.toMutableList()
-            val city = cityMutableList[pos]
+            val cityName = cityMutableList[pos]
             cityMutableList.removeAt(pos)
-            _cityList.value = cityMutableList
+            _weatherCityList.value = cityMutableList
             viewModelScope.launch {
+                val city = City(cityName.name)
                 repository.deleteCity(city)
             }
-
         }
     }
 }

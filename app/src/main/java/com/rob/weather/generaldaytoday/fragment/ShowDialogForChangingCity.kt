@@ -3,6 +3,7 @@ package com.rob.weather.generaldaytoday.fragment
 import android.content.Context
 import android.view.LayoutInflater
 import androidx.appcompat.app.AlertDialog
+import com.rob.weather.citylist.fragment.CityListFragment
 import com.rob.weather.citylist.viewmodel.CityListViewModel
 import com.rob.weather.utils.Utils
 import com.rob.weather.databinding.SearchCityDialogBinding
