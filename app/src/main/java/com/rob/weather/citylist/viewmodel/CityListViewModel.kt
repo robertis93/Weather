@@ -2,47 +2,69 @@ package com.rob.weather.citylist.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.*
-import com.rob.weather.R
-import com.rob.weather.citylist.database.CityDao
 import com.rob.weather.citylist.database.WeatherDataBase
+import com.rob.weather.citylist.database.WeatherRepository
 import com.rob.weather.citylist.model.City
 import com.rob.weather.citylist.model.WeatherCity
-import com.rob.weather.datasource.retrofit.WeatherDataSource
 import com.rob.weather.model.WeatherForecastResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class CityListViewModel(private val dataSource: WeatherDataSource, private val cityDao: CityDao) : ViewModel() {
+class CityListViewModel(application: Application) : AndroidViewModel(application) {
+    //val dataSource: WeatherDataSource
 
+    private val repository: WeatherRepository
     private val _cityList = MutableLiveData<List<City>>()
     val cityList: LiveData<List<City>> = _cityList
-   // var cityDao: CityDao = WeatherDataBase.getDataBase(application).cityDao()
-    
-
-    private val _weatherCityList = MutableLiveData<List<WeatherCity>>()
-    val weatherCityList: LiveData<List<WeatherCity>> = _weatherCityList
 
     init {
-        getListAlarm()
-        for(oneCity in cityList.value!!){
-            getAllWeatherForecast(oneCity.name)
+        val wordsDao = WeatherDataBase.getDataBase(application).cityDao()
+        repository = WeatherRepository(wordsDao)
+        viewModelScope.launch(Dispatchers.IO) {
+
+            withContext(Dispatchers.Main) {
+
+                _cityList.value = repository.getAllCities()
+            }
         }
     }
 
 
 
+    // var cityDao: CityDao = WeatherDataBase.getDataBase(application).cityDao()
+
+    // val allCities = repository.getAllCities()
+
+    private val _weatherCityList = MutableLiveData<List<WeatherCity>>()
+    val weatherCityList: LiveData<List<WeatherCity>> = _weatherCityList
+//
+//    init {
+//        getListAlarm()
+//        for(oneCity in cityList.value!!){
+//            getAllWeatherForecast(oneCity.name)
+//        }
+//    }
+
+    fun getListCities() {
+        viewModelScope.launch(Dispatchers.IO) {
+           _cityList.value =  repository.getAllCities()
+        }
+    }
+
     fun getAllWeatherForecast(city: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            try {
-                val weatherForecastResult = dataSource.getWeatherForecastResponse(city)
-                withContext(Dispatchers.Main) {
-                    weatherForecastResult.let { getWeatherCity(it)}
-                }
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                }
-            }
+           // repository.getWeatherResponse(city)
+//            try {
+//                val weatherForecastResult = dataSource.getWeatherForecastResponse(city)
+//                withContext(Dispatchers.Main) {
+//                    weatherForecastResult.let { getWeatherCity(it)}
+//                }
+//            } catch (e: Exception) {
+//                withContext(Dispatchers.Main) {
+//                }
+//            }
         }
     }
 
@@ -62,7 +84,7 @@ class CityListViewModel(private val dataSource: WeatherDataSource, private val c
 
     private fun getListAlarm() {
         viewModelScope.launch {
-            _cityList.value = cityDao.getListCity()
+            //  _cityList.value = cityDao.getListCity()
         }
     }
 
@@ -73,7 +95,7 @@ class CityListViewModel(private val dataSource: WeatherDataSource, private val c
             cityMutableList.add(city)
             _cityList.value = cityMutableList
             viewModelScope.launch {
-                cityDao.addCity(city)
+                repository.insert(city)
             }
         }
     }
@@ -85,9 +107,28 @@ class CityListViewModel(private val dataSource: WeatherDataSource, private val c
             cityMutableList.removeAt(pos)
             _cityList.value = cityMutableList
             viewModelScope.launch {
-               cityDao.deleteCity(city)
+              //  repository.deleteCity(city)
             }
 
         }
     }
 }
+
+//class CityListModelFactory @Inject constructor(private val repository: WeatherRepository) : ViewModelProvider.Factory {
+//    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+//        if (modelClass.isAssignableFrom(CityListViewModel::class.java)) {
+//            @Suppress("UNCHECKED_CAST")
+//            return CityListViewModel(repository) as T
+//        }
+//        throw IllegalArgumentException("Unknown ViewModel class")
+//    }
+//}
+//class WordViewModelFactory(private val repository: WeatherRepository) : ViewModelProvider.Factory {
+//    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+//        if (modelClass.isAssignableFrom(CityListViewModel::class.java)) {
+//            @Suppress("UNCHECKED_CAST")
+//            return CityListViewModel(repository) as T
+//        }
+//        throw IllegalArgumentException("Unknown ViewModel class")
+//    }
+//}

@@ -9,6 +9,6 @@ import javax.inject.Singleton
 @Singleton
 interface WeatherAppComponent {
     fun inject(generalDayTodayFragment: GeneralDayTodayFragment)
-    fun inject(cityListFragment: CityListFragment)
+    //fun inject(cityListFragment: CityListFragment)
 }
 

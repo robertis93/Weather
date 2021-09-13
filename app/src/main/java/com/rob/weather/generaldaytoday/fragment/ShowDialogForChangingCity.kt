@@ -10,11 +10,7 @@ import com.rob.weather.generaldaytoday.viewmodel.GeneralDayTodayViewModel
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Singleton
-class ShowDialogForChangingCity
-@Inject
-constructor()
-{
+class ShowDialogForChangingCity {
     fun showDialog(context: Context, viewModel: CityListViewModel) {
         val builder = AlertDialog.Builder(context)
         val layoutInflater = LayoutInflater.from(context)

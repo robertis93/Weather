@@ -13,7 +13,7 @@ import com.squareup.picasso.Picasso
 class CityAdapter :
     RecyclerView.Adapter<CityAdapter.WeatherViewHolder>() {
 
-    private var cityList = emptyList<WeatherCity>()
+    private var cityList = emptyList<City>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WeatherViewHolder {
         val binding =
@@ -30,7 +30,7 @@ class CityAdapter :
         return cityList.size
     }
 
-    fun setData(listCity: List<WeatherCity>) {
+    fun setData(listCity: List<City>) {
         this.cityList = listCity
         notifyDataSetChanged()
     }
@@ -38,13 +38,13 @@ class CityAdapter :
     class WeatherViewHolder(private val binding:  CityItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
         @SuppressLint("SetTextI18n")
-        fun bind(item: WeatherCity) {
+        fun bind(item: City) {
             binding.dayTextView.text = item.name
-            binding.minTemperatureTextView.text = item.temperatureMin.toString() + "°"
-            binding.maxTemperatureTextView.text = item.temperatureMax.toString() + "°"
-            val iconCode = item.icon
-            val iconUrl = "https://openweathermap.org/img/w/" + iconCode + ".png"
-            Picasso.get().load(iconUrl).into(binding.imageView)
+        //    binding.minTemperatureTextView.text = item.temperatureMin.toString() + "°"
+          //  binding.maxTemperatureTextView.text = item.temperatureMax.toString() + "°"
+           // val iconCode = item.icon
+            //val iconUrl = "https://openweathermap.org/img/w/" + iconCode + ".png"
+            //Picasso.get().load(iconUrl).into(binding.imageView)
 
         }
     }
