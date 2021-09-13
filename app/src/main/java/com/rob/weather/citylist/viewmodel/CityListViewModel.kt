@@ -7,12 +7,10 @@ import com.rob.weather.citylist.database.WeatherRepository
 import com.rob.weather.citylist.model.City
 import com.rob.weather.citylist.model.WeatherCity
 import com.rob.weather.datasource.retrofit.WeatherDataFromRemoteSource
-import com.rob.weather.datasource.retrofit.WeatherDataSource
 import com.rob.weather.model.WeatherForecastResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import javax.inject.Inject
 
 class CityListViewModel(application: Application) : AndroidViewModel(application) {
     //val dataSource: WeatherDataSource
@@ -33,20 +31,14 @@ class CityListViewModel(application: Application) : AndroidViewModel(application
             withContext(Dispatchers.Main) {
                 _cityList.value = repository.getAllCities()
             }
-            for (oneCity in cityList.value!!) {
-                getAllWeatherForecast(oneCity.name)
-            }
+                getAllWeatherForecast(cityList.value)
 
         }
     }
 
-
-
     // var cityDao: CityDao = WeatherDataBase.getDataBase(application).cityDao()
 
     // val allCities = repository.getAllCities()
-
-
 //
 //    init {
 //        getListAlarm()
@@ -61,16 +53,20 @@ class CityListViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
-    fun getAllWeatherForecast(city: String) {
+    fun getAllWeatherForecast(city: List<City>?) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.getWeatherResponse(city)
-            try {
-                val weatherForecastResult = dataSource.getWeatherForecastResponse(city)
-                withContext(Dispatchers.Main) {
-                    weatherForecastResult.let { getWeatherCity(it)}
-                }
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
+            if (city != null) {
+                for (oneCity in city) {
+                    val weatherForecastResult = repository.getWeatherResponse(oneCity.name)
+                    try {
+                        // val weatherForecastResult = dataSource.getWeatherForecastResponse(city)
+                        withContext(Dispatchers.Main) {
+                            weatherForecastResult.let { getWeatherCity(it) }
+                        }
+                    } catch (e: Exception) {
+                        withContext(Dispatchers.Main) {
+                        }
+                    }
                 }
             }
         }
@@ -83,22 +79,16 @@ class CityListViewModel(application: Application) : AndroidViewModel(application
         val icon = weatherForecastResult.list.first().weather.first().icon
         val weatherCity = WeatherCity(cityName, tempMax.toInt(), tempMin.toInt(), icon)
         val weatherList = _weatherCityList.value?.toMutableList() ?: mutableListOf()
-        weatherList.add(weatherCity)
+      //  weatherList.add(weatherCity)
         _weatherCityList.value = weatherList
-//        _weatherCityList.value?.let { listAlarm ->
-//            val measureMutableList = listAlarm.toMutableList()
-//            measureMutableList.add(weatherCity)
-//            _weatherCityList.value = measureMutableList
-//            // _weatherCityList.value = weatherCity
-//        }
-
-        _weatherCityList.value = listOf(weatherCity)
-    }
-
-    private fun getListAlarm() {
-        viewModelScope.launch {
-            //  _cityList.value = cityDao.getListCity()
+        _weatherCityList.value?.let { listAlarm ->
+            val measureMutableList = listAlarm.toMutableList()
+            measureMutableList.add(weatherCity)
+            _weatherCityList.value = measureMutableList
+           //  _weatherCityList.value = listOf(weatherCity)
         }
+
+       // _weatherCityList.value = listOf(weatherCity)
     }
 
     fun addCity(cityName: String) {

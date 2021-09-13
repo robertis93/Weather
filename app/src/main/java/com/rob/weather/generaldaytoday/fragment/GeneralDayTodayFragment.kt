@@ -107,10 +107,6 @@ class GeneralDayTodayFragment :
         super.onCreateOptionsMenu(menu, inflater)
     }
 
-    override fun onStop() {
-        super.onStop()
-    }
-
     override fun onDestroy() {
         super.onDestroy()
     }
