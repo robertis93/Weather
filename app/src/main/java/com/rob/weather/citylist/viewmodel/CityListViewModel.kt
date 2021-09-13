@@ -1,7 +1,10 @@
 package com.rob.weather.citylist.viewmodel
 
 import android.app.Application
-import androidx.lifecycle.*
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.rob.weather.citylist.database.WeatherDataBase
 import com.rob.weather.citylist.database.WeatherRepository
 import com.rob.weather.citylist.model.City
@@ -31,7 +34,7 @@ class CityListViewModel(application: Application) : AndroidViewModel(application
             withContext(Dispatchers.Main) {
                 _cityList.value = repository.getAllCities()
             }
-                getAllWeatherForecast(cityList.value)
+            getAllWeatherForecast(cityList.value)
 
         }
     }
@@ -40,8 +43,8 @@ class CityListViewModel(application: Application) : AndroidViewModel(application
         viewModelScope.launch(Dispatchers.IO) {
             if (city != null) {
                 for (oneCity in city) {
-                    val weatherForecastResult = repository.getWeatherResponse(oneCity.name)
                     try {
+                        val weatherForecastResult = repository.getWeatherResponse(oneCity.name)
                         // val weatherForecastResult = dataSource.getWeatherForecastResponse(city)
                         withContext(Dispatchers.Main) {
                             weatherForecastResult.let { getWeatherCity(it) }
@@ -62,28 +65,31 @@ class CityListViewModel(application: Application) : AndroidViewModel(application
         val icon = weatherForecastResult.list.first().weather.first().icon
         val weatherCity = WeatherCity(cityName, tempMax.toInt(), tempMin.toInt(), icon)
         val weatherList = _weatherCityList.value?.toMutableList() ?: mutableListOf()
-      //  weatherList.add(weatherCity)
+        //  weatherList.add(weatherCity)
         _weatherCityList.value = weatherList
         _weatherCityList.value?.let { listAlarm ->
             val measureMutableList = listAlarm.toMutableList()
             measureMutableList.add(weatherCity)
             _weatherCityList.value = measureMutableList
-           //  _weatherCityList.value = listOf(weatherCity)
+            //  _weatherCityList.value = listOf(weatherCity)
         }
 
-       // _weatherCityList.value = listOf(weatherCity)
+        // _weatherCityList.value = listOf(weatherCity)
     }
 
     fun addCity(cityName: String) {
-        val city = City(cityName)
-        _cityList.value?.let { listCity ->
-            val cityMutableList = listCity.toMutableList()
-            cityMutableList.add(city)
-            _cityList.value = cityMutableList
-            viewModelScope.launch {
-                repository.insert(city)
-              //  getAllWeatherForecast(cityList.value)
+        try {
+            val city = City(cityName)
+            _cityList.value?.let { listCity ->
+                val cityMutableList = listCity.toMutableList()
+                cityMutableList.add(city)
+                _cityList.value = cityMutableList
+                getAllWeatherForecast(listOf(city))
+                viewModelScope.launch {
+                    repository.insert(city)
+                }
             }
+        } catch (e: Exception) {
         }
     }
 
