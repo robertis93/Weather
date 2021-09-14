@@ -1,10 +1,7 @@
 package com.rob.weather.citylist.viewmodel
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.rob.weather.citylist.database.WeatherDataBase
 import com.rob.weather.citylist.database.WeatherRepository
 import com.rob.weather.citylist.model.City
@@ -15,10 +12,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class CityListViewModel(application: Application) : AndroidViewModel(application) {
+class CityListViewModel(private val repository: WeatherRepository) : ViewModel() {
     //val dataSource: WeatherDataSource
 
-    private val repository: WeatherRepository
     private val _cityList = MutableLiveData<List<City>>()
     val cityList: LiveData<List<City>> = _cityList
     val dataSource = WeatherDataFromRemoteSource()
@@ -26,9 +22,9 @@ class CityListViewModel(application: Application) : AndroidViewModel(application
     val weatherCityList: LiveData<List<WeatherCity>> = _weatherCityList
 
     init {
-        val wordsDao = WeatherDataBase.getDataBase(application).cityDao()
+     //   val wordsDao = WeatherDataBase.getDataBase(application).cityDao()
 
-        repository = WeatherRepository(wordsDao, dataSource)
+            // repository = WeatherRepository(wordsDao, dataSource)
         viewModelScope.launch(Dispatchers.IO) {
 
             withContext(Dispatchers.Main) {
@@ -125,3 +121,14 @@ class CityListViewModel(application: Application) : AndroidViewModel(application
 //        throw IllegalArgumentException("Unknown ViewModel class")
 //    }
 //}
+
+class CityListViewModelFactory constructor(private val repository: WeatherRepository): ViewModelProvider.Factory {
+
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        return if (modelClass.isAssignableFrom(CityListViewModel::class.java)) {
+            CityListViewModel(this.repository) as T
+        } else {
+            throw IllegalArgumentException("ViewModel Not Found")
+        }
+    }
+}
