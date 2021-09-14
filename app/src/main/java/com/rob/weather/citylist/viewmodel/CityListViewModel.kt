@@ -1,8 +1,6 @@
 package com.rob.weather.citylist.viewmodel
 
-import android.app.Application
 import androidx.lifecycle.*
-import com.rob.weather.citylist.database.WeatherDataBase
 import com.rob.weather.citylist.database.WeatherRepository
 import com.rob.weather.citylist.model.City
 import com.rob.weather.citylist.model.WeatherCity
@@ -11,6 +9,7 @@ import com.rob.weather.model.WeatherForecastResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 class CityListViewModel(private val repository: WeatherRepository) : ViewModel() {
     //val dataSource: WeatherDataSource
@@ -22,9 +21,9 @@ class CityListViewModel(private val repository: WeatherRepository) : ViewModel()
     val weatherCityList: LiveData<List<WeatherCity>> = _weatherCityList
 
     init {
-     //   val wordsDao = WeatherDataBase.getDataBase(application).cityDao()
+        //   val wordsDao = WeatherDataBase.getDataBase(application).cityDao()
 
-            // repository = WeatherRepository(wordsDao, dataSource)
+        // repository = WeatherRepository(wordsDao, dataSource)
         viewModelScope.launch(Dispatchers.IO) {
 
             withContext(Dispatchers.Main) {
@@ -103,26 +102,8 @@ class CityListViewModel(private val repository: WeatherRepository) : ViewModel()
     }
 }
 
-//class CityListModelFactory @Inject constructor(private val repository: WeatherRepository) : ViewModelProvider.Factory {
-//    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-//        if (modelClass.isAssignableFrom(CityListViewModel::class.java)) {
-//            @Suppress("UNCHECKED_CAST")
-//            return CityListViewModel(repository) as T
-//        }
-//        throw IllegalArgumentException("Unknown ViewModel class")
-//    }
-//}
-//class WordViewModelFactory(private val repository: WeatherRepository) : ViewModelProvider.Factory {
-//    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-//        if (modelClass.isAssignableFrom(CityListViewModel::class.java)) {
-//            @Suppress("UNCHECKED_CAST")
-//            return CityListViewModel(repository) as T
-//        }
-//        throw IllegalArgumentException("Unknown ViewModel class")
-//    }
-//}
-
-class CityListViewModelFactory constructor(private val repository: WeatherRepository): ViewModelProvider.Factory {
+class CityListViewModelFactory @Inject constructor(private val repository: WeatherRepository) :
+    ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return if (modelClass.isAssignableFrom(CityListViewModel::class.java)) {

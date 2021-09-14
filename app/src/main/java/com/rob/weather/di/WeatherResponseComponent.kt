@@ -5,10 +5,10 @@ import com.rob.weather.generaldaytoday.fragment.GeneralDayTodayFragment
 import dagger.Component
 import javax.inject.Singleton
 
-@Component(modules = [DataSourceModule::class])
+@Component(modules = [DataSourceModule::class, CityListModule::class])
 @Singleton
 interface WeatherAppComponent {
     fun inject(generalDayTodayFragment: GeneralDayTodayFragment)
-    //fun inject(cityListFragment: CityListFragment)
+    fun inject(cityListFragment: CityListFragment)
 }
 

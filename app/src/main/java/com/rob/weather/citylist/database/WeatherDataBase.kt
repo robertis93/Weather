@@ -6,6 +6,8 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.rob.weather.citylist.model.City
 import kotlinx.coroutines.CoroutineScope
+import javax.inject.Inject
+
 
 @Database(
     entities = [City::class],

@@ -5,9 +5,10 @@ import androidx.room.Room
 import com.rob.weather.citylist.database.WeatherDataBase
 import com.rob.weather.di.DaggerWeatherAppComponent
 import com.rob.weather.di.WeatherAppComponent
+import javax.inject.Inject
 
 
-class App : Application() {
+class App @Inject constructor(): Application() {
     lateinit var component: WeatherAppComponent
 
     lateinit var instance: App
@@ -31,32 +32,4 @@ class App : Application() {
     fun getDatabase(): WeatherDataBase {
         return database
     }
-//    lateinit var component: WeatherAppComponent
-//    var instance: App? = null
-//
-//    lateinit var dataBase: WeatherDataBase
-//
-//
-//        // Using by lazy so the database and the repository are only created when they're needed
-//        // rather than when the application starts
-//       // var database by lazy { WeatherDataBase.getDataBase(this) }
-//  // val repository by lazy { WeatherRepository(database.cityDao()) }
-//   //     val repository by lazy { WeatherRepository(database.cityDao(), WeatherDataSource()}
-//        // Using by lazy so the database and the repository are only created when they're needed
-//        // rather than when the application starts
-//       // val database by lazy { WeatherDataBase.getDataBase(this) }
-//      //  val r by lazy { WordRepository(database.wordDao()) }
-//
-//    override fun onCreate() {
-//        super.onCreate()
-//       component = DaggerWeatherAppComponent.create()
-//        var db: WeatherDataBase = Room.databaseBuilder(
-//            applicationContext,
-//            WeatherDataBase::class.java, "database"
-//        ).build()
-////        instance = this
-////        dataBase = Room.databaseBuilder(this, WeatherDataBase::class.java, "database")
-////            .build()
-//
-//    }
 }
