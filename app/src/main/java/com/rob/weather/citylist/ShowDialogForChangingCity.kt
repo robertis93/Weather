@@ -10,10 +10,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ShowDialogForChangingCity
-@Inject
-constructor()
-{
+class ShowDialogForChangingCity @Inject constructor(){
     fun showDialog(context: Context, viewModel: GeneralDayTodayViewModel) {
         val builder = AlertDialog.Builder(context)
         val layoutInflater = LayoutInflater.from(context)

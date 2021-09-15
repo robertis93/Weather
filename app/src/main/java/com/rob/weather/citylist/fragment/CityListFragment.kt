@@ -10,16 +10,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.rob.weather.citylist.CityAdapter
 import com.rob.weather.citylist.SwipeToDeleteCallback
 import com.rob.weather.citylist.viewmodel.CityListViewModel
-import com.rob.weather.citylist.viewmodel.CityListViewModelFactory
 import com.rob.weather.databinding.CityListFragmentBinding
-import com.rob.weather.datasource.retrofit.WeatherDataFromRemoteSource
+import com.rob.weather.generaldaytoday.fragment.CityListViewModelFactory
 import com.rob.weather.generaldaytoday.fragment.ShowDialogForChangingCity
 import com.rob.weather.utils.BaseFragment
 import javax.inject.Inject
 
 
 class CityListFragment: BaseFragment<CityListFragmentBinding>(CityListFragmentBinding::inflate) {
-    val dataSource = WeatherDataFromRemoteSource()
 
     @Inject
     lateinit var cityListViewModelFactory: CityListViewModelFactory

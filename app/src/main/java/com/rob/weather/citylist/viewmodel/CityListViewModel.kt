@@ -12,7 +12,6 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class CityListViewModel(private val repository: WeatherRepository) : ViewModel() {
-    //val dataSource: WeatherDataSource
 
     private val _cityList = MutableLiveData<List<City>>()
     val cityList: LiveData<List<City>> = _cityList
@@ -21,16 +20,11 @@ class CityListViewModel(private val repository: WeatherRepository) : ViewModel()
     val weatherCityList: LiveData<List<WeatherCity>> = _weatherCityList
 
     init {
-        //   val wordsDao = WeatherDataBase.getDataBase(application).cityDao()
-
-        // repository = WeatherRepository(wordsDao, dataSource)
         viewModelScope.launch(Dispatchers.IO) {
-
             withContext(Dispatchers.Main) {
                 _cityList.value = repository.getAllCities()
             }
             getAllWeatherForecast(cityList.value)
-
         }
     }
 
@@ -40,7 +34,6 @@ class CityListViewModel(private val repository: WeatherRepository) : ViewModel()
                 for (oneCity in city) {
                     try {
                         val weatherForecastResult = repository.getWeatherResponse(oneCity.name)
-                        // val weatherForecastResult = dataSource.getWeatherForecastResponse(city)
                         withContext(Dispatchers.Main) {
                             weatherForecastResult.let { getWeatherCity(it) }
                         }
@@ -66,10 +59,7 @@ class CityListViewModel(private val repository: WeatherRepository) : ViewModel()
             val measureMutableList = listAlarm.toMutableList()
             measureMutableList.add(weatherCity)
             _weatherCityList.value = measureMutableList
-            //  _weatherCityList.value = listOf(weatherCity)
         }
-
-        // _weatherCityList.value = listOf(weatherCity)
     }
 
     fun addCity(cityName: String) {
@@ -102,14 +92,3 @@ class CityListViewModel(private val repository: WeatherRepository) : ViewModel()
     }
 }
 
-class CityListViewModelFactory @Inject constructor(private val repository: WeatherRepository) :
-    ViewModelProvider.Factory {
-
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return if (modelClass.isAssignableFrom(CityListViewModel::class.java)) {
-            CityListViewModel(this.repository) as T
-        } else {
-            throw IllegalArgumentException("ViewModel Not Found")
-        }
-    }
-}

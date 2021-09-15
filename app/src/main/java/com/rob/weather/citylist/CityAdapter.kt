@@ -9,10 +9,7 @@ import com.rob.weather.citylist.model.WeatherCity
 import com.rob.weather.databinding.CityItemBinding
 import com.squareup.picasso.Picasso
 
-
-class CityAdapter :
-    RecyclerView.Adapter<CityAdapter.WeatherViewHolder>() {
-
+class CityAdapter: RecyclerView.Adapter<CityAdapter.WeatherViewHolder>() {
     private var cityList = emptyList<WeatherCity>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WeatherViewHolder {
