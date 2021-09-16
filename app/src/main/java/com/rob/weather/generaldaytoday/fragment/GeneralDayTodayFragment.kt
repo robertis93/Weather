@@ -25,9 +25,8 @@ class GeneralDayTodayFragment :
     BaseFragment<FragmentGeneralDayTodayBinding>(FragmentGeneralDayTodayBinding::inflate) {
     @Inject
     lateinit var generalDayTodayViewModelFactory: GeneralDayTodayViewModelFactory
-    val generalDayTodayViewModel: GeneralDayTodayViewModel by viewModels{ generalDayTodayViewModelFactory }
+    val generalDayTodayViewModel: GeneralDayTodayViewModel by viewModels { generalDayTodayViewModelFactory }
     lateinit var todayWeather: FullWeatherToday
-    private val dialog = ShowDialogForChangingCity()
     lateinit var picasso: Picasso
 
     override fun onAttach(context: Context) {
@@ -77,7 +76,6 @@ class GeneralDayTodayFragment :
             when (it.itemId) {
                 R.id.action_search -> {
                     findNavController().navigate(R.id.action_weatherInformationByDayFragment_to_cityListFragment)
-                    //dialog.showDialog(requireContext(), generalDayTodayViewModel)
                     true
                 }
                 R.id.action_loader -> {
@@ -105,10 +103,6 @@ class GeneralDayTodayFragment :
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.toolbar_menu, menu)
         super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
     }
 }
 

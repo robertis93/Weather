@@ -10,11 +10,8 @@ import com.rob.weather.datasource.retrofit.WeatherDataSource
 import dagger.Module
 import dagger.Provides
 
-
 @Module
 class DataSourceModule {
-
-    // @IntoSet
     @Provides
     fun provideDataSource(): WeatherDataSource {
         return WeatherDataFromRemoteSource()
@@ -22,28 +19,19 @@ class DataSourceModule {
 }
 
 @Module
-class CityListModule {
-//    // @IntoSet
-//    @Provides
-//    fun provideDataSource(): WeatherDataSource {
-//        return WeatherDataFromRemoteSource()
-//    }
-
+class CityListModule(val application: App)  {
     @Provides
     fun provideContext(application: App): Context {
         return application.applicationContext
     }
-
     @Provides
     fun provideDB(context: Context): WeatherDataBase {
         return WeatherDataBase.getDataBase(context)
     }
-
     @Provides
     fun provideCityDao(dataBase: WeatherDataBase): CityDao {
         return dataBase.cityDao()
     }
-
     @Provides
     fun provideRepository(cityDao: CityDao, weatherDataSource: WeatherDataSource) : WeatherRepository{
         return WeatherRepository(cityDao, weatherDataSource)
