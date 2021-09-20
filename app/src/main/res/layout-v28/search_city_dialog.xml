@@ -36,19 +36,20 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <AutoCompleteTextView
+            <EditText
                 android:id="@+id/searchCityEditText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
+                android:layout_marginEnd="221dp"
                 android:layout_marginBottom="8dp"
                 android:fontFamily="@font/manrope_regular"
                 android:gravity="center"
                 android:inputType="textCapWords"
-                android:textFontWeight="500"
                 android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/crossImageBtn"
                 app:layout_constraintStart_toEndOf="@+id/searchImageView"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -70,7 +71,8 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="0dp"
-            android:layout_height="24dp"
+            android:visibility="invisible"
+            android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="12dp"
             app:layout_constraintEnd_toEndOf="parent"
