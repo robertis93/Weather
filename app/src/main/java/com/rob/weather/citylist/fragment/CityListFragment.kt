@@ -59,6 +59,7 @@ class CityListFragment: BaseFragment<CityListFragmentBinding>(CityListFragmentBi
         }
 
         binding.addCityButton.setOnClickListener {
+            dialog.showDialog(requireContext(), viewModel)
         }
     }
 }

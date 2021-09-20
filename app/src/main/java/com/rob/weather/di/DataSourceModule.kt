@@ -11,31 +11,38 @@ import dagger.Module
 import dagger.Provides
 
 @Module
-class CityListModule() {
+class CityListModule(val application: App) {
     @Provides
     fun provideDataSource(): WeatherDataSource {
         return WeatherDataFromRemoteSource()
     }
+
     @Provides
     fun provideContext(application: App): Context {
         return application.applicationContext
     }
+
     @Provides
     fun provideDB(context: Context): WeatherDataBase {
         return WeatherDataBase.getDataBase(context)
     }
+
     @Provides
     fun provideCityDao(dataBase: WeatherDataBase): CityDao {
         return dataBase.cityDao()
     }
+
     @Provides
-    fun provideRepository(cityDao: CityDao, weatherDataSource: WeatherDataSource) : WeatherRepository{
+    fun provideRepository(
+        cityDao: CityDao,
+        weatherDataSource: WeatherDataSource
+    ): WeatherRepository {
         return WeatherRepository(cityDao, weatherDataSource)
     }
 
     @Provides
     fun provideApp(): App {
-        return App()
+        return application
     }
 
 }

@@ -3,21 +3,23 @@ package com.rob.weather.generaldaytoday.fragment
 import android.content.Context
 import android.view.LayoutInflater
 import androidx.appcompat.app.AlertDialog
+import com.rob.weather.citylist.viewmodel.CityListViewModel
 import com.rob.weather.databinding.SearchCityDialogBinding
 import com.rob.weather.generaldaytoday.viewmodel.GeneralDayTodayViewModel
+import com.rob.weather.utils.Utils
 
 class ShowDialogForChangingCity {
-    fun showDialog(context: Context, viewModel: GeneralDayTodayViewModel) {
+    fun showDialog(context: Context, viewModel: CityListViewModel) {
         val builder = AlertDialog.Builder(context)
         val layoutInflater = LayoutInflater.from(context)
         val dialogFragment = SearchCityDialogBinding.inflate(layoutInflater)
         builder.setView(dialogFragment.root)
         val alertDialog = builder.show()
         dialogFragment.addBtn.setOnClickListener {
-          //  Utils.city = dialogFragment.searchCityEditText.text.toString()
+            Utils.city = dialogFragment.searchCityEditText.text.toString()
             val city =  dialogFragment.searchCityEditText.text.toString()
-          //  viewModel.addCity(city)
-           // viewModel.getAllWeatherForecast(Utils.city)
+            viewModel.addCity(city)
+                //   viewModel.getAllWeatherForecast(Utils.city)
             alertDialog.dismiss()
         }
         dialogFragment.crossImageBtn.setOnClickListener {
