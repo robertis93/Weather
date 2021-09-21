@@ -51,6 +51,7 @@ class GeneralDayTodayFragment :
 
         generalDayTodayViewModel.errorMessage.observe(viewLifecycleOwner) { error ->
             binding.currentWeatherDescriptionTextview.text = error
+            binding.progressBar.visibility = View.GONE
         }
 
         generalDayTodayViewModel.fullWeatherTodayResponse.observe(viewLifecycleOwner) {
