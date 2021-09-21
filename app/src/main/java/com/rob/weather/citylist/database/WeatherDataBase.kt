@@ -9,11 +9,7 @@ import kotlinx.coroutines.CoroutineScope
 import javax.inject.Inject
 
 
-@Database(
-    entities = [City::class],
-    version = 1,
-    exportSchema = false
-)
+@Database(entities = [City::class], version = 1, exportSchema = false)
 abstract class WeatherDataBase : RoomDatabase() {
 
     abstract fun cityDao(): CityDao

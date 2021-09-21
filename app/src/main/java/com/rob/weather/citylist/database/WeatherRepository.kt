@@ -5,7 +5,8 @@ import com.rob.weather.datasource.retrofit.WeatherDataSource
 import com.rob.weather.model.WeatherForecastResult
 import javax.inject.Inject
 
-class WeatherRepository @Inject constructor(private val cityDao: CityDao, val dataSource: WeatherDataSource) {
+class WeatherRepository @Inject constructor(private val cityDao: CityDao, val dataSource:
+WeatherDataSource) {
 
     suspend fun getAllCities() : List<City> =
         cityDao.getListCity()

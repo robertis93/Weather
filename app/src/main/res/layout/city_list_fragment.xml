@@ -105,5 +105,16 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/add_city_button" />
 
+        <View
+            android:id="@+id/gradient"
+            android:layout_width="match_parent"
+            android:layout_height="194dp"
+            android:background="@drawable/ic_rectangle_212"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>
