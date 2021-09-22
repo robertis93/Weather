@@ -55,6 +55,7 @@ class CityListFragment : BaseFragment<CityListFragmentBinding>(CityListFragmentB
                 viewHolder: RecyclerView.ViewHolder,
                 target: RecyclerView.ViewHolder
             ): Boolean {
+               // Collections.swap(viewModel.weatherCityList, )
                 cityAdapter.notifyItemMoved(viewHolder.adapterPosition, target.adapterPosition)
                 return true
             }

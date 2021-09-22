@@ -15,15 +15,7 @@ interface WeatherDataSource {
 }
 
 class WeatherDataFromRemoteSource @Inject constructor() : WeatherDataSource {
-    private interface RetrofitServices {
-        @GET("data/2.5/forecast?")
-        suspend fun getWeatherForecastResponse(
-            @Query("q") q: String,
-            @Query("appid") appid: String = Utils.id_key,
-            @Query("units") units: String = "metric",
-            @Query("lang") language: String = "ru",
-        ): WeatherForecastResult
-    }
+
 
     private val retrofit = Retrofit.Builder()
         .baseUrl(BASE_URL)
