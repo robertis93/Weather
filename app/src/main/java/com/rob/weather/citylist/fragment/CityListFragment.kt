@@ -11,10 +11,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.rob.weather.App
 import com.rob.weather.citylist.CityAdapter
 import com.rob.weather.citylist.DragAndDropCallback
+import com.rob.weather.citylist.ShowDialogForChangingCity
 import com.rob.weather.citylist.viewmodel.CityListViewModel
 import com.rob.weather.databinding.CityListFragmentBinding
 import com.rob.weather.generaldaytoday.fragment.CityListViewModelFactory
-import com.rob.weather.generaldaytoday.fragment.ShowDialogForChangingCity
 import com.rob.weather.utils.BaseFragment
 import javax.inject.Inject
 

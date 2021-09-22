@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.*
 
-class GeneralDayTodayViewModel (val dataSource: WeatherDataSource) : ViewModel() {
+class GeneralDayTodayViewModel(val dataSource: WeatherDataSource) : ViewModel() {
 
     private val _errorMessage = MutableLiveData<String>()
     val errorMessage: LiveData<String> = _errorMessage
@@ -35,41 +35,38 @@ class GeneralDayTodayViewModel (val dataSource: WeatherDataSource) : ViewModel()
     fun getAllWeatherForecast(city: String) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val weatherForecastResult = dataSource.getWeatherForecastResponse(city)
+                val weatherForecast = dataSource.getWeatherForecastResponse(city)
                 withContext(Dispatchers.Main) {
-                    _errorMessage.value = R.string.error.toString()
-                    weatherForecastResult.let { getShortAndFullWeatherToday(it) }
-                    weatherForecastResult.let {
-                        getWithoutFirstElementSortedByDateForecastResponseList(it)
-                        updateFullWeatherTodayResponse(weatherForecastResult)
-                    }
+                    getShortAndFullWeatherToday(weatherForecast)
+                    getWithoutFirstElementSortedByDateForecastResponseList(weatherForecast)
+                    updateFullWeatherTodayResponse(weatherForecast)
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    _errorMessage.value = "Ошибка сервера"
+                    _errorMessage.value = R.string.error.toString()
                 }
             }
         }
     }
 
-    private fun getShortAndFullWeatherToday(weatherForecastResult: WeatherForecastResult) {
-        val date = " Сегодня, " + weatherForecastResult.list.first().date.changeDateFormat()
-        val cityName: String = weatherForecastResult.city.name
+    private fun getShortAndFullWeatherToday(weatherForecast: WeatherForecastResult) {
+        val date = " Сегодня, " + weatherForecast.list.first().date.changeDateFormat()
+        val cityName: String = weatherForecast.city.name
         val temperature: String =
-            weatherForecastResult.list.first().main.temp.toInt()
+            weatherForecast.list.first().main.temp.toInt()
                 .toString() + "°"
         val description: String =
-            weatherForecastResult.list.first().weather.first().description
+            weatherForecast.list.first().weather.first().description
                 .replaceFirstChar {
                     if (it.isLowerCase()) it.titlecase(Locale.getDefault())
                     else it.toString()
-                } + ", ощущается как  " + weatherForecastResult.list.first().main.temp_max.toInt()
+                } + ", ощущается как  " + weatherForecast.list.first().main.temp_max.toInt()
                 .toString() + "°"
-        val iconCode = weatherForecastResult.list.first().weather.first().icon
-        val windSpeed = weatherForecastResult.list.first().wind.speed
-        val humidity = weatherForecastResult.list.first().main.humidity.toInt()
-        val precipitation = weatherForecastResult.list.first().clouds.all
-        val forecastResponseList = weatherForecastResult.list
+        val iconCode = weatherForecast.list.first().weather.first().icon
+        val windSpeed = weatherForecast.list.first().wind.speed
+        val humidity = weatherForecast.list.first().main.humidity.toInt()
+        val precipitation = weatherForecast.list.first().clouds.all
+        val forecastResponseList = weatherForecast.list
 
         val todayWeather = WeatherToday(date, cityName, temperature, description, iconCode)
         val fullTodayWeather = FullWeatherToday(
@@ -93,31 +90,28 @@ class GeneralDayTodayViewModel (val dataSource: WeatherDataSource) : ViewModel()
         }
     }
 
-    private fun geWeatherForecastResponseGroupByDate(weatherForecastResult: WeatherForecastResult):
-            List<SortedByDateWeatherForecastResult> {
-        val weatherForecastGroup =
-            weatherForecastResult.list.groupBy { (it.date).changeDateFormat() }
-        return (weatherForecastGroup.keys).map { date ->
-            val forecasts = weatherForecastGroup[date] ?: emptyList()
-            SortedByDateWeatherForecastResult(date, forecasts)
-        }
+    private fun geWeatherForecastResponseGroupByDate(
+        weatherForecast: WeatherForecastResult
+    ): List<SortedByDateWeatherForecastResult> {
+        val weatherForecastGroup = weatherForecast.list.groupBy { it.date.changeDateFormat() }
+        return weatherForecastGroup.map { (date, forecasts) ->
+            SortedByDateWeatherForecastResult(date, forecasts)}
     }
 
     private fun getWithoutFirstElementSortedByDateForecastResponseList(
-        weatherForecastResult:
-        WeatherForecastResult
+        weatherForecast: WeatherForecastResult
     ) {
         val sortedByDateForecastResponseList =
-            geWeatherForecastResponseGroupByDate(weatherForecastResult)
+            geWeatherForecastResponseGroupByDate(weatherForecast)
         val withoutFirstElementSortedByDateForecastResponseList =
             sortedByDateForecastResponseList.toMutableList()
                 .subList(1, sortedByDateForecastResponseList.size)
         _sortedWeatherForecastResult.postValue(withoutFirstElementSortedByDateForecastResponseList)
     }
 
-    private fun updateFullWeatherTodayResponse(weatherForecastResult: WeatherForecastResult) {
+    private fun updateFullWeatherTodayResponse(weatherForecast: WeatherForecastResult) {
         val firstElementWeatherForecastResponse =
-            geWeatherForecastResponseGroupByDate(weatherForecastResult)[0]
+            geWeatherForecastResponseGroupByDate(weatherForecast)[0]
         val todayForecastResponseList = firstElementWeatherForecastResponse.forecastResponseList
         _fullWeatherTodayResponse.value?.forecastResponseList = todayForecastResponseList
     }
