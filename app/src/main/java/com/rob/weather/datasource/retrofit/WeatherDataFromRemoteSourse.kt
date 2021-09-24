@@ -14,16 +14,13 @@ interface WeatherDataSource {
     suspend fun getWeatherForecastResponse(q: String): WeatherForecastResult
 }
 
-class WeatherDataFromRemoteSource @Inject constructor() : WeatherDataSource {
-
+class WeatherDataFromRemoteSource @Inject constructor(private val retrofitService: RetrofitServices): WeatherDataSource {
 
     private val retrofit = Retrofit.Builder()
         .baseUrl(BASE_URL)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
-    private val retrofitService: RetrofitServices by lazy {
-        retrofit.create(RetrofitServices::class.java)
-    }
+
 
     override suspend fun getWeatherForecastResponse(q: String): WeatherForecastResult{
         return retrofitService.getWeatherForecastResponse(q)

@@ -4,6 +4,7 @@ import androidx.lifecycle.*
 import com.rob.weather.citylist.database.WeatherRepository
 import com.rob.weather.citylist.model.City
 import com.rob.weather.citylist.model.WeatherCity
+import com.rob.weather.datasource.retrofit.RetrofitServices
 import com.rob.weather.datasource.retrofit.WeatherDataFromRemoteSource
 import com.rob.weather.model.WeatherForecastResult
 import kotlinx.coroutines.Dispatchers
@@ -11,11 +12,11 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class CityListViewModel(private val repository: WeatherRepository) : ViewModel() {
+class CityListViewModel(private val repository: WeatherRepository, retrofitService: RetrofitServices) : ViewModel() {
 
     private val _cityList = MutableLiveData<List<City>>()
     val cityList: LiveData<List<City>> = _cityList
-    val dataSource = WeatherDataFromRemoteSource()
+    val dataSource = WeatherDataFromRemoteSource(retrofitService)
     private val _weatherCityList = MutableLiveData<List<WeatherCity>>()
     val weatherCityList: LiveData<List<WeatherCity>> = _weatherCityList
 

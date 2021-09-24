@@ -5,16 +5,17 @@ import com.rob.weather.App
 import com.rob.weather.citylist.database.CityDao
 import com.rob.weather.citylist.database.WeatherDataBase
 import com.rob.weather.citylist.database.WeatherRepository
-import com.rob.weather.datasource.retrofit.WeatherDataFromRemoteSource
+import com.rob.weather.datasource.retrofit.RetrofitServices
 import com.rob.weather.datasource.retrofit.WeatherDataSource
 import dagger.Module
 import dagger.Provides
+import retrofit2.Retrofit
 
 @Module
 class CityListModule(val application: App) {
     @Provides
-    fun provideDataSource(): WeatherDataSource {
-        return WeatherDataFromRemoteSource()
+    fun provideRetrofitService(retrofit: Retrofit): RetrofitServices {
+        return retrofit.create(RetrofitServices::class.java)
     }
 
     @Provides
@@ -44,5 +45,4 @@ class CityListModule(val application: App) {
     fun provideApp(): App {
         return application
     }
-
 }
