@@ -6,13 +6,24 @@ import com.rob.weather.citylist.database.CityDao
 import com.rob.weather.citylist.database.WeatherDataBase
 import com.rob.weather.citylist.database.WeatherRepository
 import com.rob.weather.datasource.retrofit.RetrofitServices
-import com.rob.weather.datasource.retrofit.WeatherDataSource
+import com.rob.weather.datasource.retrofit.WeatherDataFromRemoteSource
+import com.rob.weather.utils.Utils
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 @Module
 class CityListModule(val application: App) {
+
+    @Provides
+    fun providesRetrofit(): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl(Utils.BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+    }
+
     @Provides
     fun provideRetrofitService(retrofit: Retrofit): RetrofitServices {
         return retrofit.create(RetrofitServices::class.java)
@@ -36,7 +47,7 @@ class CityListModule(val application: App) {
     @Provides
     fun provideRepository(
         cityDao: CityDao,
-        weatherDataSource: WeatherDataSource
+        weatherDataSource: WeatherDataFromRemoteSource
     ): WeatherRepository {
         return WeatherRepository(cityDao, weatherDataSource)
     }

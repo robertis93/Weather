@@ -2,11 +2,11 @@ package com.rob.weather.generaldaytoday.fragment
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.rob.weather.datasource.retrofit.WeatherDataSource
+import com.rob.weather.datasource.retrofit.WeatherDataFromRemoteSource
 import com.rob.weather.generaldaytoday.viewmodel.GeneralDayTodayViewModel
 import javax.inject.Inject
 
-class GeneralDayTodayViewModelFactory @Inject constructor (val dataSource: WeatherDataSource) :
+class GeneralDayTodayViewModelFactory @Inject constructor (val dataSource: WeatherDataFromRemoteSource) :
     ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {

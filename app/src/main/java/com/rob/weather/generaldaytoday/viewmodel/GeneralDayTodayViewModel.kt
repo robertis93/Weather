@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rob.weather.R
-import com.rob.weather.datasource.retrofit.WeatherDataSource
+import com.rob.weather.datasource.retrofit.WeatherDataFromRemoteSource
 import com.rob.weather.model.*
 import com.rob.weather.utils.Utils.fullDateFormat
 import com.rob.weather.utils.Utils.shortDateFormat
@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.*
 
-class GeneralDayTodayViewModel(val dataSource: WeatherDataSource) : ViewModel() {
+class GeneralDayTodayViewModel(val dataSource: WeatherDataFromRemoteSource) : ViewModel() {
     private val _errorMessage = MutableLiveData<String>()
     val errorMessage: LiveData<String> = _errorMessage
     private val _sortedWeatherForecastResult =
