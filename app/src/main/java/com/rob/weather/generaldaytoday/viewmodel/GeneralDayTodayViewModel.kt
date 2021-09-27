@@ -39,7 +39,7 @@ class GeneralDayTodayViewModel(val dataSource: WeatherDataFromRemoteSource) : Vi
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    _errorMessage.value = R.string.error.toString()
+                    _errorMessage.value = "Ошибка сервера"
                 }
             }
         }

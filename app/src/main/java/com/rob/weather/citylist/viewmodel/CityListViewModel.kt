@@ -1,6 +1,9 @@
 package com.rob.weather.citylist.viewmodel
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.rob.weather.citylist.database.WeatherRepository
 import com.rob.weather.citylist.model.City
 import com.rob.weather.citylist.model.WeatherCity
@@ -10,9 +13,11 @@ import com.rob.weather.model.WeatherForecastResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import javax.inject.Inject
 
-class CityListViewModel(private val repository: WeatherRepository, retrofitService: RetrofitServices) : ViewModel() {
+class CityListViewModel(
+    private val repository: WeatherRepository,
+    retrofitService: RetrofitServices
+) : ViewModel() {
 
     private val _cityList = MutableLiveData<List<City>>()
     val cityList: LiveData<List<City>> = _cityList
@@ -65,7 +70,7 @@ class CityListViewModel(private val repository: WeatherRepository, retrofitServi
 
     fun addCity(cityName: String) {
         try {
-            val city = City(cityName)
+            val city = City(0, cityName)
             _cityList.value?.let { listCity ->
                 val cityMutableList = listCity.toMutableList()
                 cityMutableList.add(city)
@@ -86,9 +91,24 @@ class CityListViewModel(private val repository: WeatherRepository, retrofitServi
             cityMutableList.removeAt(pos)
             _weatherCityList.value = cityMutableList
             viewModelScope.launch {
-                val city = City(cityName.name)
+                val city = City(0, cityName.name)
                 repository.deleteCity(city)
             }
+        }
+    }
+
+    fun updateCity(cityList: List<WeatherCity>) {
+        val mutableList = mutableListOf<City>()
+        try {
+            for (cityName in cityList) {
+                val city = City(0, cityName.name)
+                mutableList.add(city)
+            }
+            viewModelScope.launch {
+                repository.deleteAllCity()
+                repository.insertList(mutableList)
+            }
+        } catch (e: Exception) {
         }
     }
 }

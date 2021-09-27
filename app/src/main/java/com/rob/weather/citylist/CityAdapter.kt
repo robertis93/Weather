@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.rob.weather.citylist.model.City
 import com.rob.weather.citylist.model.WeatherCity
 import com.rob.weather.databinding.CityItemBinding
 import com.squareup.picasso.Picasso
@@ -44,4 +43,28 @@ class CityAdapter: RecyclerView.Adapter<CityAdapter.WeatherViewHolder>() {
             Picasso.get().load(iconUrl).into(binding.imageView)
         }
     }
+
+//    override fun onItemMove(fromPosition: Int, toPosition: Int): Boolean {
+//        //Log.v("", "Log position" + fromPosition + " " + toPosition);
+//        //Log.v("", "Log position" + fromPosition + " " + toPosition);
+//        if (fromPosition < cityList.size && toPosition < cityList.size) {
+//            if (fromPosition < toPosition) {
+//                for (i in fromPosition until toPosition) {
+//                    Collections.swap(cityList, i, i + 1)
+//                }
+//            } else {
+//                for (i in fromPosition downTo toPosition + 1) {
+//                    Collections.swap(cityList, i, i - 1)
+//                }
+//            }
+//            notifyItemMoved(fromPosition, toPosition)
+//        }
+//        return true
+//    }
+
+//    override fun onItemDismiss(position: Int) {
+//      //  cityList.(position)
+//        notifyItemRemoved(position)
+//    }
+
 }

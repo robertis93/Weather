@@ -16,6 +16,14 @@ WeatherDataFromRemoteSource
         cityDao.addCity(cityName)
     }
 
+    suspend fun insertList(cityList: List<City>) {
+        cityDao.addCityList(cityList)
+    }
+
+    suspend fun update(cityList: List<City>) {
+        cityDao.updateCity(cityList)
+    }
+
     suspend fun getWeatherResponse(city: String): WeatherForecastResult {
         val weatherForecastResult = dataSource.getWeatherForecastResponse(city)
         return weatherForecastResult
@@ -23,5 +31,9 @@ WeatherDataFromRemoteSource
 
     suspend fun deleteCity(city: City) {
         cityDao.deleteCity(city)
+    }
+
+    suspend fun deleteAllCity() {
+        cityDao.deleteAllCity()
     }
 }
