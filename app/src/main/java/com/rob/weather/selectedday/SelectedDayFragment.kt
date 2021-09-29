@@ -27,6 +27,7 @@ import com.github.mikephil.charting.utils.MPPointF
 import com.rob.weather.R
 import com.rob.weather.databinding.FragmetChooseDayBinding
 import com.rob.weather.model.FullWeatherToday
+import com.rob.weather.model.SortedByDateWeatherForecastResult
 import com.rob.weather.utils.BaseFragment
 import com.rob.weather.utils.Utils
 import com.squareup.picasso.Picasso
@@ -41,16 +42,16 @@ class SelectedDayFragment :
     @SuppressLint("ResourceAsColor")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        context?.let { initSecChart(it, args.todayWeather) }
+        context?.let { initSecChart(it, args.weatherForecastList) }
         with(binding) {
-            toolbarToday.text = args.todayWeather.city
-            currentDateTextview.text = args.todayWeather.date
-            humidityValueTextview.text = args.todayWeather.humidity.toString()
-            currentTemperatureTextview.text = args.todayWeather.temperature
-            windValueTextview.text = args.todayWeather.windSpeed.toString()
-            preciptationValueTextview.text = args.todayWeather.clouds.toString()
-            currentWeatherDescriptionTextview.text = args.todayWeather.description
-            val iconCode = args.todayWeather.icon
+            toolbarToday.text = args.weatherForecastList.city
+            currentDateTextview.text = args.weatherForecastList.date
+            humidityValueTextview.text = args.weatherForecastList.humidity.toString()
+            currentTemperatureTextview.text = args.weatherForecastList.temperature
+            windValueTextview.text = args.weatherForecastList.windSpeed.toString()
+            preciptationValueTextview.text = args.weatherForecastList.clouds.toString()
+            currentWeatherDescriptionTextview.text = args.weatherForecastList.description
+            val iconCode = args.weatherForecastList.icon
             val iconUrl = "https://openweathermap.org/img/w/" + iconCode + ".png"
             Picasso.get().load(iconUrl).into(weatherIcon)
 
@@ -61,11 +62,11 @@ class SelectedDayFragment :
     }
 
     @SuppressLint("ResourceAsColor")
-    private fun initSecChart(context: Context, todayWeather: FullWeatherToday) {
+    private fun initSecChart(context: Context, todayWeather: SortedByDateWeatherForecastResult) {
         val entries = ArrayList<Entry>()
         val image: ImageView
         val someResource = resources.getDrawable(R.drawable.ic_sun)
-        val iconCode = args.todayWeather.icon
+        val iconCode = args.weatherForecastList.icon
         val iconUrl = "https://openweathermap.org/img/w/" + iconCode + ".png"
 
 //        val bitmap: Bitmap = Glide

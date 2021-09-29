@@ -92,6 +92,13 @@ data class Wind(
 @Parcelize
 data class SortedByDateWeatherForecastResult(
     val date: String,
+    var city: String,
+    val temperature: String,
+    val description: String,
+    val icon: String,
+    val windSpeed: Int,
+    val humidity: Int,
+    val clouds: Int,
     val forecastResponseList: List<ForecastResponse>
 ) : Parcelable
 

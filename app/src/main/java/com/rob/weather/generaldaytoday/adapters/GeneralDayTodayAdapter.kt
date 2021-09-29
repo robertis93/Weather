@@ -2,8 +2,10 @@ package com.rob.weather.generaldaytoday.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.rob.weather.databinding.DayWeatherItemBinding
+import com.rob.weather.generaldaytoday.fragment.GeneralDayTodayFragmentDirections
 import com.rob.weather.model.SortedByDateWeatherForecastResult
 import com.squareup.picasso.Picasso
 
@@ -53,6 +55,11 @@ class GeneralDayTodayAdapter :
                 TimeAndTemperatureAdapter(item.forecastResponseList)
             val recyclerView = binding.recyclerView
             recyclerView.adapter = timeAndTemperatureAdapter
+            binding.rowLayout.setOnClickListener {
+                val action =
+                    GeneralDayTodayFragmentDirections.actionWeatherInformationByDayFragmentToChooseDayFragment3(item)
+                binding.root.findNavController().navigate(action)
+            }
         }
     }
 }

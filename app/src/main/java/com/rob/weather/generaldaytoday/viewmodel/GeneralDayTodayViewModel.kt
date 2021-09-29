@@ -120,7 +120,16 @@ class GeneralDayTodayViewModel(val dataSource: WeatherDataFromRemoteSource) : Vi
     ): List<SortedByDateWeatherForecastResult> {
         val weatherForecastGroup = weatherForecast.list.groupBy { it.date.changeDateFormat() }
         return weatherForecastGroup.map { (date, forecasts) ->
-            SortedByDateWeatherForecastResult(date, forecasts)
+            SortedByDateWeatherForecastResult(
+                date,
+                fullWeatherTodayResponse.value!!.city,
+                fullWeatherTodayResponse.value!!.temperature,
+                fullWeatherTodayResponse.value!!.description,
+                fullWeatherTodayResponse.value!!.icon,
+                fullWeatherTodayResponse.value!!.windSpeed,
+                fullWeatherTodayResponse.value!!.humidity,
+                fullWeatherTodayResponse.value!!.clouds,
+                forecasts)
         }
     }
 

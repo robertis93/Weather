@@ -16,6 +16,7 @@ import com.rob.weather.databinding.FragmentGeneralDayTodayBinding
 import com.rob.weather.generaldaytoday.adapters.GeneralDayTodayAdapter
 import com.rob.weather.generaldaytoday.viewmodel.GeneralDayTodayViewModel
 import com.rob.weather.model.FullWeatherToday
+import com.rob.weather.model.SortedByDateWeatherForecastResult
 import com.rob.weather.utils.BaseFragment
 import com.rob.weather.utils.Utils.city
 import com.squareup.picasso.Picasso
@@ -26,7 +27,7 @@ class GeneralDayTodayFragment :
     @Inject
     lateinit var generalDayTodayViewModelFactory: GeneralDayTodayViewModelFactory
     val generalDayTodayViewModel: GeneralDayTodayViewModel by viewModels { generalDayTodayViewModelFactory }
-    lateinit var todayWeather: FullWeatherToday
+    lateinit var todayWeather: List<SortedByDateWeatherForecastResult>
     lateinit var picasso: Picasso
 
     override fun onAttach(context: Context) {
@@ -47,6 +48,7 @@ class GeneralDayTodayFragment :
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         generalDayTodayViewModel.sortedWeatherForecastResult.observe(viewLifecycleOwner) { list ->
             allDaysWeatherListAdapter.setData(list)
+            todayWeather = list
         }
 
         generalDayTodayViewModel.errorMessage.observe(viewLifecycleOwner) { error ->
@@ -54,9 +56,10 @@ class GeneralDayTodayFragment :
             binding.progressBar.visibility = View.GONE
         }
 
-        generalDayTodayViewModel.fullWeatherTodayResponse.observe(viewLifecycleOwner) {
-            todayWeather = it
-        }
+        //TODO : delete
+//        generalDayTodayViewModel.fullWeatherTodayResponse.observe(viewLifecycleOwner) {
+//            todayWeather = it
+//        }
 
         generalDayTodayViewModel.weatherToday.observe(viewLifecycleOwner) {
             with(binding) {
@@ -90,7 +93,7 @@ class GeneralDayTodayFragment :
         binding.blueRectangleView.setOnClickListener {
             val action =
                 GeneralDayTodayFragmentDirections.actionWeatherInformationByDayFragmentToChooseDayFragment3(
-                    todayWeather
+                    todayWeather.get(0)
                 )
             findNavController().navigate(action)
         }
