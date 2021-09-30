@@ -18,6 +18,7 @@ import com.rob.weather.citylist.model.WeatherCity
 import com.rob.weather.citylist.viewmodel.CityListViewModel
 import com.rob.weather.databinding.CityListFragmentBinding
 import com.rob.weather.generaldaytoday.fragment.CityListViewModelFactory
+import com.rob.weather.generaldaytoday.fragment.GeneralDayTodayFragmentDirections
 import com.rob.weather.utils.BaseFragment
 import java.util.*
 import javax.inject.Inject
@@ -80,6 +81,13 @@ class CityListFragment : BaseFragment<CityListFragmentBinding>(CityListFragmentB
 
         binding.addCityButton.setOnClickListener {
             dialog.showDialog(requireContext(), viewModel)
+        }
+
+
+        binding.mapIcon.setOnClickListener {
+            val action =
+                CityListFragmentDirections.actionCityListFragmentToMapsFragment2()
+            findNavController().navigate(action)
         }
     }
 }
