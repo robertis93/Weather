@@ -31,6 +31,7 @@ import com.rob.weather.model.SortedByDateWeatherForecastResult
 import com.rob.weather.utils.BaseFragment
 import com.rob.weather.utils.Utils
 import com.squareup.picasso.Picasso
+import java.util.*
 import kotlin.collections.ArrayList
 
 class SelectedDayFragment :
@@ -46,12 +47,18 @@ class SelectedDayFragment :
         with(binding) {
             toolbarToday.text = args.weatherForecastList.city
             currentDateTextview.text = args.weatherForecastList.date
-            humidityValueTextview.text = args.weatherForecastList.humidity.toString()
-            currentTemperatureTextview.text = args.weatherForecastList.temperature
-            windValueTextview.text = args.weatherForecastList.windSpeed.toString()
-            preciptationValueTextview.text = args.weatherForecastList.clouds.toString()
-            currentWeatherDescriptionTextview.text = args.weatherForecastList.description
-            val iconCode = args.weatherForecastList.icon
+            humidityValueTextview.text = args.weatherForecastList.forecastResponseList.first().main.humidity.toString()
+            currentTemperatureTextview.text = args.weatherForecastList.forecastResponseList.first().main.temp.toInt()
+                .toString() + "°"
+            windValueTextview.text = args.weatherForecastList.forecastResponseList.first().wind.speed.toInt().toString()
+            preciptationValueTextview.text = args.weatherForecastList.forecastResponseList.first().clouds.all.toString()
+            currentWeatherDescriptionTextview.text = args.weatherForecastList.forecastResponseList.first().weather.first().description
+                .replaceFirstChar {
+                    if (it.isLowerCase()) it.titlecase(Locale.getDefault())
+                    else "$it"
+                } + ", ощущается как  " + Math.round(args.weatherForecastList.forecastResponseList.first().main.temp_max).
+                toString() + "°"
+            val iconCode = args.weatherForecastList.forecastResponseList.first().weather.first().icon
             val iconUrl = "https://openweathermap.org/img/w/" + iconCode + ".png"
             Picasso.get().load(iconUrl).into(weatherIcon)
 
@@ -66,7 +73,7 @@ class SelectedDayFragment :
         val entries = ArrayList<Entry>()
         val image: ImageView
         val someResource = resources.getDrawable(R.drawable.ic_sun)
-        val iconCode = args.weatherForecastList.icon
+        val iconCode = args.weatherForecastList.forecastResponseList.first().weather.first().icon
         val iconUrl = "https://openweathermap.org/img/w/" + iconCode + ".png"
 
 //        val bitmap: Bitmap = Glide

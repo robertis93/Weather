@@ -1,8 +1,6 @@
 package com.rob.weather.model
 
 import android.os.Parcelable
-import androidx.room.Entity
-import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 
@@ -93,12 +91,6 @@ data class Wind(
 data class SortedByDateWeatherForecastResult(
     val date: String,
     var city: String,
-    val temperature: String,
-    val description: String,
-    val icon: String,
-    val windSpeed: Int,
-    val humidity: Int,
-    val clouds: Int,
     val forecastResponseList: List<ForecastResponse>
 ) : Parcelable
 
@@ -138,7 +130,7 @@ data class FullWeatherRightToday(
 ) : Parcelable
 
 @Parcelize
-class TemperatureByTime (
+class TemperatureByTime(
     var date: String,
     val temperature: Int,
     var icon: String

@@ -48,7 +48,11 @@ class GeneralDayTodayFragment :
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         generalDayTodayViewModel.sortedWeatherForecastResult.observe(viewLifecycleOwner) { list ->
             allDaysWeatherListAdapter.setData(list)
-            todayWeather = list
+         //   todayWeather = list
+        }
+
+        generalDayTodayViewModel.firstSsortedWeatherForecastResult.observe(viewLifecycleOwner){
+            todayWeather = it
         }
 
         generalDayTodayViewModel.errorMessage.observe(viewLifecycleOwner) { error ->

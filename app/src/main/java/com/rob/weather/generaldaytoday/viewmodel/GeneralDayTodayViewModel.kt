@@ -21,6 +21,12 @@ class GeneralDayTodayViewModel(val dataSource: WeatherDataFromRemoteSource) : Vi
         MutableLiveData<List<SortedByDateWeatherForecastResult>>()
     val sortedWeatherForecastResult: LiveData<List<SortedByDateWeatherForecastResult>> =
         _sortedWeatherForecastResult
+
+    private val _firstSortedWeatherForecastResult =
+        MutableLiveData<List<SortedByDateWeatherForecastResult>>()
+    val firstSsortedWeatherForecastResult: LiveData<List<SortedByDateWeatherForecastResult>> =
+        _firstSortedWeatherForecastResult
+
     private val _weatherToday = MutableLiveData<WeatherToday>()
     val weatherToday: LiveData<WeatherToday> = _weatherToday
     private val _fullWeatherTodayResponse =
@@ -122,13 +128,7 @@ class GeneralDayTodayViewModel(val dataSource: WeatherDataFromRemoteSource) : Vi
         return weatherForecastGroup.map { (date, forecasts) ->
             SortedByDateWeatherForecastResult(
                 date,
-                fullWeatherTodayResponse.value!!.city,
-                fullWeatherTodayResponse.value!!.temperature,
-                fullWeatherTodayResponse.value!!.description,
-                fullWeatherTodayResponse.value!!.icon,
-                fullWeatherTodayResponse.value!!.windSpeed,
-                fullWeatherTodayResponse.value!!.humidity,
-                fullWeatherTodayResponse.value!!.clouds,
+                weatherForecast.city.name,
                 forecasts)
         }
     }
@@ -147,6 +147,7 @@ class GeneralDayTodayViewModel(val dataSource: WeatherDataFromRemoteSource) : Vi
     private fun updateFullWeatherTodayResponse(weatherForecast: WeatherForecastResult) {
         val firstElementWeatherForecastResponse =
             geWeatherForecastResponseGroupByDate(weatherForecast)[0]
+        _firstSortedWeatherForecastResult.value = listOf(firstElementWeatherForecastResponse)
         val todayForecastResponseList = firstElementWeatherForecastResponse.forecastResponseList
         _fullWeatherTodayResponse.value?.forecastResponseList = todayForecastResponseList
     }
