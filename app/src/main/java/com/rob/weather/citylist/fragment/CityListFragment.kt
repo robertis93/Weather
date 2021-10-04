@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -18,7 +17,6 @@ import com.rob.weather.citylist.model.WeatherCity
 import com.rob.weather.citylist.viewmodel.CityListViewModel
 import com.rob.weather.databinding.CityListFragmentBinding
 import com.rob.weather.generaldaytoday.fragment.CityListViewModelFactory
-import com.rob.weather.generaldaytoday.fragment.GeneralDayTodayFragmentDirections
 import com.rob.weather.utils.BaseFragment
 import java.util.*
 import javax.inject.Inject
@@ -33,7 +31,7 @@ class CityListFragment : BaseFragment<CityListFragmentBinding>(CityListFragmentB
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        (activity?.application as App).component.inject(this)
+        cityListViewModelFactory = (activity?.application as App).component.getDependencyCityList()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -48,7 +46,6 @@ class CityListFragment : BaseFragment<CityListFragmentBinding>(CityListFragmentB
         viewModel.weatherCityList.observe(viewLifecycleOwner) { weatherInCities ->
             cityAdapter.setData(weatherInCities)
             сityList.value = weatherInCities
-
         }
 
         val actionListCallback = object : DragAndDropCallback() {
@@ -82,7 +79,6 @@ class CityListFragment : BaseFragment<CityListFragmentBinding>(CityListFragmentB
         binding.addCityButton.setOnClickListener {
             dialog.showDialog(requireContext(), viewModel)
         }
-
 
         binding.mapIcon.setOnClickListener {
             val action =

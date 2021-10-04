@@ -1,14 +1,14 @@
 package com.rob.weather.di
 
-import com.rob.weather.citylist.fragment.CityListFragment
-import com.rob.weather.generaldaytoday.fragment.GeneralDayTodayFragment
+import com.rob.weather.generaldaytoday.fragment.CityListViewModelFactory
+import com.rob.weather.generaldaytoday.fragment.GeneralDayTodayViewModelFactory
 import dagger.Component
 import javax.inject.Singleton
 
 @Component(modules = [CityListModule::class])
 @Singleton
 interface WeatherAppComponent {
-    fun inject(generalDayTodayFragment: GeneralDayTodayFragment)
-    fun inject(cityListFragment: CityListFragment)
+    fun getDependencyGeneralDay(): GeneralDayTodayViewModelFactory
+    fun getDependencyCityList() : CityListViewModelFactory
 }
 

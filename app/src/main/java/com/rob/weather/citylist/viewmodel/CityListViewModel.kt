@@ -70,7 +70,7 @@ class CityListViewModel(
 
     fun addCity(cityName: String) {
         try {
-            val city = City(0, cityName)
+            val city = City(cityName)
             _cityList.value?.let { listCity ->
                 val cityMutableList = listCity.toMutableList()
                 cityMutableList.add(city)
@@ -91,7 +91,7 @@ class CityListViewModel(
             cityMutableList.removeAt(pos)
             _weatherCityList.value = cityMutableList
             viewModelScope.launch {
-                val city = City(0, cityName.name)
+                val city = City(cityName.name)
                 repository.deleteCity(city)
             }
         }
@@ -101,7 +101,7 @@ class CityListViewModel(
         val mutableList = mutableListOf<City>()
         try {
             for (cityName in cityList) {
-                val city = City(0, cityName.name)
+                val city = City(cityName.name)
                 mutableList.add(city)
             }
             viewModelScope.launch {

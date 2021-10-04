@@ -32,7 +32,7 @@ class GeneralDayTodayFragment :
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        (activity?.application as App).component.inject(this)
+        generalDayTodayViewModelFactory = (activity?.application as App).component.getDependencyGeneralDay()
     }
 
     @SuppressLint("ResourceAsColor")

@@ -19,7 +19,7 @@ import com.rob.weather.databinding.CityListFragmentBinding
 import com.rob.weather.databinding.FragmentMapsBinding
 import com.rob.weather.utils.BaseFragment
 
-class MapsFragment : BaseFragment<FragmentMapsBinding>(FragmentMapsBinding::inflate){
+class MapsFragment : Fragment(){
 
     private val callback = OnMapReadyCallback { googleMap ->
         /**
@@ -36,14 +36,14 @@ class MapsFragment : BaseFragment<FragmentMapsBinding>(FragmentMapsBinding::infl
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
     }
 
-//    override fun onCreateView(
-//        inflater: LayoutInflater,
-//        container: ViewGroup?,
-//        savedInstanceState: Bundle?
-//    ): View? {
-//        return inflater.inflate(R.layout.fragment_maps, container, false)
-//    }
-//
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.fragment_maps, container, false)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
