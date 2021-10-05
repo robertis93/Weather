@@ -39,16 +39,15 @@
             android:id="@+id/action_cityListFragment_to_weatherInformationByDayFragment"
             app:destination="@id/weatherInformationByDayFragment" />
         <action
-            android:id="@+id/action_cityListFragment_to_mapsFragment2"
-            app:destination="@id/mapsFragment2" />
+            android:id="@+id/action_cityListFragment_to_mapsFragment"
+            app:destination="@id/mapsFragment" />
     </fragment>
     <fragment
-        android:id="@+id/mapsFragment2"
+        android:id="@+id/mapsFragment"
         android:name="com.rob.weather.map.fragment.MapsFragment"
-        android:label="fragment_maps"
-        tools:layout="@layout/fragment_maps" >
+        android:label="MapsFragment" >
         <action
-            android:id="@+id/action_mapsFragment2_to_cityListFragment"
+            android:id="@+id/action_mapsFragment_to_cityListFragment"
             app:destination="@id/cityListFragment" />
     </fragment>
 </navigation>

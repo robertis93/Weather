@@ -20,7 +20,6 @@ import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.highlight.Highlight
-import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import com.github.mikephil.charting.utils.MPPointF
 import com.rob.weather.R
 import com.rob.weather.databinding.FragmetChooseDayBinding
@@ -96,8 +95,12 @@ class SelectedDayFragment :
         lineDataSet.mode = LineDataSet.Mode.CUBIC_BEZIER
         lineDataSet.setDrawValues(false)
         lineDataSet.setDrawCircles(false)
-        lineDataSet.setDrawHighlightIndicators(false)
-        lineDataSet.setDrawHorizontalHighlightIndicator(false)
+
+        lineDataSet.setDrawHighlightIndicators(true)
+        lineDataSet.setDrawVerticalHighlightIndicator(true)
+        lineDataSet.setDrawHorizontalHighlightIndicator(true)
+       // lineDataSet.setupCircularHighlightIndicator
+       // lineDataSet.setDrawHorizontalHighlightIndicator(true)
         lineDataSet.setValueTextColor(R.color.grey_storm)
         lineDataSet.lineWidth = 3f
         lineDataSet.fillColor = R.color.line_blue
@@ -111,8 +114,9 @@ class SelectedDayFragment :
         lineChart.setBackgroundResource(R.drawable.chart_rounded_corners)
         lineChart.setTouchEnabled(true)
         lineChart.setPinchZoom(false)
-        lineChart.setScaleXEnabled(true)
-        lineChart.setScaleYEnabled(true)
+        lineChart.isScaleXEnabled = true
+        lineChart.isScaleYEnabled = true
+
 
 
         // chart.setDrawYLabels(false);
@@ -143,22 +147,32 @@ class SelectedDayFragment :
         //ось поднялась наверх
         // lineChart.legend.yOffset = +10f
         lineChart.solidColor
-        lineChart.setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
-            override fun onValueSelected(e: Entry, h: Highlight?) {
-                val x = e.x.toString()
-                val y = e.y
-                val selectedXAxisCount = x.substringBefore(".")
-                lineDataSet.setDrawCircles(true)
-                lineDataSet.setDrawCircleHole(true)
-                lineDataSet.circleHoleRadius = 50f
-//                lineDataSet.setDrawCircleHole
-                //     lineDataSet.circleRadius= 4f
-                val nonFloat = lineChart.getXAxis().getValueFormatter().getFormattedValue(e.x)
-                //if you are display any string in x axis you will get this
-            }
 
-            override fun onNothingSelected() {}
-        })
+        lineChart.highlighter.getHighlight(22f, 10f)
+
+//        lineChart.setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
+//            override fun onValueSelected(e: Entry, h: Highlight?) {
+//                val x = e.x.toString()
+//                val y = e.y
+//
+//
+//                val selectedXAxisCount = x.substringBefore(".")
+//                lineDataSet.setDrawCircles(true)
+//                lineDataSet.setDrawCircleHole(true)
+//                lineDataSet.circleHoleRadius = 50f
+//                lineDataSet.circleRadius = 8F
+//                lineDataSet.circleHoleRadius = 4F
+//                h?.dataIndex = 33
+////                lineDataSet.setDrawCircleHole
+//                //     lineDataSet.circleRadius= 4f
+//                val nonFloat = lineChart.getXAxis().getValueFormatter().getFormattedValue(e.x)
+//                //if you are display any string in x axis you will get this
+//            }
+//
+//            override fun onNothingSelected() {}
+//
+//
+//        })
 
         val markerView = CustomMarker(context, R.layout.marker_view)
         lineChart.marker = markerView
@@ -192,6 +206,7 @@ class CustomMarker(context: Context, layoutResource: Int) : MarkerView(context, 
         findViewById<TextView>(R.id.temperature_textview).text = resText
         super.refreshContent(entry, highlight)
     }
+
 
     override fun getOffsetForDrawingAtPoint(xpos: Float, ypos: Float): MPPointF {
         return if (ypos < 200) {

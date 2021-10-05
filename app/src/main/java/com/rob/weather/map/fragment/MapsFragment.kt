@@ -1,39 +1,30 @@
 package com.rob.weather.map.fragment
 
-import androidx.fragment.app.Fragment
-
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
+import androidx.fragment.app.Fragment
 import com.rob.weather.R
-import com.rob.weather.databinding.CityListFragmentBinding
 import com.rob.weather.databinding.FragmentMapsBinding
+import com.rob.weather.databinding.FragmetChooseDayBinding
 import com.rob.weather.utils.BaseFragment
+import com.yandex.mapkit.Animation
+import com.yandex.mapkit.MapKitFactory
+import com.yandex.mapkit.geometry.Point
+import com.yandex.mapkit.map.CameraPosition
+import com.yandex.mapkit.mapview.MapView
+
 
 class MapsFragment : Fragment(){
+    lateinit var binding: FragmentMapsBinding
 
-    private val callback = OnMapReadyCallback { googleMap ->
-        /**
-         * Manipulates the map once available.
-         * This callback is triggered when the map is ready to be used.
-         * This is where we can add markers or lines, add listeners or move the camera.
-         * In this case, we just add a marker near Sydney, Australia.
-         * If Google Play services is not installed on the device, the user will be prompted to
-         * install it inside the SupportMapFragment. This method will only be triggered once the
-         * user has installed Google Play services and returned to the app.
-         */
-        val sydney = LatLng(-34.0, 151.0)
-        googleMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+    private var mapview: MapView? = null
+    override fun onStart() {
+        super.onStart()
+        mapview?.onStart();
+        MapKitFactory.getInstance().onStart();
     }
 
     override fun onCreateView(
@@ -41,15 +32,30 @@ class MapsFragment : Fragment(){
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_maps, container, false)
-    }
+        MapKitFactory.setApiKey("040a037b-1287-4381-bb2c-5b20912a208e");
+        MapKitFactory.initialize(requireContext());
+        binding = FragmentMapsBinding.inflate(inflater, container, false)
+        mapview = binding.mapCity
+        mapview!!.getMap().move(
+            CameraPosition(Point(55.751574, 37.573856), 11.0f, 0.0f, 0.0f),
+            Animation(Animation.Type.SMOOTH, 0F),
+            null
+        )
+        val view = binding.root
+        return view    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
         super.onViewCreated(view, savedInstanceState)
-        val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
-        mapFragment?.getMapAsync(callback)
+
+//        val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
+//        mapFragment?.getMapAsync(callback)
         Log.i("myLogs", "MapsFragment")
     }
 
-
+    override fun onStop() {
+        super.onStop()
+        mapview?.onStop()
+        MapKitFactory.getInstance().onStop()
+    }
 }

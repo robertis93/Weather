@@ -82,7 +82,7 @@ class CityListFragment : BaseFragment<CityListFragmentBinding>(CityListFragmentB
 
         binding.mapIcon.setOnClickListener {
             val action =
-                CityListFragmentDirections.actionCityListFragmentToMapsFragment2()
+                CityListFragmentDirections.actionCityListFragmentToMapsFragment()
             findNavController().navigate(action)
         }
     }
