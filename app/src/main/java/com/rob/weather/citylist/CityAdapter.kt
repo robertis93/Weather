@@ -3,9 +3,14 @@ package com.rob.weather.citylist
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.rob.weather.citylist.fragment.CityListFragmentDirections
 import com.rob.weather.citylist.model.WeatherCity
 import com.rob.weather.databinding.CityItemBinding
+import com.rob.weather.generaldaytoday.fragment.GeneralDayTodayFragmentDirections
 import com.squareup.picasso.Picasso
 
 class CityAdapter: RecyclerView.Adapter<CityAdapter.WeatherViewHolder>() {
@@ -41,6 +46,17 @@ class CityAdapter: RecyclerView.Adapter<CityAdapter.WeatherViewHolder>() {
             val iconCode = item.icon
             val iconUrl = "https://openweathermap.org/img/w/" + iconCode + ".png"
             Picasso.get().load(iconUrl).into(binding.imageView)
+            binding.rowLayout.setOnClickListener {
+                val action =
+                    CityListFragmentDirections.actionCityListFragmentToMapsFragment(item.latitude.toFloat(),
+                        item.longitude.toFloat()
+                    )
+                binding.root.findNavController().navigate(action)
+
+//                val action =
+//                    GeneralDayTodayFragmentDirections.actionWeatherInformationByDayFragmentToChooseDayFragment3(item)
+//                binding.root.findNavController().navigate(action)
+            }
         }
     }
 

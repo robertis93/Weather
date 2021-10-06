@@ -6,9 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.navArgs
 import com.rob.weather.R
 import com.rob.weather.databinding.FragmentMapsBinding
 import com.rob.weather.databinding.FragmetChooseDayBinding
+import com.rob.weather.selectedday.SelectedDayFragmentArgs
 import com.rob.weather.utils.BaseFragment
 import com.yandex.mapkit.Animation
 import com.yandex.mapkit.MapKitFactory
@@ -19,7 +21,7 @@ import com.yandex.mapkit.mapview.MapView
 
 class MapsFragment : Fragment(){
     lateinit var binding: FragmentMapsBinding
-
+    private val args by navArgs<MapsFragmentArgs>()
     private var mapview: MapView? = null
     override fun onStart() {
         super.onStart()
@@ -32,12 +34,13 @@ class MapsFragment : Fragment(){
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        MapKitFactory.setApiKey("040a037b-1287-4381-bb2c-5b20912a208e");
+        val lan = args.latitude.toDouble()
+        val lon = args.longitude.toDouble()
         MapKitFactory.initialize(requireContext());
         binding = FragmentMapsBinding.inflate(inflater, container, false)
         mapview = binding.mapCity
         mapview!!.getMap().move(
-            CameraPosition(Point(55.751574, 37.573856), 11.0f, 0.0f, 0.0f),
+            CameraPosition(Point(lan, lon), 10.0f, 0.0f, 0.0f),
             Animation(Animation.Type.SMOOTH, 0F),
             null
         )
@@ -45,12 +48,7 @@ class MapsFragment : Fragment(){
         return view    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
         super.onViewCreated(view, savedInstanceState)
-
-//        val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
-//        mapFragment?.getMapAsync(callback)
-        Log.i("myLogs", "MapsFragment")
     }
 
     override fun onStop() {
