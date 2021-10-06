@@ -7,4 +7,5 @@
     <string name="clear">ясно</string>
     <string name="today">сегодня</string>
     <string name="error">Ошибка сервера</string>
+    <string name="for_my_geolocation">По моей геолокации</string>
 </resources>
