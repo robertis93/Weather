@@ -36,18 +36,5 @@
           app:layout_constraintEnd_toEndOf="parent"
           app:layout_constraintStart_toStartOf="parent" />
 
-      <TextView
-          android:id="@+id/textView"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_alignParentStart="true"
-          android:layout_alignParentEnd="true"
-          android:layout_alignParentBottom="true"
-          android:layout_marginStart="175dp"
-          android:layout_marginEnd="162dp"
-          android:layout_marginBottom="137dp"
-          android:textSize="24sp"
-          android:text="coordinates" />
-
    </com.yandex.mapkit.mapview.MapView>
 </androidx.constraintlayout.widget.ConstraintLayout>
