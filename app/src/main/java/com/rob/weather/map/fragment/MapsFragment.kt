@@ -7,8 +7,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
+import com.MapCustomView
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.rob.weather.R
@@ -87,13 +89,18 @@ class MapsFragment : Fragment() {
             Animation(Animation.Type.SMOOTH, 0F),
             null
         )
-        val view = View(requireContext()).apply {
+        val vieww = View(requireContext()).apply {
             background = requireContext().getDrawable(R.drawable.ic_location)
         }
 
-        mapview?.map?.mapObjects?.addPlacemark(
+        val textView =
+            MapCustomView(requireContext())
+        textView.iconWeather.setImageResource(R.drawable.ic_location)
+        textView.temperatureWeather.text = "23"
+
+        val z = mapview?.map?.mapObjects?.addPlacemark(
             Point(latitudeOfCity, longitudeOfCity),
-            ViewProvider(view)
+            ViewProvider(textView)
         )
 //        mapview?.map?.mapObjects?.addPlacemark(
 //            Point(latitudeOfCity, longitudeOfCity),
