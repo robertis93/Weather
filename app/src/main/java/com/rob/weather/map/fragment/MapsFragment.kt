@@ -7,21 +7,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
-import com.MapCustomView
+import com.DisplayShortInfoWeather
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.rob.weather.R
 import com.rob.weather.databinding.FragmentMapsBinding
 import com.yandex.mapkit.Animation
 import com.yandex.mapkit.MapKitFactory
 import com.yandex.mapkit.geometry.Point
 import com.yandex.mapkit.map.CameraPosition
-import com.yandex.mapkit.map.PlacemarkMapObject
 import com.yandex.mapkit.mapview.MapView
-import com.yandex.runtime.image.ImageProvider
 import com.yandex.runtime.ui_view.ViewProvider
 import kotlin.properties.Delegates
 
@@ -45,10 +41,12 @@ class MapsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val latitudeOfCity = args.latitude.toDouble()
-        val longitudeOfCity = args.longitude.toDouble()
+        val latitudeOfCity = args.weatherCity.latitude
+        val longitudeOfCity = args.weatherCity.longitude
         binding = FragmentMapsBinding.inflate(inflater, container, false)
+
         locationDetermination(latitudeOfCity, longitudeOfCity, binding)
+
         binding.findCityGeoBtn.setOnClickListener {
             getLastKnownLocation(args, binding)
         }
@@ -71,9 +69,7 @@ class MapsFragment : Fragment() {
                 currentLongitude = location.longitude
                 locationDetermination(currentLatitude, currentLongitude, binding)
             }
-
         }
-
     }
 
     @SuppressLint("ResourceType")
@@ -84,37 +80,40 @@ class MapsFragment : Fragment() {
     ) {
         MapKitFactory.initialize(requireContext())
         mapview = binding.mapCity
+        mapview!!.map.setMapStyle(style)
         mapview!!.map.move(
             CameraPosition(Point(latitudeOfCity, longitudeOfCity), 9.0f, 0.0f, 0.0f),
             Animation(Animation.Type.SMOOTH, 0F),
             null
         )
-        val vieww = View(requireContext()).apply {
-            background = requireContext().getDrawable(R.drawable.ic_location)
-        }
+        val displayShortInfoWeather =
+            DisplayShortInfoWeather(requireContext())
 
-        val textView =
-            MapCustomView(requireContext())
-        textView.iconWeather.setImageResource(R.drawable.ic_location)
-        textView.temperatureWeather.text = "23"
-
-        val z = mapview?.map?.mapObjects?.addPlacemark(
-            Point(latitudeOfCity, longitudeOfCity),
-            ViewProvider(textView)
+        displayShortInfoWeather.setTemperature(
+            args.weatherCity!!.temperatureMin,
+            args.weatherCity!!.temperatureMax
         )
-//        mapview?.map?.mapObjects?.addPlacemark(
-//            Point(latitudeOfCity, longitudeOfCity),
-//            ImageProvider.fromResource(context, R.drawable.ic_location)
-//        )
+        displayShortInfoWeather.setIconWeather(args.weatherCity.icon)
+
+        mapview?.map?.mapObjects?.addPlacemark(
+            Point((latitudeOfCity + 0.1), longitudeOfCity),
+            ViewProvider(displayShortInfoWeather)
+        )
+
+
     }
-//    private fun drawMyLocationMark() {
-//        val view = View(requireContext()).apply {
-//            background = requireContext().getDrawable(R.drawable.ic_place_24px)
-//        }
-//
-//        mapview?.map?.mapObjects?.addPlacemark(
-//            Point(it.latitude, it.longitude),
-//            ViewProvider(view)
-//        )
-//    }
+
+    var style = "[" +
+            "        {" +
+            "            \"types\": \"point\"," +
+            "            \"tags\": {" +
+            "                \"all\": [" +
+            "                    \"poi\"" +
+            "                ]" +
+            "            }," +
+            "            \"stylers\": {" +
+            "                \"color\": \"#RRGGBBAA\"" +
+            "            }" +
+            "        }" +
+            "    ]"
 }

@@ -50,10 +50,7 @@
             android:id="@+id/action_mapsFragment_to_cityListFragment"
             app:destination="@id/cityListFragment" />
         <argument
-            android:name="latitude"
-            app:argType="float" />
-        <argument
-            android:name="longitude"
-            app:argType="float" />
+            android:name="weatherCity"
+            app:argType="com.rob.weather.citylist.model.WeatherCity" />
     </fragment>
 </navigation>

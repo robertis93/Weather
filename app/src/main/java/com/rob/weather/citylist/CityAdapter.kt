@@ -48,39 +48,9 @@ class CityAdapter: RecyclerView.Adapter<CityAdapter.WeatherViewHolder>() {
             Picasso.get().load(iconUrl).into(binding.imageView)
             binding.rowLayout.setOnClickListener {
                 val action =
-                    CityListFragmentDirections.actionCityListFragmentToMapsFragment(item.latitude.toFloat(),
-                        item.longitude.toFloat()
-                    )
+                    CityListFragmentDirections.actionCityListFragmentToMapsFragment(item)
                 binding.root.findNavController().navigate(action)
-
-//                val action =
-//                    GeneralDayTodayFragmentDirections.actionWeatherInformationByDayFragmentToChooseDayFragment3(item)
-//                binding.root.findNavController().navigate(action)
             }
         }
     }
-
-//    override fun onItemMove(fromPosition: Int, toPosition: Int): Boolean {
-//        //Log.v("", "Log position" + fromPosition + " " + toPosition);
-//        //Log.v("", "Log position" + fromPosition + " " + toPosition);
-//        if (fromPosition < cityList.size && toPosition < cityList.size) {
-//            if (fromPosition < toPosition) {
-//                for (i in fromPosition until toPosition) {
-//                    Collections.swap(cityList, i, i + 1)
-//                }
-//            } else {
-//                for (i in fromPosition downTo toPosition + 1) {
-//                    Collections.swap(cityList, i, i - 1)
-//                }
-//            }
-//            notifyItemMoved(fromPosition, toPosition)
-//        }
-//        return true
-//    }
-
-//    override fun onItemDismiss(position: Int) {
-//      //  cityList.(position)
-//        notifyItemRemoved(position)
-//    }
-
 }

@@ -1,7 +1,9 @@
 package com.rob.weather.citylist.model
 
+import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.parcelize.Parcelize
 
 @Entity(tableName = "city_table")
 data class City(
@@ -9,6 +11,7 @@ data class City(
     val name: String
 )
 
+@Parcelize
 data class WeatherCity(
     @PrimaryKey
     val name: String,
@@ -17,4 +20,4 @@ data class WeatherCity(
     var icon: String,
     var latitude: Double,
     var longitude: Double
-)
+) : Parcelable

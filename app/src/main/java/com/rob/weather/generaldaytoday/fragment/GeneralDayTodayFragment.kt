@@ -48,7 +48,6 @@ class GeneralDayTodayFragment :
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         generalDayTodayViewModel.sortedWeatherForecastResult.observe(viewLifecycleOwner) { list ->
             allDaysWeatherListAdapter.setData(list)
-         //   todayWeather = list
         }
 
         generalDayTodayViewModel.firstSsortedWeatherForecastResult.observe(viewLifecycleOwner){
@@ -59,11 +58,6 @@ class GeneralDayTodayFragment :
             binding.currentWeatherDescriptionTextview.text = error
             binding.progressBar.visibility = View.GONE
         }
-
-        //TODO : delete
-//        generalDayTodayViewModel.fullWeatherTodayResponse.observe(viewLifecycleOwner) {
-//            todayWeather = it
-//        }
 
         generalDayTodayViewModel.weatherToday.observe(viewLifecycleOwner) {
             with(binding) {
