@@ -15,9 +15,9 @@ import com.rob.weather.R
 import com.rob.weather.databinding.FragmentGeneralDayTodayBinding
 import com.rob.weather.generaldaytoday.adapters.GeneralDayTodayAdapter
 import com.rob.weather.generaldaytoday.viewmodel.GeneralDayTodayViewModel
-import com.rob.weather.model.FullWeatherToday
 import com.rob.weather.model.SortedByDateWeatherForecastResult
 import com.rob.weather.utils.BaseFragment
+import com.rob.weather.utils.Utils.BASE_URL_IMAGE
 import com.rob.weather.utils.Utils.city
 import com.squareup.picasso.Picasso
 import javax.inject.Inject
@@ -66,7 +66,7 @@ class GeneralDayTodayFragment :
                 currentWeatherDescriptionTextview.text = it.description
                 toolbarToday.text = it.city
                 val iconCode = it.icon
-                val iconUrl = "https://openweathermap.org/img/w/" + iconCode + ".png"
+                val iconUrl = BASE_URL_IMAGE + iconCode + getString(R.string.png)
                 binding.weatherIcon.visibility = View.VISIBLE
                 binding.progressBar.visibility = View.GONE
                 Picasso.get().load(iconUrl).into(weatherIcon)
@@ -81,7 +81,6 @@ class GeneralDayTodayFragment :
                     true
                 }
                 R.id.action_loader -> {
-
                     true
                 }
                 else -> onOptionsItemSelected(it)
@@ -90,7 +89,8 @@ class GeneralDayTodayFragment :
 
         binding.blueRectangleView.setOnClickListener {
             val action =
-                GeneralDayTodayFragmentDirections.actionWeatherInformationByDayFragmentToChooseDayFragment3(
+                GeneralDayTodayFragmentDirections
+                    .actionWeatherInformationByDayFragmentToChooseDayFragment3(
                     todayWeather.get(0)
                 )
             findNavController().navigate(action)
