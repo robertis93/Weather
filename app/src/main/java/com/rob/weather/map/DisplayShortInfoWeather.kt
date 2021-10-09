@@ -1,4 +1,4 @@
-package com
+package com.rob.weather.map
 
 import android.content.Context
 import android.view.LayoutInflater

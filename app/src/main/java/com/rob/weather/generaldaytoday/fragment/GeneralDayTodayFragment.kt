@@ -40,7 +40,7 @@ class GeneralDayTodayFragment :
         super.onViewCreated(view, savedInstanceState)
 
         picasso = Picasso.Builder(requireContext()).build()
-        generalDayTodayViewModel.getAllWeatherForecast(city)
+        generalDayTodayViewModel.getAllWeatherForecast(requireContext(), city)
         val allDaysWeatherListAdapter = GeneralDayTodayAdapter()
         val recyclerView = binding.recyclerView
         recyclerView.adapter = allDaysWeatherListAdapter
@@ -97,7 +97,7 @@ class GeneralDayTodayFragment :
         }
 
         binding.swipeRefresh.setOnRefreshListener(OnRefreshListener {
-            generalDayTodayViewModel.getAllWeatherForecast(city)
+            generalDayTodayViewModel.getAllWeatherForecast(requireContext(), city)
             binding.swipeRefresh.isRefreshing = false
         })
     }

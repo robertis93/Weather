@@ -1,0 +1,15 @@
+{
+
+  "style": [
+                    {
+                        "types": "point",
+                        "tags": {
+                            "all": [
+                                "poi"
+                            ]
+                        },
+                        "stylers": {
+                            "color": "0xRRGGBBAA"
+                        }
+                    }
+                ]}
