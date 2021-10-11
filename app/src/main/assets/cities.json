@@ -1717,12 +1717,6 @@
       "name": "Лида"
     },
     {
-      "city_id": "341",
-      "country_id": "248",
-      "region_id": "330",
-      "name": "Мосты"
-    },
-    {
       "city_id": "342",
       "country_id": "248",
       "region_id": "330",
@@ -2681,12 +2675,6 @@
       "country_id": "467",
       "region_id": "550",
       "name": "Кайку"
-    },
-    {
-      "city_id": "552",
-      "country_id": "467",
-      "region_id": "550",
-      "name": "Моссору"
     },
     {
       "city_id": "553",
@@ -20131,12 +20119,6 @@
       "name": "Мещовск"
     },
     {
-      "city_id": "3862",
-      "country_id": "3159",
-      "region_id": "3841",
-      "name": "Мосальск"
-    },
-    {
       "city_id": "3863",
       "country_id": "3159",
       "region_id": "3841",
@@ -21437,12 +21419,6 @@
       "country_id": "3159",
       "region_id": "4052",
       "name": "Майкоп"
-    },
-    {
-      "city_id": "4087",
-      "country_id": "3159",
-      "region_id": "4052",
-      "name": "Мостовской"
     },
     {
       "city_id": "4088",
@@ -23273,6 +23249,18 @@
       "country_id": "3159",
       "region_id": "4312",
       "name": "Москва"
+    },
+    {
+      "city_id": "3862",
+      "country_id": "3159",
+      "region_id": "3841",
+      "name": "Мосальск"
+    },
+    {
+      "city_id": "4087",
+      "country_id": "3159",
+      "region_id": "4052",
+      "name": "Мостовской"
     },
     {
       "city_id": "4401",

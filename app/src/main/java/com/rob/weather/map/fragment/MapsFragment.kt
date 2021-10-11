@@ -15,10 +15,17 @@ import com.rob.weather.map.DisplayShortInfoWeather
 import com.yandex.mapkit.Animation
 import com.yandex.mapkit.MapKitFactory
 import com.yandex.mapkit.geometry.Point
+import com.yandex.mapkit.layers.GeoObjectTapListener
 import com.yandex.mapkit.map.CameraPosition
+import com.yandex.mapkit.map.InputListener
+import com.yandex.mapkit.map.Map
+import com.yandex.mapkit.map.MapObjectTapListener
 import com.yandex.mapkit.mapview.MapView
 import com.yandex.runtime.ui_view.ViewProvider
 import kotlin.properties.Delegates
+
+
+//: TODO при добавлении города который рядом, иконка с информацией закрывает собой другую иконку
 
 class MapsFragment : Fragment() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
@@ -47,9 +54,18 @@ class MapsFragment : Fragment() {
         binding.findCityGeoBtn.setOnClickListener {
             getLastKnownLocation(args, binding)
         }
+
+        val listener = object : InputListener {
+            override fun onMapTap(p0: Map, point: Point) {
+            val latitudeSelectedCity= point.latitude//do something...
+            val longitudeSelectedCity= point.longitude//do something...
+            }
+        }
+        mapview?.map?.addInputListener(listener)
         val view = binding.root
         return view
     }
+
 
     override fun onStop() {
         super.onStop()
