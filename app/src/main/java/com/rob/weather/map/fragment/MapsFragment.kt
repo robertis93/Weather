@@ -60,6 +60,10 @@ class MapsFragment : Fragment() {
             val latitudeSelectedCity= point.latitude//do something...
             val longitudeSelectedCity= point.longitude//do something...
             }
+
+            override fun onMapLongTap(p0: Map, p1: Point) {
+                TODO("Not yet implemented")
+            }
         }
         mapview?.map?.addInputListener(listener)
         val view = binding.root
