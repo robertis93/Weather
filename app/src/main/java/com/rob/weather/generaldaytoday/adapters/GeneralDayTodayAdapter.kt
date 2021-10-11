@@ -11,7 +11,6 @@ import com.squareup.picasso.Picasso
 
 class GeneralDayTodayAdapter :
     RecyclerView.Adapter<GeneralDayTodayAdapter.WeatherViewHolder>() {
-
     private var allDaysWeatherList = emptyList<SortedByDateWeatherForecastResult>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WeatherViewHolder {
@@ -57,7 +56,8 @@ class GeneralDayTodayAdapter :
             recyclerView.adapter = timeAndTemperatureAdapter
             binding.rowLayout.setOnClickListener {
                 val action =
-                    GeneralDayTodayFragmentDirections.actionWeatherInformationByDayFragmentToChooseDayFragment3(item)
+                    GeneralDayTodayFragmentDirections
+                        .actionWeatherInformationByDayFragmentToChooseDayFragment3(item)
                 binding.root.findNavController().navigate(action)
             }
         }
