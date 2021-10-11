@@ -43,7 +43,7 @@ class MapsFragment : Fragment() {
         val latitudeOfCity = args.weatherCity.latitude
         val longitudeOfCity = args.weatherCity.longitude
         binding = FragmentMapsBinding.inflate(inflater, container, false)
-        locationDetermination(latitudeOfCity, longitudeOfCity, binding)
+        locationDetermination(latitudeOfCity, longitudeOfCity, binding, args)
         binding.findCityGeoBtn.setOnClickListener {
             getLastKnownLocation(args, binding)
         }
@@ -64,7 +64,7 @@ class MapsFragment : Fragment() {
             } else {
                 currentLatitude = location.latitude
                 currentLongitude = location.longitude
-                locationDetermination(currentLatitude, currentLongitude, binding)
+                locationDetermination(currentLatitude, currentLongitude, binding, args)
             }
         }
     }
@@ -73,13 +73,16 @@ class MapsFragment : Fragment() {
     fun locationDetermination(
         latitudeOfCity: Double,
         longitudeOfCity: Double,
-        binding: FragmentMapsBinding
+        binding: FragmentMapsBinding,
+        args: MapsFragmentArgs
     ) {
         MapKitFactory.initialize(requireContext())
         mapview = binding.mapCity
         mapview?.map?.move(
-            CameraPosition(Point(latitudeOfCity, longitudeOfCity), 7.0f, 0.0f,
-                0.0f),
+            CameraPosition(
+                Point(latitudeOfCity, longitudeOfCity), 7.0f, 0.0f,
+                0.0f
+            ),
             Animation(Animation.Type.SMOOTH, 0F),
             null
         )
@@ -96,5 +99,20 @@ class MapsFragment : Fragment() {
             Point((latitudeOfCity + 0.4), longitudeOfCity),
             ViewProvider(displayShortInfoWeather)
         )
+        val weatherInfoInCityList = args.cityWeatherList
+        for (weatherInfoInCity in weatherInfoInCityList) {
+            val latitude = weatherInfoInCity.latitude
+            val longitude = weatherInfoInCity.longitude
+            val minTemperature = weatherInfoInCity.temperatureMin
+            val maxTemperature = weatherInfoInCity.temperatureMax
+            val displayInfoWeather =
+                DisplayShortInfoWeather(requireContext())
+            displayInfoWeather.setTemperature(minTemperature, maxTemperature)
+            displayInfoWeather.setIconWeather(weatherInfoInCity.icon)
+            mapview?.map?.mapObjects?.addPlacemark(
+                Point((latitude + 0.4), longitude),
+                ViewProvider(displayInfoWeather)
+            )
+        }
     }
 }

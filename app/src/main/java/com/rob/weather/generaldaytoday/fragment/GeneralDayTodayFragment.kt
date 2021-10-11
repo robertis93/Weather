@@ -7,6 +7,7 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.View
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
@@ -20,6 +21,8 @@ import com.rob.weather.utils.BaseFragment
 import com.rob.weather.utils.Utils.BASE_URL_IMAGE
 import com.rob.weather.utils.Utils.city
 import com.squareup.picasso.Picasso
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 class GeneralDayTodayFragment :
@@ -55,10 +58,17 @@ class GeneralDayTodayFragment :
             todayWeather = it
         }
 
-        generalDayTodayViewModel.errorMessage.observe(viewLifecycleOwner) { error ->
-            binding.currentWeatherDescriptionTextview.text = error
-            binding.progressBar.visibility = View.GONE
-        }
+        generalDayTodayViewModel.errorMessage
+            .onEach { error ->
+                binding.currentWeatherDescriptionTextview.text = error
+                binding.progressBar.visibility = View.GONE
+            }
+            .launchIn(lifecycleScope)
+
+//        generalDayTodayViewModel.errorMessage.observe(viewLifecycleOwner) { error ->
+//            binding.currentWeatherDescriptionTextview.text = error
+//            binding.progressBar.visibility = View.GONE
+//        }
 
         generalDayTodayViewModel.weatherToday.observe(viewLifecycleOwner) {
             with(binding) {

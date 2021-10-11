@@ -9,32 +9,30 @@
     android:orientation="vertical"
     tools:context=".generaldaytoday.fragment.GeneralDayTodayFragment">
 
-   <com.yandex.mapkit.mapview.MapView
-       android:id="@+id/map_city"
-       android:layout_width="match_parent"
-       android:layout_height="match_parent"
-       app:layout_constraintBottom_toBottomOf="parent"
-       app:layout_constraintEnd_toEndOf="parent"
-       app:layout_constraintStart_toStartOf="parent"
-       app:layout_constraintTop_toTopOf="parent">
+    <com.yandex.mapkit.mapview.MapView
+        android:id="@+id/map_city"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-      <com.google.android.material.button.MaterialButton
-          android:id="@+id/find_city_geo_btn"
-          style="@style/Button"
-          android:layout_width="wrap_content"
-          android:layout_height="40dp"
-          android:layout_alignParentStart="true"
-          android:layout_alignParentEnd="true"
-          android:layout_alignParentBottom="true"
-          android:layout_marginStart="80dp"
-          android:layout_marginEnd="80dp"
-          android:layout_marginBottom="37dp"
-          android:text="@string/for_my_geolocation"
-          android:textAllCaps="false"
-          app:cornerRadius="12dp"
-          app:layout_constraintBottom_toBottomOf="parent"
-          app:layout_constraintEnd_toEndOf="parent"
-          app:layout_constraintStart_toStartOf="parent" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/find_city_geo_btn"
+            style="@style/Button"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="100dp"
+            android:layout_marginEnd="100dp"
+            android:layout_marginBottom="37dp"
+            android:gravity="center"
+            android:text="@string/for_my_geolocation"
+            android:textAllCaps="false"
+            app:cornerRadius="12dp" />
 
-   </com.yandex.mapkit.mapview.MapView>
+    </com.yandex.mapkit.mapview.MapView>
 </androidx.constraintlayout.widget.ConstraintLayout>
