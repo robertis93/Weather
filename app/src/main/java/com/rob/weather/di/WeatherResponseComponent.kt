@@ -2,6 +2,7 @@ package com.rob.weather.di
 
 import com.rob.weather.generaldaytoday.fragment.CityListViewModelFactory
 import com.rob.weather.generaldaytoday.fragment.GeneralDayTodayViewModelFactory
+import com.rob.weather.generaldaytoday.fragment.MapViewModelFactory
 import dagger.Component
 import javax.inject.Singleton
 
@@ -10,5 +11,6 @@ import javax.inject.Singleton
 interface WeatherAppComponent {
     fun getDependencyGeneralDay(): GeneralDayTodayViewModelFactory
     fun getDependencyCityList(): CityListViewModelFactory
+    fun getDependencyMap(): MapViewModelFactory
 }
 

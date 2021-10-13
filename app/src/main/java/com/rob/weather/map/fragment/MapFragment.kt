@@ -1,16 +1,23 @@
 package com.rob.weather.map.fragment
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.location.Location
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.rob.weather.App
+import com.rob.weather.citylist.viewmodel.CityListViewModel
 import com.rob.weather.databinding.FragmentMapsBinding
+import com.rob.weather.generaldaytoday.fragment.CityListViewModelFactory
+import com.rob.weather.generaldaytoday.fragment.MapViewModelFactory
 import com.rob.weather.map.DisplayShortInfoWeather
 import com.yandex.mapkit.Animation
 import com.yandex.mapkit.MapKitFactory
@@ -22,18 +29,28 @@ import com.yandex.mapkit.map.Map
 import com.yandex.mapkit.map.MapObjectTapListener
 import com.yandex.mapkit.mapview.MapView
 import com.yandex.runtime.ui_view.ViewProvider
+import javax.inject.Inject
 import kotlin.properties.Delegates
 
 
 //: TODO при добавлении города который рядом, иконка с информацией закрывает собой другую иконку
 
-class MapsFragment : Fragment() {
+class MapFragment : Fragment() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     var currentLatitude by Delegates.notNull<Double>()
     var currentLongitude by Delegates.notNull<Double>()
     lateinit var binding: FragmentMapsBinding
-    private val args by navArgs<MapsFragmentArgs>()
+    private val args by navArgs<MapFragmentArgs>()
     private var mapview: MapView? = null
+
+    @Inject
+    lateinit var mapViewModelFactory: MapViewModelFactory
+    val mapViewModel: MapViewModel by viewModels { mapViewModelFactory }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+      mapViewModelFactory = (activity?.application as App).component.getDependencyMap()
+    }
 
     override fun onStart() {
         super.onStart()
@@ -59,6 +76,8 @@ class MapsFragment : Fragment() {
             override fun onMapTap(p0: Map, point: Point) {
             val latitudeSelectedCity= point.latitude
             val longitudeSelectedCity= point.longitude
+                mapViewModel.getWeatherInCity(latitudeSelectedCity, longitudeSelectedCity)
+                Log.i("myLogs", "GEoLocation City Click")
             }
 
             override fun onMapLongTap(p0: Map, p1: Point) {
@@ -76,7 +95,7 @@ class MapsFragment : Fragment() {
         MapKitFactory.getInstance().onStop()
     }
 
-    fun getLastKnownLocation(args: MapsFragmentArgs, binding: FragmentMapsBinding) {
+    fun getLastKnownLocation(args: MapFragmentArgs, binding: FragmentMapsBinding) {
         fusedLocationClient.lastLocation.addOnCompleteListener { task ->
             var location: Location? = task.result
             if (location == null) {
@@ -93,7 +112,7 @@ class MapsFragment : Fragment() {
         latitudeOfCity: Double,
         longitudeOfCity: Double,
         binding: FragmentMapsBinding,
-        args: MapsFragmentArgs
+        args: MapFragmentArgs
     ) {
         MapKitFactory.initialize(requireContext())
         mapview = binding.mapCity

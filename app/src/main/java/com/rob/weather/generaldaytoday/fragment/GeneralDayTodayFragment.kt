@@ -16,7 +16,6 @@ import com.rob.weather.R
 import com.rob.weather.databinding.FragmentGeneralDayTodayBinding
 import com.rob.weather.generaldaytoday.adapters.GeneralDayTodayAdapter
 import com.rob.weather.generaldaytoday.viewmodel.GeneralDayTodayViewModel
-import com.rob.weather.model.SortedByDateWeatherForecastResult
 import com.rob.weather.utils.BaseFragment
 import com.rob.weather.utils.Utils.BASE_URL_IMAGE
 import com.rob.weather.utils.Utils.city
@@ -30,7 +29,6 @@ class GeneralDayTodayFragment :
     @Inject
     lateinit var generalDayTodayViewModelFactory: GeneralDayTodayViewModelFactory
     private val generalDayTodayViewModel: GeneralDayTodayViewModel by viewModels { generalDayTodayViewModelFactory }
-    private lateinit var todayWeather: List<SortedByDateWeatherForecastResult>
 
     override fun onAttach(context: Context) {
         super.onAttach(context)

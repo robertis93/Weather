@@ -5,11 +5,12 @@ import com.rob.weather.datasource.retrofit.WeatherDataFromRemoteSource
 import com.rob.weather.model.WeatherForecastResult
 import javax.inject.Inject
 
-class WeatherRepository @Inject constructor(private val cityDao: CityDao, val dataSource:
-WeatherDataFromRemoteSource
+class WeatherRepository @Inject constructor(
+    private val cityDao: CityDao, val dataSource:
+    WeatherDataFromRemoteSource
 ) {
 
-    suspend fun getAllCities() : List<City> =
+    suspend fun getAllCities(): List<City> =
         cityDao.getListCity()
 
     suspend fun insert(cityName: City) {
@@ -27,6 +28,11 @@ WeatherDataFromRemoteSource
     suspend fun getWeatherResponse(city: String): WeatherForecastResult {
         val weatherForecastResult = dataSource.getWeatherForecastResponse(city)
         return weatherForecastResult
+    }
+
+    suspend fun getWeatherInCityByCoordinates(latitude: Double, longitude: Double):
+            WeatherForecastResult {
+        return dataSource.getWeatherInformationByLatitudeAndLongitude(latitude, longitude)
     }
 
     suspend fun deleteCity(city: City) {

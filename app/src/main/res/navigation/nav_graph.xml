@@ -44,7 +44,7 @@
     </fragment>
     <fragment
         android:id="@+id/mapsFragment"
-        android:name="com.rob.weather.map.fragment.MapsFragment"
+        android:name="com.rob.weather.map.fragment.MapFragment"
         android:label="MapsFragment" >
         <action
             android:id="@+id/action_mapsFragment_to_cityListFragment"
