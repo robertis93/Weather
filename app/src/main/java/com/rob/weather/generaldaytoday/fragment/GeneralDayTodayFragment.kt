@@ -29,9 +29,9 @@ class GeneralDayTodayFragment :
     BaseFragment<FragmentGeneralDayTodayBinding>(FragmentGeneralDayTodayBinding::inflate) {
     @Inject
     lateinit var generalDayTodayViewModelFactory: GeneralDayTodayViewModelFactory
-    val generalDayTodayViewModel: GeneralDayTodayViewModel by viewModels { generalDayTodayViewModelFactory }
-    lateinit var todayWeather: List<SortedByDateWeatherForecastResult>
-    lateinit var picasso: Picasso
+    private val generalDayTodayViewModel: GeneralDayTodayViewModel by viewModels { generalDayTodayViewModelFactory }
+    private lateinit var todayWeather: List<SortedByDateWeatherForecastResult>
+    private lateinit var picasso: Picasso
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -64,11 +64,6 @@ class GeneralDayTodayFragment :
                 binding.progressBar.visibility = View.GONE
             }
             .launchIn(lifecycleScope)
-
-//        generalDayTodayViewModel.errorMessage.observe(viewLifecycleOwner) { error ->
-//            binding.currentWeatherDescriptionTextview.text = error
-//            binding.progressBar.visibility = View.GONE
-//        }
 
         generalDayTodayViewModel.weatherToday.observe(viewLifecycleOwner) {
             with(binding) {

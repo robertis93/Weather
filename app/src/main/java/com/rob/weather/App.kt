@@ -16,5 +16,10 @@ class App : Application() {
             .dataBaseModule(DataBaseModule(this))
             .build()
     }
+
+    fun Application.getComponent(): WeatherAppComponent {
+        if (this !is App) throw IllegalArgumentException("Для работы метода его надо вызывать у класса App.")
+        return component
+    }
 }
 
