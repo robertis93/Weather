@@ -31,7 +31,6 @@ class GeneralDayTodayFragment :
     lateinit var generalDayTodayViewModelFactory: GeneralDayTodayViewModelFactory
     private val generalDayTodayViewModel: GeneralDayTodayViewModel by viewModels { generalDayTodayViewModelFactory }
     private lateinit var todayWeather: List<SortedByDateWeatherForecastResult>
-    private lateinit var picasso: Picasso
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -42,8 +41,6 @@ class GeneralDayTodayFragment :
     @SuppressLint("ResourceAsColor")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        picasso = Picasso.Builder(requireContext()).build()
         generalDayTodayViewModel.getAllWeatherForecast(requireContext(), city)
         val allDaysWeatherListAdapter = GeneralDayTodayAdapter()
         val recyclerView = binding.recyclerView
@@ -54,8 +51,16 @@ class GeneralDayTodayFragment :
             allDaysWeatherListAdapter.setData(list)
         }
 
-        generalDayTodayViewModel.firstSortedWeatherForecastResult.observe(viewLifecycleOwner){
-            todayWeather = it
+        generalDayTodayViewModel.firstSortedWeatherForecastResult.observe(viewLifecycleOwner) {
+            val action =
+                GeneralDayTodayFragmentDirections
+                    .actionWeatherInformationByDayFragmentToChooseDayFragment3(
+                        it[0]
+                    )
+            binding.blueRectangleView.setOnClickListener {
+                findNavController().navigate(action)
+            }
+
         }
 
         generalDayTodayViewModel.errorMessage
@@ -72,7 +77,7 @@ class GeneralDayTodayFragment :
                 currentWeatherDescriptionTextview.text = it.description
                 toolbarToday.text = it.city
                 val iconCode = it.icon
-                val iconUrl = BASE_URL_IMAGE + iconCode + getString(R.string.png)
+                val iconUrl = BASE_URL_IMAGE + iconCode + ".png"
                 binding.weatherIcon.visibility = View.VISIBLE
                 binding.progressBar.visibility = View.GONE
                 Picasso.get().load(iconUrl).into(weatherIcon)
@@ -92,16 +97,6 @@ class GeneralDayTodayFragment :
                 else -> onOptionsItemSelected(it)
             }
         }
-
-        binding.blueRectangleView.setOnClickListener {
-            val action =
-                GeneralDayTodayFragmentDirections
-                    .actionWeatherInformationByDayFragmentToChooseDayFragment3(
-                    todayWeather.get(0)
-                )
-            findNavController().navigate(action)
-        }
-
         binding.swipeRefresh.setOnRefreshListener(OnRefreshListener {
             generalDayTodayViewModel.getAllWeatherForecast(requireContext(), city)
             binding.swipeRefresh.isRefreshing = false

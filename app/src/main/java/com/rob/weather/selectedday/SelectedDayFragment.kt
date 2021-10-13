@@ -117,17 +117,6 @@ class SelectedDayFragment :
         lineChart.isScaleXEnabled = true
         lineChart.isScaleYEnabled = true
 
-
-
-        // chart.setDrawYLabels(false);
-        // val xAxisFormatter: IAxisValueFormatter = DayAxisValueFormatter(lineChart)
-
-        // if disabled, scaling can be done on x- and y-axis separately
-//        lineChart.setPinchZoom(false)
-//        lineChart.getLegend().setEnabled(false)
-//
-//        lineChart.setDrawGridBackground(false)
-        // chart.setDrawYLabels(false);
         val xAxis: XAxis = lineChart.xAxis
         xAxis.position = XAxis.XAxisPosition.BOTTOM
         xAxis.setDrawGridLines(false)
@@ -138,45 +127,17 @@ class SelectedDayFragment :
         xAxis.valueFormatter = MyValueFormatter()
         xAxis.axisMaximum = 21f
 
-        // no description text
-        lineChart.description.isEnabled = false
+         lineChart.description.isEnabled = false
         lineChart.setNoDataText("No forex yet!")
         lineChart.invalidate()
         lineChart.centerOffsets
         lineChart.legend.xOffset = -60f
-        //ось поднялась наверх
-        // lineChart.legend.yOffset = +10f
-        lineChart.solidColor
+         lineChart.solidColor
 
         lineChart.highlighter.getHighlight(22f, 10f)
 
-//        lineChart.setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
-//            override fun onValueSelected(e: Entry, h: Highlight?) {
-//                val x = e.x.toString()
-//                val y = e.y
-//
-//
-//                val selectedXAxisCount = x.substringBefore(".")
-//                lineDataSet.setDrawCircles(true)
-//                lineDataSet.setDrawCircleHole(true)
-//                lineDataSet.circleHoleRadius = 50f
-//                lineDataSet.circleRadius = 8F
-//                lineDataSet.circleHoleRadius = 4F
-//                h?.dataIndex = 33
-////                lineDataSet.setDrawCircleHole
-//                //     lineDataSet.circleRadius= 4f
-//                val nonFloat = lineChart.getXAxis().getValueFormatter().getFormattedValue(e.x)
-//                //if you are display any string in x axis you will get this
-//            }
-//
-//            override fun onNothingSelected() {}
-//
-//
-//        })
-
         val markerView = CustomMarker(context, R.layout.marker_view)
         lineChart.marker = markerView
-        // xAxis.valueFormatter = xAxisFormatter
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

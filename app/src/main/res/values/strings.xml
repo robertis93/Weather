@@ -12,5 +12,4 @@
     <string name="error_server">Ошибка сервера</string>
     <string name="feels_like">\", ощущается как  \"</string>
     <string name="celsius_icon">°</string>
-    <string name="png">.png</string>
 </resources>
