@@ -1,5 +1,6 @@
 package com.rob.weather.datasource.retrofit
 
+import com.google.android.play.core.internal.q
 import com.rob.weather.model.WeatherForecastResult
 import com.rob.weather.utils.Utils.BASE_URL
 import retrofit2.Retrofit
@@ -10,5 +11,9 @@ class WeatherDataFromRemoteSource @Inject constructor(private val retrofitServic
 
     suspend fun getWeatherForecastResponse(q: String): WeatherForecastResult {
         return retrofitService.getWeatherForecastResponse(q)
+    }
+
+    suspend fun  getWeatherInformationByLatitudeAndLongitude(lat: String, lon: String): WeatherForecastResult {
+        return retrofitService.getWeatherForecastResponse(lat, lon)
     }
 }

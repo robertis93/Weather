@@ -13,4 +13,13 @@ interface RetrofitServices {
         @Query("units") units: String = "metric",
         @Query("lang") language: String = "ru",
     ): WeatherForecastResult
+
+    @GET("data/2.5/forecast?")
+    suspend fun getWeatherInformationByLatitudeAndLongitude(
+        @Query("lat") lat: String,
+        @Query("lon") lon: String,
+        @Query("appid") appid: String = Utils.id_key,
+        @Query("units") units: String = "metric",
+        @Query("lang") language: String = "ru",
+    ): WeatherForecastResult
 }

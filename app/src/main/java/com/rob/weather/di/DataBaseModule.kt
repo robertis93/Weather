@@ -14,25 +14,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 @Module
-class CityListModule(val application: App) {
-
-    @Provides
-    fun providesRetrofit(): Retrofit {
-        return Retrofit.Builder()
-            .baseUrl(Utils.BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-    }
-
-    @Provides
-    fun provideRetrofitService(retrofit: Retrofit): RetrofitServices {
-        return retrofit.create(RetrofitServices::class.java)
-    }
-
-    @Provides
-    fun provideContext(application: App): Context {
-        return application.applicationContext
-    }
+class DataBaseModule(val application: App) {
 
     @Provides
     fun provideDB(context: Context): WeatherDataBase {
@@ -50,10 +32,5 @@ class CityListModule(val application: App) {
         weatherDataSource: WeatherDataFromRemoteSource
     ): WeatherRepository {
         return WeatherRepository(cityDao, weatherDataSource)
-    }
-
-    @Provides
-    fun provideApp(): App {
-        return application
     }
 }

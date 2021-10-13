@@ -27,7 +27,7 @@ class GeneralDayTodayViewModel(val dataSource: WeatherDataFromRemoteSource) : Vi
         _sortedWeatherForecastResult
     private val _firstSortedWeatherForecastResult =
         MutableLiveData<List<SortedByDateWeatherForecastResult>>()
-    val firstSsortedWeatherForecastResult: LiveData<List<SortedByDateWeatherForecastResult>> =
+    val firstSortedWeatherForecastResult: LiveData<List<SortedByDateWeatherForecastResult>> =
         _firstSortedWeatherForecastResult
     private val _weatherToday = MutableLiveData<WeatherToday>()
     val weatherToday: LiveData<WeatherToday> = _weatherToday

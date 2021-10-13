@@ -54,7 +54,7 @@ class GeneralDayTodayFragment :
             allDaysWeatherListAdapter.setData(list)
         }
 
-        generalDayTodayViewModel.firstSsortedWeatherForecastResult.observe(viewLifecycleOwner){
+        generalDayTodayViewModel.firstSortedWeatherForecastResult.observe(viewLifecycleOwner){
             todayWeather = it
         }
 

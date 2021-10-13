@@ -5,10 +5,10 @@ import com.rob.weather.generaldaytoday.fragment.GeneralDayTodayViewModelFactory
 import dagger.Component
 import javax.inject.Singleton
 
-@Component(modules = [CityListModule::class])
+@Component(modules = [ApplicationModule::class, RemoteModule::class, DataBaseModule::class])
 @Singleton
 interface WeatherAppComponent {
     fun getDependencyGeneralDay(): GeneralDayTodayViewModelFactory
-    fun getDependencyCityList() : CityListViewModelFactory
+    fun getDependencyCityList(): CityListViewModelFactory
 }
 
