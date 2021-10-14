@@ -84,4 +84,9 @@ class CityListFragment : BaseFragment<CityListFragmentBinding>(CityListFragmentB
 
         }
     }
+
+//    override fun onResume() {
+//        super.onResume()
+//        viewModel.getWeatherInCityList()
+//    }
 }

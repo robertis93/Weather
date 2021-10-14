@@ -22,18 +22,21 @@ class MapViewModel(
     private val _cityList = MutableLiveData<List<City>>()
     val cityList: LiveData<List<City>> = _cityList
     val dataSource = WeatherDataFromRemoteSource(retrofitService)
+    private val _weatherCity = MutableLiveData<WeatherCity>()
+    val weatherCity: LiveData<WeatherCity> = _weatherCity
 
-    fun getWeatherInCity(latitude: Double, longitude: Double) {
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
-                val city = repository.getWeatherInCityByCoordinates(latitude, longitude).city.name
-                addCity(city)
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                }
+    suspend fun getWeatherInCity(latitude: Double, longitude: Double) : WeatherCity {
+                val weatherForecastResult = repository.getWeatherInCityByCoordinates(latitude, longitude)
+                val cityName = weatherForecastResult.city.name
+                val latitude = weatherForecastResult.city.coordinates.latitude
+                val longitude = weatherForecastResult.city.coordinates.longitude
+                val tempMax = weatherForecastResult.list.first().main.temp_max
+                val tempMin = weatherForecastResult.list.first().main.temp_min
+                val icon = weatherForecastResult.list.first().weather.first().icon
+                val weatherCity =
+                    WeatherCity(cityName, tempMax.toInt(), tempMin.toInt(), icon, latitude, longitude)
+        return weatherCity
             }
-        }
-    }
 
     fun addCity(cityName: String) {
         try {

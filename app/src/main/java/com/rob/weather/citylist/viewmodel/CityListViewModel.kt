@@ -52,14 +52,32 @@ class CityListViewModel(
         }
     }
 
+    fun getWeatherInCityList() {
+        viewModelScope.launch(Dispatchers.IO) {
+            for (oneCity in cityList.value!!) {
+                try {
+                    val weatherForecastResult = repository.getWeatherResponse(oneCity.name)
+                    withContext(Dispatchers.Main) {
+                        weatherForecastResult.let { getWeatherCity(it) }
+                    }
+                } catch (e: Exception) {
+                    withContext(Dispatchers.Main) {
+                    }
+                }
+            }
+        }
+    }
+
+
     private fun getWeatherCity(weatherForecastResult: WeatherForecastResult) {
         val cityName = weatherForecastResult.city.name
-        val latitude= weatherForecastResult.city.coordinates.latitude
+        val latitude = weatherForecastResult.city.coordinates.latitude
         val longitude = weatherForecastResult.city.coordinates.longitude
         val tempMax = weatherForecastResult.list.first().main.temp_max
         val tempMin = weatherForecastResult.list.first().main.temp_min
         val icon = weatherForecastResult.list.first().weather.first().icon
-        val weatherCity = WeatherCity(cityName, tempMax.toInt(), tempMin.toInt(), icon, latitude, longitude)
+        val weatherCity =
+            WeatherCity(cityName, tempMax.toInt(), tempMin.toInt(), icon, latitude, longitude)
         val weatherList = _weatherCityList.value?.toMutableList() ?: mutableListOf()
         //  weatherList.add(weatherCity)
         _weatherCityList.value = weatherList

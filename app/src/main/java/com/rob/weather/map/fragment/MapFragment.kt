@@ -10,25 +10,26 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.rob.weather.App
-import com.rob.weather.citylist.viewmodel.CityListViewModel
+import com.rob.weather.citylist.model.WeatherCity
 import com.rob.weather.databinding.FragmentMapsBinding
-import com.rob.weather.generaldaytoday.fragment.CityListViewModelFactory
 import com.rob.weather.generaldaytoday.fragment.MapViewModelFactory
 import com.rob.weather.map.DisplayShortInfoWeather
 import com.yandex.mapkit.Animation
 import com.yandex.mapkit.MapKitFactory
 import com.yandex.mapkit.geometry.Point
-import com.yandex.mapkit.layers.GeoObjectTapListener
 import com.yandex.mapkit.map.CameraPosition
 import com.yandex.mapkit.map.InputListener
 import com.yandex.mapkit.map.Map
-import com.yandex.mapkit.map.MapObjectTapListener
 import com.yandex.mapkit.mapview.MapView
 import com.yandex.runtime.ui_view.ViewProvider
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.properties.Delegates
 
@@ -49,7 +50,7 @@ class MapFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-      mapViewModelFactory = (activity?.application as App).component.getDependencyMap()
+        mapViewModelFactory = (activity?.application as App).component.getDependencyMap()
     }
 
     override fun onStart() {
@@ -74,20 +75,25 @@ class MapFragment : Fragment() {
 
         val listener = object : InputListener {
             override fun onMapTap(p0: Map, point: Point) {
-            val latitudeSelectedCity= point.latitude
-            val longitudeSelectedCity= point.longitude
-                mapViewModel.getWeatherInCity(latitudeSelectedCity, longitudeSelectedCity)
-                Log.i("myLogs", "GEoLocation City Click")
+                val latitudeSelectedCity = point.latitude
+                val longitudeSelectedCity = point.longitude
+                lifecycleScope.launch(Dispatchers.Main) {
+                  val weatherInCity =   mapViewModel.getWeatherInCity(latitudeSelectedCity, longitudeSelectedCity)
+                    Log.i("myLogs", "GEoLocation City Click")
+                        showWeatherOnCity(weatherInCity)
+                     //  locationDetermination(latitudeSelectedCity, longitudeSelectedCity, binding, args)
+                }
             }
 
             override fun onMapLongTap(p0: Map, p1: Point) {
             }
         }
         mapview?.map?.addInputListener(listener)
+
+
         val view = binding.root
         return view
     }
-
 
     override fun onStop() {
         super.onStop()
@@ -152,5 +158,46 @@ class MapFragment : Fragment() {
                 ViewProvider(displayInfoWeather)
             )
         }
+    }
+
+    fun showWeatherOnCity(
+        weatherCity: WeatherCity
+    ) {
+        MapKitFactory.initialize(requireContext())
+        mapview = binding.mapCity
+        mapview?.map?.move(
+            CameraPosition(
+                Point(weatherCity.latitude, weatherCity.longitude), 7.0f, 0.0f,
+                0.0f
+            ),
+            Animation(Animation.Type.SMOOTH, 0F),
+            null
+        )
+        val displayShortInfoWeather =
+            DisplayShortInfoWeather(requireContext())
+
+        displayShortInfoWeather.setTemperature(
+            weatherCity.temperatureMin, weatherCity.temperatureMax
+        )
+        displayShortInfoWeather.setIconWeather(args.weatherCity.icon)
+
+        mapview?.map?.mapObjects?.addPlacemark(
+            Point((weatherCity.latitude + 0.4), weatherCity.longitude),
+            ViewProvider(displayShortInfoWeather)
+        )
+
+
+        val latitude = weatherCity.latitude
+        val longitude = weatherCity.longitude
+        val minTemperature = weatherCity.temperatureMin
+        val maxTemperature = weatherCity.temperatureMax
+        val displayInfoWeather =
+            DisplayShortInfoWeather(requireContext())
+        displayInfoWeather.setTemperature(minTemperature, maxTemperature)
+        displayInfoWeather.setIconWeather(weatherCity.icon)
+        mapview?.map?.mapObjects?.addPlacemark(
+            Point((latitude + 0.4), longitude),
+            ViewProvider(displayInfoWeather)
+        )
     }
 }
