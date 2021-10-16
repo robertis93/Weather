@@ -11,7 +11,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
-import com.rob.weather.App
 import com.rob.weather.R
 import com.rob.weather.databinding.FragmentGeneralDayTodayBinding
 import com.rob.weather.generaldaytoday.adapters.GeneralDayTodayAdapter
@@ -19,21 +18,19 @@ import com.rob.weather.generaldaytoday.viewmodel.GeneralDayTodayViewModel
 import com.rob.weather.utils.BaseFragment
 import com.rob.weather.utils.Utils.BASE_URL_IMAGE
 import com.rob.weather.utils.Utils.city
+import com.rob.weather.utils.extensions.getAppComponent
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import javax.inject.Inject
 
 class GeneralDayTodayFragment :
     BaseFragment<FragmentGeneralDayTodayBinding>(FragmentGeneralDayTodayBinding::inflate) {
-    @Inject
-    lateinit var generalDayTodayViewModelFactory: GeneralDayTodayViewModelFactory
+    private lateinit var generalDayTodayViewModelFactory: GeneralDayTodayViewModelFactory
     private val generalDayTodayViewModel: GeneralDayTodayViewModel by viewModels { generalDayTodayViewModelFactory }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        generalDayTodayViewModelFactory = (activity?.application as App).component
-            .getDependencyGeneralDay()
+        generalDayTodayViewModelFactory = getAppComponent().getDependencyGeneralDay()
     }
 
     @SuppressLint("ResourceAsColor")
