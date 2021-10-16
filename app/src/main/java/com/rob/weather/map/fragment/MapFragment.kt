@@ -78,7 +78,8 @@ class MapFragment : Fragment() {
                 val latitudeSelectedCity = point.latitude
                 val longitudeSelectedCity = point.longitude
                 lifecycleScope.launch(Dispatchers.Main) {
-                  val weatherInCity =   mapViewModel.getWeatherInCity(latitudeSelectedCity, longitudeSelectedCity)
+                  val weatherInCity = mapViewModel.getWeatherInCity(latitudeSelectedCity, longitudeSelectedCity)
+
                     Log.i("myLogs", "GEoLocation City Click")
                         showWeatherOnCity(weatherInCity)
                      //  locationDetermination(latitudeSelectedCity, longitudeSelectedCity, binding, args)
