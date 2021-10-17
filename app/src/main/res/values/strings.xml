@@ -8,8 +8,8 @@
     <string name="today">сегодня</string>
     <string name="error">Ошибка сервера</string>
     <string name="for_my_geolocation">По моей геолокации</string>
-    <string name="today_with_comma">Сегодня, </string>
+    <string name="today_with_comma">"Сегодня, "</string>
     <string name="error_server">Ошибка сервера</string>
-    <string name="feels_like">, ощущается как </string>
+    <string name="feels_like">", ощущается как "</string>
     <string name="celsius_icon">°</string>
 </resources>

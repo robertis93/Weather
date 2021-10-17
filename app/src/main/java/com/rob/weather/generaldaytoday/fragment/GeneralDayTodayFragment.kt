@@ -27,7 +27,6 @@ class GeneralDayTodayFragment :
     BaseFragment<FragmentGeneralDayTodayBinding>(FragmentGeneralDayTodayBinding::inflate) {
     private lateinit var generalDayTodayViewModelFactory: GeneralDayTodayViewModelFactory
     private val generalDayTodayViewModel: GeneralDayTodayViewModel by viewModels { generalDayTodayViewModelFactory }
-
     override fun onAttach(context: Context) {
         super.onAttach(context)
         generalDayTodayViewModelFactory = getAppComponent().getDependencyGeneralDay()
@@ -36,7 +35,7 @@ class GeneralDayTodayFragment :
     @SuppressLint("ResourceAsColor")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        generalDayTodayViewModel.getAllWeatherForecast(requireContext(), city)
+        generalDayTodayViewModel.getAllWeatherForecast(city)
         val allDaysWeatherListAdapter = GeneralDayTodayAdapter()
         val recyclerView = binding.recyclerView
         recyclerView.adapter = allDaysWeatherListAdapter
@@ -55,7 +54,6 @@ class GeneralDayTodayFragment :
             binding.blueRectangleView.setOnClickListener {
                 findNavController().navigate(action)
             }
-
         }
 
         generalDayTodayViewModel.errorMessage
@@ -67,9 +65,11 @@ class GeneralDayTodayFragment :
 
         generalDayTodayViewModel.weatherToday.observe(viewLifecycleOwner) {
             with(binding) {
-                currentDateTextView.text = it.date
-                currentTemperatureTextview.text = it.temperature
-                currentWeatherDescriptionTextview.text = it.description
+                currentDateTextView.text = requireContext().getString(R.string.today_with_comma) + it.date
+                currentTemperatureTextview.text = it.temperature +
+                        requireContext().getString(R.string.celsius_icon)
+                currentWeatherDescriptionTextview.text =
+                    it.description + requireContext().getString(R.string.feels_like) + it.temperature + requireContext().getString(R.string.celsius_icon)
                 toolbarToday.text = it.city
                 val iconCode = it.icon
                 val iconUrl = BASE_URL_IMAGE + iconCode + ".png"
@@ -93,7 +93,7 @@ class GeneralDayTodayFragment :
             }
         }
         binding.swipeRefresh.setOnRefreshListener(OnRefreshListener {
-            generalDayTodayViewModel.getAllWeatherForecast(requireContext(), city)
+            generalDayTodayViewModel.getAllWeatherForecast(city)
             binding.swipeRefresh.isRefreshing = false
         })
     }

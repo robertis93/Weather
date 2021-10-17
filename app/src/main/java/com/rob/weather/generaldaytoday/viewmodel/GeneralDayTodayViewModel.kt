@@ -1,6 +1,8 @@
 package com.rob.weather.generaldaytoday.viewmodel
 
 import android.content.Context
+import androidx.annotation.StringRes
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -32,40 +34,36 @@ class GeneralDayTodayViewModel(val dataSource: WeatherDataFromRemoteSource) : Vi
     private val _weatherToday = MutableLiveData<WeatherToday>()
     val weatherToday: LiveData<WeatherToday> = _weatherToday
 
-    fun getAllWeatherForecast(context: Context, city: String) {
+    fun getAllWeatherForecast(city: String) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val weatherForecast = dataSource.getWeatherForecastResponse(city)
                 if (weatherForecast != null) {
                     withContext(Dispatchers.Main) {
-                        weatherToday(context, weatherForecast)
+                        weatherToday(weatherForecast)
                         withoutFirstElementSortedByDateForecastResponseList(weatherForecast)
                         updateFullWeatherTodayResponse(weatherForecast)
                     }
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    _errorMessage.value = context.getString(R.string.error_server)
+                    _errorMessage.value = stringResource(R.string.error)
                 }
             }
         }
     }
 
-    private fun weatherToday(context: Context, weatherForecast: WeatherForecastResult) {
+    private fun weatherToday(weatherForecast: WeatherForecastResult) {
         val weatherDate = weatherForecast.list.first()
-        val date =
-            context.getString(R.string.today_with_comma) + weatherDate.date.changeDateFormat()
+        val date = weatherDate.date.changeDateFormat()
         val cityName: String = weatherForecast.city.name
-        val temperature: String =
-            weatherDate.main.temp.toInt()
-                .toString() + context.getString(R.string.celsius_icon)
+        val temperature: String = weatherDate.main.temp.toInt().toString()
         val description: String =
             weatherDate.weather.first().description
                 .replaceFirstChar {
                     if (it.isLowerCase()) it.titlecase(Locale.getDefault())
                     else "$it"
-                } + context.getString(R.string.feels_like) + weatherDate.main.temp_max.toInt()
-                .toString() + context.getString(R.string.celsius_icon)
+                }
         val iconCode = weatherDate.weather.first().icon
         val todayWeather = WeatherToday(date, cityName, temperature, description, iconCode)
         _weatherToday.value = todayWeather
