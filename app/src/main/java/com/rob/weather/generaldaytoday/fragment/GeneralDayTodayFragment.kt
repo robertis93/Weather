@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -54,12 +55,13 @@ class GeneralDayTodayFragment :
             }
         }
 
-        generalDayTodayViewModel.errorMessage
-            .onEach { error ->
-                binding.currentWeatherDescriptionTextview.text = error
-                binding.progressBar.visibility = View.GONE
-            }
-            .launchIn(lifecycleScope)
+        generalDayTodayViewModel.progressBar.observe(viewLifecycleOwner){ visibility ->
+            binding.progressBar.isVisible = visibility
+        }
+
+        generalDayTodayViewModel.errorMessage.observe(viewLifecycleOwner){ visibility ->
+            binding.currentWeatherDescriptionTextview.text = getString(visibility)
+        }
 
         generalDayTodayViewModel.weatherToday.observe(viewLifecycleOwner) {
             with(binding) {
@@ -72,7 +74,6 @@ class GeneralDayTodayFragment :
                 val iconCode = it.icon
                 val iconUrl = BASE_URL_IMAGE + iconCode + ".png"
                 binding.weatherIcon.visibility = View.VISIBLE
-                binding.progressBar.visibility = View.GONE
                 Picasso.get().load(iconUrl).into(weatherIcon)
             }
         }

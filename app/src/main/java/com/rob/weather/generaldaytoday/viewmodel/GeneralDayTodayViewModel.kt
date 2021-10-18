@@ -1,8 +1,8 @@
 package com.rob.weather.generaldaytoday.viewmodel
 
-import android.content.Context
 import androidx.annotation.StringRes
 import androidx.compose.ui.res.stringResource
+import androidx.core.content.res.TypedArrayUtils.getString
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -21,8 +21,8 @@ import kotlinx.coroutines.withContext
 import java.util.*
 
 class GeneralDayTodayViewModel(val dataSource: WeatherDataFromRemoteSource) : ViewModel() {
-    private val _errorMessage = MutableStateFlow<String>("")
-    val errorMessage: StateFlow<String> = _errorMessage.asStateFlow()
+    private val _errorMessage =  MutableLiveData<Int>()
+    val errorMessage:  LiveData<Int> = _errorMessage
     private val _sortedWeatherForecastResult =
         MutableLiveData<List<SortedByDateWeatherForecastResult>>()
     val sortedWeatherForecastResult: LiveData<List<SortedByDateWeatherForecastResult>> =
@@ -33,6 +33,8 @@ class GeneralDayTodayViewModel(val dataSource: WeatherDataFromRemoteSource) : Vi
         _firstSortedWeatherForecastResult
     private val _weatherToday = MutableLiveData<WeatherToday>()
     val weatherToday: LiveData<WeatherToday> = _weatherToday
+    private var _progressBar = MutableLiveData<Boolean>()
+    val progressBar: LiveData<Boolean> = _progressBar
 
     fun getAllWeatherForecast(city: String) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -40,6 +42,7 @@ class GeneralDayTodayViewModel(val dataSource: WeatherDataFromRemoteSource) : Vi
                 val weatherForecast = dataSource.getWeatherForecastResponse(city)
                 if (weatherForecast != null) {
                     withContext(Dispatchers.Main) {
+                        _progressBar.value = true
                         weatherToday(weatherForecast)
                         withoutFirstElementSortedByDateForecastResponseList(weatherForecast)
                         updateFullWeatherTodayResponse(weatherForecast)
@@ -47,7 +50,8 @@ class GeneralDayTodayViewModel(val dataSource: WeatherDataFromRemoteSource) : Vi
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    _errorMessage.value = stringResource(R.string.error)
+                    _errorMessage.value = R.string.error_server
+                    _progressBar.value = false
                 }
             }
         }
