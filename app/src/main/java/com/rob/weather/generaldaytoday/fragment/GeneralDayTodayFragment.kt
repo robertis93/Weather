@@ -5,6 +5,7 @@ import android.content.Context
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
@@ -80,21 +81,28 @@ class GeneralDayTodayFragment :
 
         val toolbar = binding.toolbar
         toolbar.setOnMenuItemClickListener {
-            when (it.itemId) {
-                R.id.action_search -> {
-                    findNavController().navigate(R.id.action_weatherInformationByDayFragment_to_cityListFragment)
-                    true
-                }
-                R.id.action_loader -> {
-                    true
-                }
-                else -> onOptionsItemSelected(it)
-            }
+            switchingAction(it)
         }
         binding.swipeRefresh.setOnRefreshListener(OnRefreshListener {
             generalDayTodayViewModel.getAllWeatherForecast(city)
             binding.swipeRefresh.isRefreshing = false
         })
+    }
+
+
+
+    private fun switchingAction(it: MenuItem) : Boolean{
+        when (it.itemId) {
+            R.id.action_search -> {
+                findNavController().navigate(R.id.action_weatherInformationByDayFragment_to_cityListFragment)
+                true
+            }
+            R.id.switch_mode -> {
+                true
+            }
+            else -> onOptionsItemSelected(it)
+        }
+        return true
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
