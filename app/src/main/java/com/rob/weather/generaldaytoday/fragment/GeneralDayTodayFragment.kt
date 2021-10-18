@@ -39,8 +39,6 @@ class GeneralDayTodayFragment :
         val allDaysWeatherListAdapter = GeneralDayTodayAdapter()
         val recyclerView = binding.recyclerView
         recyclerView.adapter = allDaysWeatherListAdapter
-        recyclerView.layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         generalDayTodayViewModel.sortedWeatherForecastResult.observe(viewLifecycleOwner) { list ->
             allDaysWeatherListAdapter.setData(list)
         }
