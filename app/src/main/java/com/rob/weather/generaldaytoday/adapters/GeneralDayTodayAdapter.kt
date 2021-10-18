@@ -41,11 +41,11 @@ class GeneralDayTodayAdapter :
             binding.weekDayTextView.text = item.date.substringAfter(",")
             val minTemperatureForDay = item.forecastResponseList.stream().min { o1, o2 ->
                 compareValues((o1.main.temp_min), (o2.main.temp_min))
-            }.map { it.main.temp_min }.get().toInt().toString()
+            }.map { it.main.temp_min }.get().toInt().toString() + "°"
             binding.minTemperatureTextView.text = minTemperatureForDay
             val maxTemperatureForDay = item.forecastResponseList.stream().max { o1, o2 ->
                 compareValues((o1.main.temp_min), (o2.main.temp_min))
-            }.map { it.main.temp_max }.get().toInt().toString()
+            }.map { it.main.temp_max }.get().toInt().toString() + "°"
             binding.maxTemperatureTextView.text = maxTemperatureForDay
             val iconCode = item.forecastResponseList.first().weather.first().icon
             val iconUrl = "https://openweathermap.org/img/w/" + iconCode + ".png"

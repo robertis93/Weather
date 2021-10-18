@@ -9,21 +9,18 @@ import android.view.MenuItem
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
 import com.rob.weather.R
 import com.rob.weather.databinding.FragmentGeneralDayTodayBinding
 import com.rob.weather.generaldaytoday.adapters.GeneralDayTodayAdapter
 import com.rob.weather.generaldaytoday.viewmodel.GeneralDayTodayViewModel
+import com.rob.weather.model.WeatherToday
 import com.rob.weather.utils.BaseFragment
 import com.rob.weather.utils.Utils.BASE_URL_IMAGE
 import com.rob.weather.utils.Utils.city
 import com.rob.weather.utils.extensions.getAppComponent
 import com.squareup.picasso.Picasso
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 
 class GeneralDayTodayFragment :
     BaseFragment<FragmentGeneralDayTodayBinding>(FragmentGeneralDayTodayBinding::inflate) {
@@ -37,7 +34,6 @@ class GeneralDayTodayFragment :
     @SuppressLint("ResourceAsColor")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        generalDayTodayViewModel.getAllWeatherForecast(city)
         val allDaysWeatherListAdapter = GeneralDayTodayAdapter()
         val recyclerView = binding.recyclerView
         recyclerView.adapter = allDaysWeatherListAdapter
@@ -56,27 +52,16 @@ class GeneralDayTodayFragment :
             }
         }
 
-        generalDayTodayViewModel.progressBar.observe(viewLifecycleOwner){ visibility ->
+        generalDayTodayViewModel.progressBar.observe(viewLifecycleOwner) { visibility ->
             binding.progressBar.isVisible = visibility
         }
 
-        generalDayTodayViewModel.errorMessage.observe(viewLifecycleOwner){ visibility ->
+        generalDayTodayViewModel.errorMessage.observe(viewLifecycleOwner) { visibility ->
             binding.currentWeatherDescriptionTextview.text = getString(visibility)
         }
 
         generalDayTodayViewModel.weatherToday.observe(viewLifecycleOwner) {
-            with(binding) {
-                currentDateTextView.text = requireContext().getString(R.string.today_with_comma) + it.date
-                currentTemperatureTextview.text = it.temperature +
-                        requireContext().getString(R.string.celsius_icon)
-                currentWeatherDescriptionTextview.text =
-                    it.description + requireContext().getString(R.string.feels_like) + it.temperature + requireContext().getString(R.string.celsius_icon)
-                toolbarToday.text = it.city
-                val iconCode = it.icon
-                val iconUrl = BASE_URL_IMAGE + iconCode + ".png"
-                binding.weatherIcon.visibility = View.VISIBLE
-                Picasso.get().load(iconUrl).into(weatherIcon)
-            }
+            initializingScreenForToday(it)
         }
 
         val toolbar = binding.toolbar
@@ -87,11 +72,29 @@ class GeneralDayTodayFragment :
             generalDayTodayViewModel.getAllWeatherForecast(city)
             binding.swipeRefresh.isRefreshing = false
         })
+        generalDayTodayViewModel.getAllWeatherForecast(city)
     }
 
+    private fun initializingScreenForToday(weatherToday: WeatherToday) {
+        with(binding) {
+            currentDateTextView.text =
+                requireContext().getString(R.string.today_with_comma) + weatherToday.date
+            currentTemperatureTextview.text = weatherToday.temperature +
+                    requireContext().getString(R.string.celsius_icon)
+            currentWeatherDescriptionTextview.text =
+                weatherToday.description + requireContext().getString(R.string.feels_like) +
+                        weatherToday.temperature + requireContext().getString(
+                    R.string.celsius_icon
+                )
+            toolbarToday.text = weatherToday.city
+            val iconCode = weatherToday.icon
+            val iconUrl = BASE_URL_IMAGE + iconCode + ".png"
+            binding.weatherIcon.visibility = View.VISIBLE
+            Picasso.get().load(iconUrl).into(weatherIcon)
+        }
+    }
 
-
-    private fun switchingAction(it: MenuItem) : Boolean{
+    private fun switchingAction(it: MenuItem): Boolean {
         when (it.itemId) {
             R.id.action_search -> {
                 findNavController().navigate(R.id.action_weatherInformationByDayFragment_to_cityListFragment)
