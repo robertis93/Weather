@@ -55,16 +55,19 @@ class GeneralDayTodayFragment :
             }
         }
 
-        generalDayTodayViewModel.progressBar.observe(viewLifecycleOwner) { visibility ->
-            binding.progressBar.isVisible = visibility
-        }
-
         generalDayTodayViewModel.errorMessage.observe(viewLifecycleOwner) { visibility ->
             binding.currentWeatherDescriptionTextview.text = getString(visibility)
         }
 
         generalDayTodayViewModel.weatherToday.observe(viewLifecycleOwner) {
             initializingScreenForToday(it)
+        }
+
+        lifecycleScope.launchWhenStarted {
+            generalDayTodayViewModel.progressBar
+                .collect { visible ->
+                    binding.progressBar.isVisible = visible
+                }
         }
 
         val toolbar = binding.toolbar
