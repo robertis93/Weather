@@ -45,12 +45,18 @@ class GeneralDayTodayFragment :
 
         binding.blueRectangleView.setOnClickListener {
             generalDayTodayViewModel.firstSortedWeatherForecastResult.observe(viewLifecycleOwner) {
-                val action =
-                    GeneralDayTodayFragmentDirections
-                        .actionWeatherInformationByDayFragmentToChooseDayFragment3(
-                            it[0]
-                        )
-                findNavController().navigate(action)
+                lifecycleScope.launchWhenStarted {
+                    generalDayTodayViewModel.getMoreInformationToday(city)
+                    generalDayTodayViewModel.currentWeather
+                        .collect { currentWeather ->
+                            val action =
+                                GeneralDayTodayFragmentDirections
+                                    .actionWeatherInformationByDayFragmentToChooseDayFragment3(
+                                        currentWeather
+                                    )
+                            findNavController().navigate(action)
+                        }
+                }
             }
         }
 

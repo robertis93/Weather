@@ -28,7 +28,7 @@ class GeneralDayTodayViewModel(val dataSource: WeatherDataFromRemoteSource) : Vi
         MutableLiveData<List<SortedByDateWeatherForecastResult>>()
     val firstSortedWeatherForecastResult: LiveData<List<SortedByDateWeatherForecastResult>> =
         _firstSortedWeatherForecastResult
-    private val _currentWeather=
+    private val _currentWeather =
         MutableSharedFlow<SortedByDateWeatherForecastResult>()
     val currentWeather: SharedFlow<SortedByDateWeatherForecastResult> =
         _currentWeather.asSharedFlow()
@@ -49,7 +49,6 @@ class GeneralDayTodayViewModel(val dataSource: WeatherDataFromRemoteSource) : Vi
                         weatherToday(weatherForecast)
                         withoutFirstElementSortedByDateForecastResponseList(weatherForecast)
                         updateFullWeatherTodayResponse(weatherForecast)
-
                     }
                 }
             } catch (e: Exception) {
@@ -111,14 +110,32 @@ class GeneralDayTodayViewModel(val dataSource: WeatherDataFromRemoteSource) : Vi
         val firstElementWeatherForecastResponse =
             geWeatherForecastResponseGroupByDate(weatherForecast)[0]
         _firstSortedWeatherForecastResult.value = listOf(firstElementWeatherForecastResponse)
-      //  _currentWeather.value = firstElementWeatherForecastResponse
+        //  _currentWeather.value = firstElementWeatherForecastResponse
     }
 
-   suspend fun getMoreInformationToday(city: String) {
-        getAllWeatherForecast(city)
-        _currentWeather.emit()
+    private fun getFullWeatherTodayResponse(weatherForecast: WeatherForecastResult)
+            : SortedByDateWeatherForecastResult {
+        return geWeatherForecastResponseGroupByDate(weatherForecast)[0]
     }
 
+    suspend fun getMoreInformationToday(city: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val weatherForecast = dataSource.getWeatherForecastResponse(city)
+                withContext(Dispatchers.Main) {
+                    val todayWeather = getFullWeatherTodayResponse(weatherForecast)
+                    _currentWeather.emit(todayWeather)
+                }
+
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    _errorMessage.value = R.string.error_server
+                    _progressBar.value = false
+                }
+            }
+        }
+
+    }
 }
 
 private fun String.changeDateFormat(): String {
