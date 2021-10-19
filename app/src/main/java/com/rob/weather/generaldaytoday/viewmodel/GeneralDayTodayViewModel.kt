@@ -12,9 +12,7 @@ import com.rob.weather.model.WeatherToday
 import com.rob.weather.utils.Utils.fullDateFormat
 import com.rob.weather.utils.Utils.shortDateFormat
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.*
@@ -30,6 +28,10 @@ class GeneralDayTodayViewModel(val dataSource: WeatherDataFromRemoteSource) : Vi
         MutableLiveData<List<SortedByDateWeatherForecastResult>>()
     val firstSortedWeatherForecastResult: LiveData<List<SortedByDateWeatherForecastResult>> =
         _firstSortedWeatherForecastResult
+    private val _currentWeather=
+        MutableSharedFlow<SortedByDateWeatherForecastResult>()
+    val currentWeather: SharedFlow<SortedByDateWeatherForecastResult> =
+        _currentWeather.asSharedFlow()
     private val _weatherToday = MutableLiveData<WeatherToday>()
     val weatherToday: LiveData<WeatherToday> = _weatherToday
     private var _progressBar = MutableStateFlow<Boolean>(true)
@@ -109,7 +111,14 @@ class GeneralDayTodayViewModel(val dataSource: WeatherDataFromRemoteSource) : Vi
         val firstElementWeatherForecastResponse =
             geWeatherForecastResponseGroupByDate(weatherForecast)[0]
         _firstSortedWeatherForecastResult.value = listOf(firstElementWeatherForecastResponse)
+      //  _currentWeather.value = firstElementWeatherForecastResponse
     }
+
+   suspend fun getMoreInformationToday(city: String) {
+        getAllWeatherForecast(city)
+        _currentWeather.emit()
+    }
+
 }
 
 private fun String.changeDateFormat(): String {

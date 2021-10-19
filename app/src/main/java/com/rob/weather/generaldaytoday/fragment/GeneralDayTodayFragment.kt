@@ -43,7 +43,6 @@ class GeneralDayTodayFragment :
             allDaysWeatherListAdapter.setData(list)
         }
 
-
         binding.blueRectangleView.setOnClickListener {
             generalDayTodayViewModel.firstSortedWeatherForecastResult.observe(viewLifecycleOwner) {
                 val action =
