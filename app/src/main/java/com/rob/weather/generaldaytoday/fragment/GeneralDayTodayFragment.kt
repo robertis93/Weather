@@ -23,8 +23,6 @@ import com.rob.weather.utils.Utils.city
 import com.rob.weather.utils.extensions.getAppComponent
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 
 class GeneralDayTodayFragment :
     BaseFragment<FragmentGeneralDayTodayBinding>(FragmentGeneralDayTodayBinding::inflate) {
@@ -79,7 +77,7 @@ class GeneralDayTodayFragment :
 
         lifecycleScope.launchWhenStarted {
             generalDayTodayViewModel.updatingInformation
-                .collect{ visible ->
+                .collect { visible ->
                     binding.swipeRefresh.isRefreshing = visible
                 }
         }

@@ -34,7 +34,7 @@ class GeneralDayTodayViewModel(val dataSource: WeatherDataFromRemoteSource) : Vi
     val weatherToday: LiveData<WeatherToday> = _weatherToday
     private var _progressBar = MutableLiveData<Boolean>()
     val progressBar: LiveData<Boolean> = _progressBar
-    private var _updatingInformation = MutableStateFlow<Boolean>(false)
+    private var _updatingInformation = MutableStateFlow<Boolean>(true)
     val updatingInformation: StateFlow<Boolean> = _updatingInformation.asStateFlow()
 
     fun getAllWeatherForecast(city: String) {
@@ -43,10 +43,11 @@ class GeneralDayTodayViewModel(val dataSource: WeatherDataFromRemoteSource) : Vi
                 val weatherForecast = dataSource.getWeatherForecastResponse(city)
                 if (weatherForecast != null) {
                     withContext(Dispatchers.Main) {
-                      //  _progressBar.value = true
+                        _updatingInformation.value = false
                         weatherToday(weatherForecast)
                         withoutFirstElementSortedByDateForecastResponseList(weatherForecast)
                         updateFullWeatherTodayResponse(weatherForecast)
+
                     }
                 }
             } catch (e: Exception) {
@@ -60,7 +61,7 @@ class GeneralDayTodayViewModel(val dataSource: WeatherDataFromRemoteSource) : Vi
 
     fun updateInformation(city: String) {
         getAllWeatherForecast(city)
-        _updatingInformation.value = false
+        _updatingInformation.value = true
     }
 
     private fun weatherToday(weatherForecast: WeatherForecastResult) {
