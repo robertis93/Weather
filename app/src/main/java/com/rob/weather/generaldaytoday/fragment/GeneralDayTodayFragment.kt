@@ -9,6 +9,7 @@ import android.view.MenuItem
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
 import com.rob.weather.R
@@ -21,6 +22,9 @@ import com.rob.weather.utils.Utils.BASE_URL_IMAGE
 import com.rob.weather.utils.Utils.city
 import com.rob.weather.utils.extensions.getAppComponent
 import com.squareup.picasso.Picasso
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 class GeneralDayTodayFragment :
     BaseFragment<FragmentGeneralDayTodayBinding>(FragmentGeneralDayTodayBinding::inflate) {
@@ -41,13 +45,14 @@ class GeneralDayTodayFragment :
             allDaysWeatherListAdapter.setData(list)
         }
 
-        generalDayTodayViewModel.firstSortedWeatherForecastResult.observe(viewLifecycleOwner) {
-            val action =
-                GeneralDayTodayFragmentDirections
-                    .actionWeatherInformationByDayFragmentToChooseDayFragment3(
-                        it[0]
-                    )
-            binding.blueRectangleView.setOnClickListener {
+
+        binding.blueRectangleView.setOnClickListener {
+            generalDayTodayViewModel.firstSortedWeatherForecastResult.observe(viewLifecycleOwner) {
+                val action =
+                    GeneralDayTodayFragmentDirections
+                        .actionWeatherInformationByDayFragmentToChooseDayFragment3(
+                            it[0]
+                        )
                 findNavController().navigate(action)
             }
         }
@@ -69,9 +74,16 @@ class GeneralDayTodayFragment :
             switchingAction(it)
         }
         binding.swipeRefresh.setOnRefreshListener(OnRefreshListener {
-            generalDayTodayViewModel.getAllWeatherForecast(city)
-            binding.swipeRefresh.isRefreshing = false
+            generalDayTodayViewModel.updateInformation(city)
         })
+
+        lifecycleScope.launchWhenStarted {
+            generalDayTodayViewModel.updatingInformation
+                .collect{ visible ->
+                    binding.swipeRefresh.isRefreshing = visible
+                }
+        }
+
         generalDayTodayViewModel.getAllWeatherForecast(city)
     }
 

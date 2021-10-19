@@ -62,7 +62,7 @@ class CityListFragment : BaseFragment<CityListFragmentBinding>(CityListFragmentB
                 val to = target.adapterPosition
                 Collections.swap(сityList.value, from, to)
                 cityAdapter.notifyItemMoved(viewHolder.adapterPosition, target.adapterPosition)
-                 viewModel.updateCity(сityList.value!!)
+                viewModel.updateCity(сityList.value!!)
                 return true
             }
         }
@@ -82,9 +82,4 @@ class CityListFragment : BaseFragment<CityListFragmentBinding>(CityListFragmentB
 
         }
     }
-
-//    override fun onResume() {
-//        super.onResume()
-//        viewModel.getWeatherInCityList()
-//    }
 }

@@ -6,17 +6,22 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rob.weather.R
 import com.rob.weather.datasource.retrofit.WeatherDataFromRemoteSource
-import com.rob.weather.model.*
+import com.rob.weather.model.SortedByDateWeatherForecastResult
+import com.rob.weather.model.WeatherForecastResult
+import com.rob.weather.model.WeatherToday
 import com.rob.weather.utils.Utils.fullDateFormat
 import com.rob.weather.utils.Utils.shortDateFormat
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.*
 
 class GeneralDayTodayViewModel(val dataSource: WeatherDataFromRemoteSource) : ViewModel() {
-    private val _errorMessage =  MutableLiveData<Int>()
-    val errorMessage:  LiveData<Int> = _errorMessage
+    private val _errorMessage = MutableLiveData<Int>()
+    val errorMessage: LiveData<Int> = _errorMessage
     private val _sortedWeatherForecastResult =
         MutableLiveData<List<SortedByDateWeatherForecastResult>>()
     val sortedWeatherForecastResult: LiveData<List<SortedByDateWeatherForecastResult>> =
@@ -29,6 +34,8 @@ class GeneralDayTodayViewModel(val dataSource: WeatherDataFromRemoteSource) : Vi
     val weatherToday: LiveData<WeatherToday> = _weatherToday
     private var _progressBar = MutableLiveData<Boolean>()
     val progressBar: LiveData<Boolean> = _progressBar
+    private var _updatingInformation = MutableStateFlow<Boolean>(false)
+    val updatingInformation: StateFlow<Boolean> = _updatingInformation.asStateFlow()
 
     fun getAllWeatherForecast(city: String) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -36,7 +43,7 @@ class GeneralDayTodayViewModel(val dataSource: WeatherDataFromRemoteSource) : Vi
                 val weatherForecast = dataSource.getWeatherForecastResponse(city)
                 if (weatherForecast != null) {
                     withContext(Dispatchers.Main) {
-                        _progressBar.value = true
+                      //  _progressBar.value = true
                         weatherToday(weatherForecast)
                         withoutFirstElementSortedByDateForecastResponseList(weatherForecast)
                         updateFullWeatherTodayResponse(weatherForecast)
@@ -49,6 +56,11 @@ class GeneralDayTodayViewModel(val dataSource: WeatherDataFromRemoteSource) : Vi
                 }
             }
         }
+    }
+
+    fun updateInformation(city: String) {
+        getAllWeatherForecast(city)
+        _updatingInformation.value = false
     }
 
     private fun weatherToday(weatherForecast: WeatherForecastResult) {

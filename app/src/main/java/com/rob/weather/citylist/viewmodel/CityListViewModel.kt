@@ -68,7 +68,6 @@ class CityListViewModel(
         }
     }
 
-
     private fun getWeatherCity(weatherForecastResult: WeatherForecastResult) {
         val cityName = weatherForecastResult.city.name
         val latitude = weatherForecastResult.city.coordinates.latitude
