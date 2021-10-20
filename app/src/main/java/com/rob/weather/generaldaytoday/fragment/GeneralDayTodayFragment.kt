@@ -58,8 +58,12 @@ class GeneralDayTodayFragment :
             }
         }
 
-        generalDayTodayViewModel.errorMessage.observe(viewLifecycleOwner) { visibility ->
-            binding.currentWeatherDescriptionTextview.text = getString(visibility)
+
+        lifecycleScope.launchWhenStarted {
+            generalDayTodayViewModel.errorMessage
+                .collect { error ->
+                    binding.currentWeatherDescriptionTextview.text = getString(error)
+                }
         }
 
         generalDayTodayViewModel.weatherToday.observe(viewLifecycleOwner) {
@@ -74,9 +78,10 @@ class GeneralDayTodayFragment :
         }
 
         val toolbar = binding.toolbar
-        toolbar.setOnMenuItemClickListener {
-            switchingAction(it)
+        toolbar.setOnMenuItemClickListener {menuItem ->
+            generalDayTodayViewModel.selectActionByClickingOnMenu(menuItem)
         }
+
         binding.swipeRefresh.setOnRefreshListener(OnRefreshListener {
             generalDayTodayViewModel.updateInformation(city)
         })
@@ -85,6 +90,13 @@ class GeneralDayTodayFragment :
             generalDayTodayViewModel.updatingInformation
                 .collect { visible ->
                     binding.swipeRefresh.isRefreshing = visible
+                }
+        }
+
+        lifecycleScope.launchWhenStarted {
+            generalDayTodayViewModel.menuItem
+                .collect { menuId ->
+                    switchingAction(menuId)
                 }
         }
 

@@ -1,5 +1,6 @@
 package com.rob.weather.generaldaytoday.viewmodel
 
+import android.view.MenuItem
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -18,8 +19,8 @@ import kotlinx.coroutines.withContext
 import java.util.*
 
 class GeneralDayTodayViewModel(val dataSource: WeatherDataFromRemoteSource) : ViewModel() {
-    private val _errorMessage = MutableLiveData<Int>()
-    val errorMessage: LiveData<Int> = _errorMessage
+    private val _errorMessage = MutableStateFlow<Int>(R.string.error)
+    val errorMessage: StateFlow<Int> = _errorMessage.asStateFlow()
     private val _sortedWeatherForecastResult =
         MutableLiveData<List<SortedByDateWeatherForecastResult>>()
     val sortedWeatherForecastResult: LiveData<List<SortedByDateWeatherForecastResult>> =
@@ -32,6 +33,10 @@ class GeneralDayTodayViewModel(val dataSource: WeatherDataFromRemoteSource) : Vi
         MutableSharedFlow<SortedByDateWeatherForecastResult>()
     val currentWeather: SharedFlow<SortedByDateWeatherForecastResult> =
         _currentWeather.asSharedFlow()
+    private val _menuItem =
+        MutableSharedFlow<MenuItem>()
+    val menuItem: SharedFlow<MenuItem> =
+        _menuItem.asSharedFlow()
     private val _weatherToday = MutableLiveData<WeatherToday>()
     val weatherToday: LiveData<WeatherToday> = _weatherToday
     private var _progressBar = MutableStateFlow<Boolean>(true)
@@ -118,7 +123,7 @@ class GeneralDayTodayViewModel(val dataSource: WeatherDataFromRemoteSource) : Vi
         return geWeatherForecastResponseGroupByDate(weatherForecast)[0]
     }
 
-     fun getMoreInformationToday(city: String) {
+    fun getMoreInformationToday(city: String) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val weatherForecast = dataSource.getWeatherForecastResponse(city)
@@ -135,6 +140,13 @@ class GeneralDayTodayViewModel(val dataSource: WeatherDataFromRemoteSource) : Vi
             }
         }
 
+    }
+
+    fun selectActionByClickingOnMenu(menuItem: MenuItem): Boolean {
+        viewModelScope.launch(Dispatchers.IO) {
+            _menuItem.emit(menuItem)
+        }
+        return true
     }
 }
 
