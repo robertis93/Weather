@@ -44,19 +44,17 @@ class GeneralDayTodayFragment :
         }
 
         binding.blueRectangleView.setOnClickListener {
-            generalDayTodayViewModel.firstSortedWeatherForecastResult.observe(viewLifecycleOwner) {
-                lifecycleScope.launchWhenStarted {
-                    generalDayTodayViewModel.getMoreInformationToday(city)
-                    generalDayTodayViewModel.currentWeather
-                        .collect { currentWeather ->
-                            val action =
-                                GeneralDayTodayFragmentDirections
-                                    .actionWeatherInformationByDayFragmentToChooseDayFragment3(
-                                        currentWeather
-                                    )
-                            findNavController().navigate(action)
-                        }
-                }
+            generalDayTodayViewModel.getMoreInformationToday(city)
+        }
+
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            generalDayTodayViewModel.currentWeather.collect { currentWeather ->
+                val action =
+                    GeneralDayTodayFragmentDirections
+                        .actionWeatherInformationByDayFragmentToChooseDayFragment3(
+                            currentWeather
+                        )
+                findNavController().navigate(action)
             }
         }
 

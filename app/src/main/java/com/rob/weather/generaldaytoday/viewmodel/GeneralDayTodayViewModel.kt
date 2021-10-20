@@ -118,7 +118,7 @@ class GeneralDayTodayViewModel(val dataSource: WeatherDataFromRemoteSource) : Vi
         return geWeatherForecastResponseGroupByDate(weatherForecast)[0]
     }
 
-    suspend fun getMoreInformationToday(city: String) {
+     fun getMoreInformationToday(city: String) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val weatherForecast = dataSource.getWeatherForecastResponse(city)
