@@ -1,8 +1,6 @@
 package com.rob.weather.generaldaytoday.viewmodel
 
 import android.view.MenuItem
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rob.weather.R
@@ -13,32 +11,30 @@ import com.rob.weather.model.WeatherToday
 import com.rob.weather.utils.Utils.fullDateFormat
 import com.rob.weather.utils.Utils.shortDateFormat
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.*
 
 class GeneralDayTodayViewModel(val dataSource: WeatherDataFromRemoteSource) : ViewModel() {
-    private val _errorMessage = MutableStateFlow<Int>(R.string.error)
+    private val _errorMessage = MutableStateFlow<Int>(R.string.empty)
     val errorMessage: StateFlow<Int> = _errorMessage.asStateFlow()
     private val _sortedWeatherForecastResult =
-        MutableLiveData<List<SortedByDateWeatherForecastResult>>()
-    val sortedWeatherForecastResult: LiveData<List<SortedByDateWeatherForecastResult>> =
-        _sortedWeatherForecastResult
-    private val _firstSortedWeatherForecastResult =
-        MutableLiveData<List<SortedByDateWeatherForecastResult>>()
-    val firstSortedWeatherForecastResult: LiveData<List<SortedByDateWeatherForecastResult>> =
-        _firstSortedWeatherForecastResult
+        MutableSharedFlow<List<SortedByDateWeatherForecastResult>>()
+    val sortedWeatherForecastResult: SharedFlow<List<SortedByDateWeatherForecastResult>> =
+        _sortedWeatherForecastResult.asSharedFlow()
     private val _currentWeather =
         MutableSharedFlow<SortedByDateWeatherForecastResult>()
     val currentWeather: SharedFlow<SortedByDateWeatherForecastResult> =
         _currentWeather.asSharedFlow()
-    private val _menuItem =
-        MutableSharedFlow<MenuItem>()
-    val menuItem: SharedFlow<MenuItem> =
-        _menuItem.asSharedFlow()
-    private val _weatherToday = MutableLiveData<WeatherToday>()
-    val weatherToday: LiveData<WeatherToday> = _weatherToday
+    private val _searchingCity = MutableSharedFlow<Unit>(replay = 1, extraBufferCapacity = 1,
+        onBufferOverflow = BufferOverflow.DROP_LATEST)
+    val searchingCity: SharedFlow<Unit> = _searchingCity.asSharedFlow()
+    private val _changingMode = MutableSharedFlow<Unit>()
+    val changingMode: SharedFlow<Unit> = _changingMode.asSharedFlow()
+    private val _weatherToday = MutableSharedFlow<WeatherToday>()
+    val weatherToday: SharedFlow<WeatherToday> = _weatherToday.asSharedFlow()
     private var _progressBar = MutableStateFlow<Boolean>(true)
     val progressBar: StateFlow<Boolean> = _progressBar.asStateFlow()
     private var _updatingInformation = MutableStateFlow<Boolean>(false)
@@ -53,7 +49,6 @@ class GeneralDayTodayViewModel(val dataSource: WeatherDataFromRemoteSource) : Vi
                         _updatingInformation.value = false
                         weatherToday(weatherForecast)
                         withoutFirstElementSortedByDateForecastResponseList(weatherForecast)
-                        updateFullWeatherTodayResponse(weatherForecast)
                     }
                 }
             } catch (e: Exception) {
@@ -70,7 +65,7 @@ class GeneralDayTodayViewModel(val dataSource: WeatherDataFromRemoteSource) : Vi
         _updatingInformation.value = true
     }
 
-    private fun weatherToday(weatherForecast: WeatherForecastResult) {
+    private suspend fun weatherToday(weatherForecast: WeatherForecastResult) {
         val weatherDate = weatherForecast.list.first()
         val date = weatherDate.date.changeDateFormat()
         val cityName: String = weatherForecast.city.name
@@ -84,7 +79,7 @@ class GeneralDayTodayViewModel(val dataSource: WeatherDataFromRemoteSource) : Vi
         val iconCode = weatherDate.weather.first().icon
         val todayWeather = WeatherToday(date, cityName, temperature, description, iconCode)
         _progressBar.value = false
-        _weatherToday.value = todayWeather
+        _weatherToday.emit(todayWeather)
     }
 
     private fun geWeatherForecastResponseGroupByDate(
@@ -100,7 +95,7 @@ class GeneralDayTodayViewModel(val dataSource: WeatherDataFromRemoteSource) : Vi
         }
     }
 
-    private fun withoutFirstElementSortedByDateForecastResponseList(
+    private suspend fun withoutFirstElementSortedByDateForecastResponseList(
         weatherForecast: WeatherForecastResult
     ) {
         val sortedByDateForecastResponseList =
@@ -108,14 +103,7 @@ class GeneralDayTodayViewModel(val dataSource: WeatherDataFromRemoteSource) : Vi
         val withoutFirstElementSortedByDateForecastResponseList =
             sortedByDateForecastResponseList
                 .subList(1, sortedByDateForecastResponseList.size)
-        _sortedWeatherForecastResult.postValue(withoutFirstElementSortedByDateForecastResponseList)
-    }
-
-    private fun updateFullWeatherTodayResponse(weatherForecast: WeatherForecastResult) {
-        val firstElementWeatherForecastResponse =
-            geWeatherForecastResponseGroupByDate(weatherForecast)[0]
-        _firstSortedWeatherForecastResult.value = listOf(firstElementWeatherForecastResponse)
-        //  _currentWeather.value = firstElementWeatherForecastResponse
+        _sortedWeatherForecastResult.emit(withoutFirstElementSortedByDateForecastResponseList)
     }
 
     private fun getFullWeatherTodayResponse(weatherForecast: WeatherForecastResult)
@@ -139,12 +127,32 @@ class GeneralDayTodayViewModel(val dataSource: WeatherDataFromRemoteSource) : Vi
                 }
             }
         }
-
     }
 
-    fun selectActionByClickingOnMenu(menuItem: MenuItem): Boolean {
+    fun clickOnMenu(menuItem: MenuItem): Boolean {
+        when (menuItem.itemId) {
+            R.id.action_search -> {
+                searchCity()
+                true
+            }
+            R.id.switch_mode -> {
+                changeMode()
+                true
+            }
+        }
+        return true
+    }
+
+    fun searchCity(): Boolean {
         viewModelScope.launch(Dispatchers.IO) {
-            _menuItem.emit(menuItem)
+            _searchingCity.emit(Unit)
+        }
+        return true
+    }
+
+    fun changeMode(): Boolean {
+        viewModelScope.launch(Dispatchers.IO) {
+            _changingMode.emit(Unit)
         }
         return true
     }

@@ -19,9 +19,9 @@ class CityListViewModel(
     retrofitService: RetrofitServices
 ) : ViewModel() {
 
+    val dataSource = WeatherDataFromRemoteSource(retrofitService)
     private val _cityList = MutableLiveData<List<City>>()
     val cityList: LiveData<List<City>> = _cityList
-    val dataSource = WeatherDataFromRemoteSource(retrofitService)
     private val _weatherCityList = MutableLiveData<List<WeatherCity>>()
     val weatherCityList: LiveData<List<WeatherCity>> = _weatherCityList
 

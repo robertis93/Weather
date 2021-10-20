@@ -5,7 +5,6 @@ import android.content.Context
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
@@ -39,8 +38,11 @@ class GeneralDayTodayFragment :
         val allDaysWeatherListAdapter = GeneralDayTodayAdapter()
         val recyclerView = binding.recyclerView
         recyclerView.adapter = allDaysWeatherListAdapter
-        generalDayTodayViewModel.sortedWeatherForecastResult.observe(viewLifecycleOwner) { list ->
-            allDaysWeatherListAdapter.setData(list)
+
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            generalDayTodayViewModel.sortedWeatherForecastResult.collect { list ->
+                allDaysWeatherListAdapter.setData(list)
+            }
         }
 
         binding.blueRectangleView.setOnClickListener {
@@ -58,7 +60,6 @@ class GeneralDayTodayFragment :
             }
         }
 
-
         lifecycleScope.launchWhenStarted {
             generalDayTodayViewModel.errorMessage
                 .collect { error ->
@@ -66,8 +67,9 @@ class GeneralDayTodayFragment :
                 }
         }
 
-        generalDayTodayViewModel.weatherToday.observe(viewLifecycleOwner) {
-            initializingScreenForToday(it)
+        lifecycleScope.launchWhenStarted {
+            generalDayTodayViewModel.weatherToday
+                .collect { initializingScreenForToday(it) }
         }
 
         lifecycleScope.launchWhenStarted {
@@ -78,8 +80,22 @@ class GeneralDayTodayFragment :
         }
 
         val toolbar = binding.toolbar
-        toolbar.setOnMenuItemClickListener {menuItem ->
-            generalDayTodayViewModel.selectActionByClickingOnMenu(menuItem)
+        toolbar.setOnMenuItemClickListener { menuItem ->
+            generalDayTodayViewModel.clickOnMenu(menuItem)
+        }
+
+        lifecycleScope.launchWhenStarted {
+            generalDayTodayViewModel.searchingCity
+                .collect {
+                    findNavController()
+                        .navigate(R.id.action_weatherInformationByDayFragment_to_cityListFragment)
+                }
+        }
+
+        lifecycleScope.launchWhenStarted {
+            generalDayTodayViewModel.changingMode
+                .collect {
+                }
         }
 
         binding.swipeRefresh.setOnRefreshListener(OnRefreshListener {
@@ -90,13 +106,6 @@ class GeneralDayTodayFragment :
             generalDayTodayViewModel.updatingInformation
                 .collect { visible ->
                     binding.swipeRefresh.isRefreshing = visible
-                }
-        }
-
-        lifecycleScope.launchWhenStarted {
-            generalDayTodayViewModel.menuItem
-                .collect { menuId ->
-                    switchingAction(menuId)
                 }
         }
 
@@ -120,20 +129,6 @@ class GeneralDayTodayFragment :
             binding.weatherIcon.visibility = View.VISIBLE
             Picasso.get().load(iconUrl).into(weatherIcon)
         }
-    }
-
-    private fun switchingAction(it: MenuItem): Boolean {
-        when (it.itemId) {
-            R.id.action_search -> {
-                findNavController().navigate(R.id.action_weatherInformationByDayFragment_to_cityListFragment)
-                true
-            }
-            R.id.switch_mode -> {
-                true
-            }
-            else -> onOptionsItemSelected(it)
-        }
-        return true
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

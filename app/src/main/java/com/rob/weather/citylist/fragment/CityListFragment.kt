@@ -41,7 +41,7 @@ class CityListFragment : BaseFragment<CityListFragmentBinding>(CityListFragmentB
         val measureRecyclerView = binding.recyclerview
         measureRecyclerView.adapter = cityAdapter
 
-        viewModel.weatherCityList.observe(viewLifecycleOwner) { weatherInCities ->
+        viewModel. weatherCityList.observe(viewLifecycleOwner) { weatherInCities ->
             cityAdapter.setData(weatherInCities)
             сityList.value = weatherInCities
         }
