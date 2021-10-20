@@ -24,10 +24,10 @@ class GeneralDayTodayViewModel(val dataSource: WeatherDataFromRemoteSource) : Vi
         MutableSharedFlow<List<SortedByDateWeatherForecastResult>>()
     val sortedWeatherForecastResult: SharedFlow<List<SortedByDateWeatherForecastResult>> =
         _sortedWeatherForecastResult.asSharedFlow()
-    private val _currentWeather =
+    private val _fullInfoTodayWeather =
         MutableSharedFlow<SortedByDateWeatherForecastResult>()
-    val currentWeather: SharedFlow<SortedByDateWeatherForecastResult> =
-        _currentWeather.asSharedFlow()
+    val fullInfoTodayWeather: SharedFlow<SortedByDateWeatherForecastResult> =
+        _fullInfoTodayWeather.asSharedFlow()
     private val _searchingCity = MutableSharedFlow<Unit>(replay = 1, extraBufferCapacity = 1,
         onBufferOverflow = BufferOverflow.DROP_LATEST)
     val searchingCity: SharedFlow<Unit> = _searchingCity.asSharedFlow()
@@ -117,7 +117,7 @@ class GeneralDayTodayViewModel(val dataSource: WeatherDataFromRemoteSource) : Vi
                 val weatherForecast = dataSource.getWeatherForecastResponse(city)
                 withContext(Dispatchers.Main) {
                     val todayWeather = getFullWeatherTodayResponse(weatherForecast)
-                    _currentWeather.emit(todayWeather)
+                    _fullInfoTodayWeather.emit(todayWeather)
                 }
 
             } catch (e: Exception) {

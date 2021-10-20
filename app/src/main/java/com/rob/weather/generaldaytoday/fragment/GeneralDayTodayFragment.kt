@@ -50,7 +50,7 @@ class GeneralDayTodayFragment :
         }
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            generalDayTodayViewModel.currentWeather.collect { currentWeather ->
+            generalDayTodayViewModel.fullInfoTodayWeather.collect { currentWeather ->
                 val action =
                     GeneralDayTodayFragmentDirections
                         .actionWeatherInformationByDayFragmentToChooseDayFragment3(
