@@ -28,8 +28,8 @@ class GeneralDayTodayViewModel(val dataSource: WeatherDataFromRemoteSource) : Vi
         MutableSharedFlow<SortedByDateWeatherForecastResult>()
     val fullInfoTodayWeather: SharedFlow<SortedByDateWeatherForecastResult> =
         _fullInfoTodayWeather.asSharedFlow()
-    private val _searchingCity = MutableSharedFlow<Unit>(replay = 1, extraBufferCapacity = 1,
-        onBufferOverflow = BufferOverflow.DROP_LATEST)
+    private val _searchingCity = MutableSharedFlow<Unit>(replay = 0, extraBufferCapacity = 1,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST)
     val searchingCity: SharedFlow<Unit> = _searchingCity.asSharedFlow()
     private val _changingMode = MutableSharedFlow<Unit>()
     val changingMode: SharedFlow<Unit> = _changingMode.asSharedFlow()

@@ -3,13 +3,16 @@ package com.rob.weather.citylist.fragment
 import android.content.Context
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.rob.weather.App
+import com.rob.weather.R
 import com.rob.weather.citylist.CityAdapter
 import com.rob.weather.citylist.DragAndDropCallback
 import com.rob.weather.citylist.ShowDialogForChangingCity
@@ -18,6 +21,7 @@ import com.rob.weather.citylist.viewmodel.CityListViewModel
 import com.rob.weather.databinding.CityListFragmentBinding
 import com.rob.weather.generaldaytoday.fragment.CityListViewModelFactory
 import com.rob.weather.utils.BaseFragment
+import kotlinx.coroutines.flow.collect
 import java.util.*
 import javax.inject.Inject
 
@@ -27,7 +31,7 @@ class CityListFragment : BaseFragment<CityListFragmentBinding>(CityListFragmentB
     lateinit var cityListViewModelFactory: CityListViewModelFactory
     val viewModel: CityListViewModel by viewModels { cityListViewModelFactory }
     private val dialog = ShowDialogForChangingCity()
-    private val сityList = MutableLiveData<List<WeatherCity>>()
+    var сityList = listOf<WeatherCity>()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -36,20 +40,36 @@ class CityListFragment : BaseFragment<CityListFragmentBinding>(CityListFragmentB
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         val cityAdapter = CityAdapter()
         val measureRecyclerView = binding.recyclerview
         measureRecyclerView.adapter = cityAdapter
 
-        viewModel. weatherCityList.observe(viewLifecycleOwner) { weatherInCities ->
-            cityAdapter.setData(weatherInCities)
-            сityList.value = weatherInCities
+        viewModel.getCityList()
+
+        lifecycleScope.launchWhenStarted {
+            viewModel.cityList
+                .collect {listCity ->
+                    viewModel.getWeatherByCity(listCity.toList())
+
+                }
+        }
+//        viewModel.cityListWithWeather.observe(viewLifecycleOwner) { weatherInCities ->
+//            cityAdapter.setData(weatherInCities)
+//            сityList.value = weatherInCities
+//        }
+
+        lifecycleScope.launchWhenStarted {
+            viewModel.cityListWithWeather
+                .collect { cityList ->
+                    cityAdapter.setData(cityList)
+                    сityList = cityList.toList()
+                }
         }
 
         val actionListCallback = object : DragAndDropCallback() {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val pos = viewHolder.adapterPosition
-                viewModel.deleteCity(pos)
+                viewModel.deleteTheCity(pos)
                 cityAdapter.notifyItemRemoved(pos)
             }
 
@@ -60,9 +80,9 @@ class CityListFragment : BaseFragment<CityListFragmentBinding>(CityListFragmentB
             ): Boolean {
                 val from = viewHolder.adapterPosition
                 val to = target.adapterPosition
-                Collections.swap(сityList.value, from, to)
+                Collections.swap(сityList, from, to)
                 cityAdapter.notifyItemMoved(viewHolder.adapterPosition, target.adapterPosition)
-                viewModel.updateCity(сityList.value!!)
+                viewModel.updateCity(сityList)
                 return true
             }
         }
@@ -79,7 +99,6 @@ class CityListFragment : BaseFragment<CityListFragmentBinding>(CityListFragmentB
         }
 
         binding.mapIcon.setOnClickListener {
-
         }
     }
 }

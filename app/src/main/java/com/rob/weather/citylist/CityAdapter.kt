@@ -32,8 +32,8 @@ class CityAdapter : RecyclerView.Adapter<CityAdapter.WeatherViewHolder>() {
         return cityList.size
     }
 
-    fun setData(listCity: List<WeatherCity>) {
-        this.cityList = listCity
+    fun setData(listCity: Set<WeatherCity>) {
+        this.cityList = listCity.plus(this.cityList.toSet()).toList()
         notifyDataSetChanged()
     }
 

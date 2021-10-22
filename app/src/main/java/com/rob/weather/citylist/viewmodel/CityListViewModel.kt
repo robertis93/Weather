@@ -1,8 +1,8 @@
 package com.rob.weather.citylist.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.rob.weather.citylist.database.WeatherRepository
 import com.rob.weather.citylist.model.City
@@ -11,6 +11,10 @@ import com.rob.weather.datasource.retrofit.RetrofitServices
 import com.rob.weather.datasource.retrofit.WeatherDataFromRemoteSource
 import com.rob.weather.model.WeatherForecastResult
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.single
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -20,19 +24,31 @@ class CityListViewModel(
 ) : ViewModel() {
 
     val dataSource = WeatherDataFromRemoteSource(retrofitService)
-    private val _cityList = MutableLiveData<List<City>>()
-    val cityList: LiveData<List<City>> = _cityList
-    private val _weatherCityList = MutableLiveData<List<WeatherCity>>()
-    val weatherCityList: LiveData<List<WeatherCity>> = _weatherCityList
+    private val _cityList = MutableSharedFlow<Set<City>>()
+    val cityList: SharedFlow<Set<City>> = _cityList.asSharedFlow()
+    private val _cityListWithWeather = MutableSharedFlow<Set<WeatherCity>>()
+    val cityListWithWeather: SharedFlow<Set<WeatherCity>> = _cityListWithWeather.asSharedFlow()
 
-    init {
-        viewModelScope.launch(Dispatchers.IO) {
+//    init {
+//        viewModelScope.launch(Dispatchers.IO) {
+//            withContext(Dispatchers.Main) {
+//                _cityList.emit(repository.getAllCities())
+//
+//                getAllWeatherForecast(cityList.single())
+//                val z = cityList.single()
+//            }
+//        }
+//    }
+
+    fun getCityList() {
+        viewModelScope.launch(Dispatchers.IO)
+        {
             withContext(Dispatchers.Main) {
-                _cityList.value = repository.getAllCities()
+                _cityList.emit(repository.getAllCities().toSet())
             }
-            getAllWeatherForecast(cityList.value)
         }
     }
+
 
     fun getAllWeatherForecast(city: List<City>?) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -52,9 +68,27 @@ class CityListViewModel(
         }
     }
 
+    fun getWeatherByCity(city: List<City>?) {
+        viewModelScope.launch(Dispatchers.IO) {
+            if (city != null) {
+                for (oneCity in city) {
+                    try {
+                        val weatherForecastResult = repository.getWeatherResponse(oneCity.name)
+                        withContext(Dispatchers.Main) {
+                            weatherForecastResult.let { getWeatherCity(it) }
+                        }
+                    } catch (e: Exception) {
+                        withContext(Dispatchers.Main) {
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     fun getWeatherInCityList() {
         viewModelScope.launch(Dispatchers.IO) {
-            for (oneCity in cityList.value!!) {
+            for (oneCity in cityList.single()!!) {
                 try {
                     val weatherForecastResult = repository.getWeatherResponse(oneCity.name)
                     withContext(Dispatchers.Main) {
@@ -68,7 +102,7 @@ class CityListViewModel(
         }
     }
 
-    private fun getWeatherCity(weatherForecastResult: WeatherForecastResult) {
+    private suspend fun getWeatherCity(weatherForecastResult: WeatherForecastResult) {
         val cityName = weatherForecastResult.city.name
         val latitude = weatherForecastResult.city.coordinates.latitude
         val longitude = weatherForecastResult.city.coordinates.longitude
@@ -77,39 +111,50 @@ class CityListViewModel(
         val icon = weatherForecastResult.list.first().weather.first().icon
         val weatherCity =
             WeatherCity(cityName, tempMax.toInt(), tempMin.toInt(), icon, latitude, longitude)
-        val weatherList = _weatherCityList.value?.toMutableList() ?: mutableListOf()
-        //  weatherList.add(weatherCity)
-        _weatherCityList.value = weatherList
-        _weatherCityList.value?.let { listAlarm ->
-            val measureMutableList = listAlarm.toMutableList()
-            measureMutableList.add(weatherCity)
-            _weatherCityList.value = measureMutableList
-        }
+
+        _cityListWithWeather.emit(setOf(weatherCity))
+
+        Log.i("myLogs", "getWeatherCity VM")
+
     }
 
     fun addCity(cityName: String) {
         try {
-            val city = City(cityName)
-            _cityList.value?.let { listCity ->
-                val cityMutableList = listCity.toMutableList()
-                cityMutableList.add(city)
-                _cityList.value = cityMutableList
-                getAllWeatherForecast(listOf(city))
-                viewModelScope.launch {
+            viewModelScope.launch {
+                val city = City(cityName)
+                repository.insert(city)
+                _cityList.emit(setOf(city))
+                _cityList.single()?.let { listCity ->
+                    val cityMutableList = listCity.toMutableSet()
+                    cityMutableList.add(city)
+                    getAllWeatherForecast(listOf(city))
                     repository.insert(city)
+                    _cityList.emit(cityMutableList)
                 }
             }
         } catch (e: Exception) {
         }
     }
 
+    fun deleteTheCity(pos: Int) {
+
+        viewModelScope.launch {
+            val cityList = repository.getAllCities()
+            val cityName = cityList.toMutableList().get(pos)
+            val city = City(cityName.name)
+            repository.deleteCity(city)
+            _cityList.emit(repository.getAllCities().toSet())
+        }
+    }
+
     fun deleteCity(pos: Int) {
-        _weatherCityList.value?.let { listCity ->
-            val cityMutableList = listCity.toMutableList()
-            val cityName = cityMutableList[pos]
-            cityMutableList.removeAt(pos)
-            _weatherCityList.value = cityMutableList
-            viewModelScope.launch {
+
+        viewModelScope.launch {
+            val cityMutableList = _cityListWithWeather.asLiveData().value?.toMutableList()
+            if (cityMutableList != null) {
+                val cityName = cityMutableList.get(pos)
+                cityMutableList?.removeAt(pos)
+                _cityListWithWeather.emit(cityMutableList.toSet())
                 val city = City(cityName.name)
                 repository.deleteCity(city)
             }
@@ -131,4 +176,5 @@ class CityListViewModel(
         }
     }
 }
+
 
