@@ -123,14 +123,15 @@ class CityListViewModel(
             viewModelScope.launch {
                 val city = City(cityName)
                 repository.insert(city)
-                _cityList.emit(setOf(city))
-                _cityList.single()?.let { listCity ->
-                    val cityMutableList = listCity.toMutableSet()
-                    cityMutableList.add(city)
-                    getAllWeatherForecast(listOf(city))
-                    repository.insert(city)
-                    _cityList.emit(cityMutableList)
-                }
+                _cityList.emit(repository.getAllCities().toSet())
+             //   _cityList.emit(setOf(city))
+//                _cityList.single()?.let { listCity ->
+//                    val cityMutableList = listCity.toMutableSet()
+//                    cityMutableList.add(city)
+//                    getAllWeatherForecast(listOf(city))
+//                    repository.insert(city)
+//                    _cityList.emit(cityMutableList)
+//                }
             }
         } catch (e: Exception) {
         }
