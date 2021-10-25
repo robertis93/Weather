@@ -53,10 +53,6 @@ class CityListFragment : BaseFragment<CityListFragmentBinding>(CityListFragmentB
 
                 }
         }
-//        viewModel.cityListWithWeather.observe(viewLifecycleOwner) { weatherInCities ->
-//            cityAdapter.setData(weatherInCities)
-//            сityList.value = weatherInCities
-//        }
 
         lifecycleScope.launchWhenStarted {
             viewModel.cityListWithWeather

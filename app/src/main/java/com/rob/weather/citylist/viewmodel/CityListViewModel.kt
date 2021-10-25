@@ -29,17 +29,6 @@ class CityListViewModel(
     private val _cityListWithWeather = MutableSharedFlow<Set<WeatherCity>>()
     val cityListWithWeather: SharedFlow<Set<WeatherCity>> = _cityListWithWeather.asSharedFlow()
 
-//    init {
-//        viewModelScope.launch(Dispatchers.IO) {
-//            withContext(Dispatchers.Main) {
-//                _cityList.emit(repository.getAllCities())
-//
-//                getAllWeatherForecast(cityList.single())
-//                val z = cityList.single()
-//            }
-//        }
-//    }
-
     fun getCityList() {
         viewModelScope.launch(Dispatchers.IO)
         {
@@ -111,9 +100,7 @@ class CityListViewModel(
         val icon = weatherForecastResult.list.first().weather.first().icon
         val weatherCity =
             WeatherCity(cityName, tempMax.toInt(), tempMin.toInt(), icon, latitude, longitude)
-
         _cityListWithWeather.emit(setOf(weatherCity))
-
         Log.i("myLogs", "getWeatherCity VM")
 
     }
@@ -124,14 +111,6 @@ class CityListViewModel(
                 val city = City(cityName)
                 repository.insert(city)
                 _cityList.emit(repository.getAllCities().toSet())
-             //   _cityList.emit(setOf(city))
-//                _cityList.single()?.let { listCity ->
-//                    val cityMutableList = listCity.toMutableSet()
-//                    cityMutableList.add(city)
-//                    getAllWeatherForecast(listOf(city))
-//                    repository.insert(city)
-//                    _cityList.emit(cityMutableList)
-//                }
             }
         } catch (e: Exception) {
         }
