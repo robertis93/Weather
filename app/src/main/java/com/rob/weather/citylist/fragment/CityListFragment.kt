@@ -3,16 +3,12 @@ package com.rob.weather.citylist.fragment
 import android.content.Context
 import android.os.Bundle
 import android.view.View
-import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.rob.weather.App
-import com.rob.weather.R
 import com.rob.weather.citylist.CityAdapter
 import com.rob.weather.citylist.DragAndDropCallback
 import com.rob.weather.citylist.ShowDialogForChangingCity
@@ -48,9 +44,8 @@ class CityListFragment : BaseFragment<CityListFragmentBinding>(CityListFragmentB
 
         lifecycleScope.launchWhenStarted {
             viewModel.cityList
-                .collect {listCity ->
-                    viewModel.getWeatherByCity(listCity.toList())
-
+                .collect { listCity ->
+                    viewModel.getWeatherByCity(listCity)
                 }
         }
 
@@ -58,7 +53,7 @@ class CityListFragment : BaseFragment<CityListFragmentBinding>(CityListFragmentB
             viewModel.cityListWithWeather
                 .collect { cityList ->
                     cityAdapter.setData(cityList)
-                    сityList = cityList.toList()
+                    сityList = cityList
                 }
         }
 
