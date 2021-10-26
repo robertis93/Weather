@@ -4,13 +4,10 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.NavHostFragment.findNavController
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.rob.weather.citylist.fragment.CityListFragmentDirections
 import com.rob.weather.citylist.model.WeatherCity
 import com.rob.weather.databinding.CityItemBinding
-import com.rob.weather.generaldaytoday.fragment.GeneralDayTodayFragmentDirections
 import com.rob.weather.utils.Utils.BASE_URL_IMAGE
 import com.squareup.picasso.Picasso
 
