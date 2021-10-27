@@ -17,9 +17,10 @@ import com.github.mikephil.charting.data.LineDataSet
 import com.rob.weather.R
 import com.rob.weather.databinding.FragmetChooseDayBinding
 import com.rob.weather.model.SortedByDateWeatherForecastResult
+import com.rob.weather.utils.BASE_URL_IMAGE
 import com.rob.weather.utils.BaseFragment
-import com.rob.weather.utils.Utils
-import com.rob.weather.utils.Utils.BASE_URL_IMAGE
+import com.rob.weather.utils.Utils.fullDateFormat
+import com.rob.weather.utils.Utils.hourFormat
 import com.squareup.picasso.Picasso
 import java.util.*
 import kotlin.collections.ArrayList
@@ -150,8 +151,8 @@ class SelectedDayFragment :
 }
 
 fun String.returnHour(): String {
-    val changedDate = Utils.fullDateFormat.parse(this)
-    return Utils.hourFormat.format(changedDate)
+    val changedDate = fullDateFormat.parse(this)
+    return hourFormat.format(changedDate)
 }
 
 

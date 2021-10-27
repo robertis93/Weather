@@ -16,8 +16,8 @@ import com.rob.weather.databinding.FragmentGeneralDayTodayBinding
 import com.rob.weather.generaldaytoday.adapters.GeneralDayTodayAdapter
 import com.rob.weather.generaldaytoday.viewmodel.GeneralDayTodayViewModel
 import com.rob.weather.model.WeatherToday
+import com.rob.weather.utils.BASE_URL_IMAGE
 import com.rob.weather.utils.BaseFragment
-import com.rob.weather.utils.Utils.BASE_URL_IMAGE
 import com.rob.weather.utils.Utils.city
 import com.rob.weather.utils.extensions.getAppComponent
 import com.squareup.picasso.Picasso

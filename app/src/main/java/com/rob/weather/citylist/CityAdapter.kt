@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.rob.weather.citylist.fragment.CityListFragmentDirections
 import com.rob.weather.citylist.model.WeatherCity
 import com.rob.weather.databinding.CityItemBinding
-import com.rob.weather.utils.Utils.BASE_URL_IMAGE
+import com.rob.weather.utils.BASE_URL_IMAGE
 import com.squareup.picasso.Picasso
 
 class CityAdapter : RecyclerView.Adapter<CityAdapter.WeatherViewHolder>() {

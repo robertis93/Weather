@@ -5,7 +5,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.rob.weather.databinding.TimeTemperatureItemBinding
 import com.rob.weather.model.ForecastResponse
-import com.rob.weather.utils.Utils
+import com.rob.weather.utils.Utils.fullDateFormat
+import com.rob.weather.utils.Utils.timeFormat
 import com.squareup.picasso.Picasso
 
 class TimeAndTemperatureAdapter(private val allDaysWeatherList: List<ForecastResponse>) :
@@ -42,6 +43,6 @@ class TimeAndTemperatureAdapter(private val allDaysWeatherList: List<ForecastRes
 }
 
 fun String.returnTime(): String {
-    val changedDate = Utils.fullDateFormat.parse(this)
-    return Utils.timeFormat.format(changedDate)
+    val changedDate = fullDateFormat.parse(this)
+    return timeFormat.format(changedDate)
 }

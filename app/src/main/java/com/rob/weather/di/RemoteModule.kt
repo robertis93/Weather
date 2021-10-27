@@ -2,7 +2,7 @@ package com.rob.weather.di
 
 import com.rob.weather.App
 import com.rob.weather.datasource.retrofit.RetrofitServices
-import com.rob.weather.utils.Utils
+import com.rob.weather.utils.BASE_URL
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
@@ -14,7 +14,7 @@ class RemoteModule(val application: App) {
     @Provides
     fun providesRetrofit(): Retrofit {
         return Retrofit.Builder()
-            .baseUrl(Utils.BASE_URL)
+            .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
