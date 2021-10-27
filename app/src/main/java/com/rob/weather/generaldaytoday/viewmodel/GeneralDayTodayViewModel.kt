@@ -50,8 +50,13 @@ class GeneralDayTodayViewModel(val dataSource: WeatherDataFromRemoteSource) : Vi
                     if (weatherForecast != null) {
                         withContext(Dispatchers.Main) {
                             _updatingInformation.value = false
-                            setWeatherToday(weatherForecast)
-                            withoutFirstElementSortedByDateForecastResponseList(weatherForecast)
+                            _weatherToday.emit(getWeatherToday(weatherForecast))
+                            _sortedWeatherForecastResult
+                                .emit(
+                                    withoutFirstElementSortedByDateForecastResponseList(
+                                        weatherForecast
+                                    )
+                                )
                         }
                     }
                 } catch (e: Exception) {
@@ -64,7 +69,7 @@ class GeneralDayTodayViewModel(val dataSource: WeatherDataFromRemoteSource) : Vi
         }
     }
 
-    private suspend fun setWeatherToday(weatherForecast: WeatherForecastResult) {
+    private fun getWeatherToday(weatherForecast: WeatherForecastResult): WeatherToday {
         val weatherDate = weatherForecast.list.first()
         val date = weatherDate.date.changeDateFormat()
         val cityName: String = weatherForecast.city.name
@@ -78,18 +83,18 @@ class GeneralDayTodayViewModel(val dataSource: WeatherDataFromRemoteSource) : Vi
         val iconCode = weatherDate.weather.first().icon
         val todayWeather = WeatherToday(date, cityName, temperature, description, iconCode)
         _progressBar.value = false
-        _weatherToday.emit(todayWeather)
+        return todayWeather
     }
 
-    private suspend fun withoutFirstElementSortedByDateForecastResponseList(
+    private fun withoutFirstElementSortedByDateForecastResponseList(
         weatherForecast: WeatherForecastResult
-    ) {
+    ): List<SortedByDateWeatherForecastResult> {
         val sortedByDateForecastResponseList =
             geWeatherForecastResponseGroupByDate(weatherForecast)
         val withoutFirstElementSortedByDateForecastResponseList =
             sortedByDateForecastResponseList
                 .subList(1, sortedByDateForecastResponseList.size)
-        _sortedWeatherForecastResult.emit(withoutFirstElementSortedByDateForecastResponseList)
+        return withoutFirstElementSortedByDateForecastResponseList
     }
 
     private fun geWeatherForecastResponseGroupByDate(
