@@ -28,8 +28,10 @@ class GeneralDayTodayViewModel(val dataSource: WeatherDataFromRemoteSource) : Vi
         MutableSharedFlow<SortedByDateWeatherForecastResult>()
     val fullInfoTodayWeather: SharedFlow<SortedByDateWeatherForecastResult> =
         _fullInfoTodayWeather.asSharedFlow()
-    private val _searchingCity = MutableSharedFlow<Unit>(replay = 0, extraBufferCapacity = 1,
-        onBufferOverflow = BufferOverflow.DROP_OLDEST)
+    private val _searchingCity = MutableSharedFlow<Unit>(
+        replay = 0, extraBufferCapacity = 1,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST
+    )
     val searchingCity: SharedFlow<Unit> = _searchingCity.asSharedFlow()
     private val _changingMode = MutableSharedFlow<Unit>()
     val changingMode: SharedFlow<Unit> = _changingMode.asSharedFlow()
@@ -40,32 +42,29 @@ class GeneralDayTodayViewModel(val dataSource: WeatherDataFromRemoteSource) : Vi
     private var _updatingInformation = MutableStateFlow<Boolean>(false)
     val updatingInformation: StateFlow<Boolean> = _updatingInformation.asStateFlow()
 
-    fun getAllWeatherForecast(city: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
-                val weatherForecast = dataSource.getWeatherForecastResponse(city)
-                if (weatherForecast != null) {
-                    withContext(Dispatchers.Main) {
-                        _updatingInformation.value = false
-                        weatherToday(weatherForecast)
-                        withoutFirstElementSortedByDateForecastResponseList(weatherForecast)
+    fun getAllWeatherForecast(city: String?) {
+        if (city != null) {
+            viewModelScope.launch(Dispatchers.IO) {
+                try {
+                    val weatherForecast = dataSource.getWeatherForecastResponse(city)
+                    if (weatherForecast != null) {
+                        withContext(Dispatchers.Main) {
+                            _updatingInformation.value = false
+                            setWeatherToday(weatherForecast)
+                            withoutFirstElementSortedByDateForecastResponseList(weatherForecast)
+                        }
                     }
-                }
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    _errorMessage.value = R.string.error_server
-                    _progressBar.value = false
+                } catch (e: Exception) {
+                    withContext(Dispatchers.Main) {
+                        _errorMessage.value = R.string.error_server
+                        _progressBar.value = false
+                    }
                 }
             }
         }
     }
 
-    fun updateInformation(city: String) {
-        getAllWeatherForecast(city)
-        _updatingInformation.value = true
-    }
-
-    private suspend fun weatherToday(weatherForecast: WeatherForecastResult) {
+    private suspend fun setWeatherToday(weatherForecast: WeatherForecastResult) {
         val weatherDate = weatherForecast.list.first()
         val date = weatherDate.date.changeDateFormat()
         val cityName: String = weatherForecast.city.name
@@ -82,19 +81,6 @@ class GeneralDayTodayViewModel(val dataSource: WeatherDataFromRemoteSource) : Vi
         _weatherToday.emit(todayWeather)
     }
 
-    private fun geWeatherForecastResponseGroupByDate(
-        weatherForecast: WeatherForecastResult
-    ): List<SortedByDateWeatherForecastResult> {
-        val weatherForecastGroup = weatherForecast.list.groupBy { it.date.changeDateFormat() }
-        return weatherForecastGroup.map { (date, forecasts) ->
-            SortedByDateWeatherForecastResult(
-                date,
-                weatherForecast.city.name,
-                forecasts
-            )
-        }
-    }
-
     private suspend fun withoutFirstElementSortedByDateForecastResponseList(
         weatherForecast: WeatherForecastResult
     ) {
@@ -106,9 +92,17 @@ class GeneralDayTodayViewModel(val dataSource: WeatherDataFromRemoteSource) : Vi
         _sortedWeatherForecastResult.emit(withoutFirstElementSortedByDateForecastResponseList)
     }
 
-    private fun getFullWeatherTodayResponse(weatherForecast: WeatherForecastResult)
-            : SortedByDateWeatherForecastResult {
-        return geWeatherForecastResponseGroupByDate(weatherForecast)[0]
+    private fun geWeatherForecastResponseGroupByDate(
+        weatherForecast: WeatherForecastResult
+    ): List<SortedByDateWeatherForecastResult> {
+        val weatherForecastGroup = weatherForecast.list.groupBy { it.date.changeDateFormat() }
+        return weatherForecastGroup.map { (date, forecasts) ->
+            SortedByDateWeatherForecastResult(
+                date,
+                weatherForecast.city.name,
+                forecasts
+            )
+        }
     }
 
     fun getMoreInformationToday(city: String) {
@@ -127,6 +121,16 @@ class GeneralDayTodayViewModel(val dataSource: WeatherDataFromRemoteSource) : Vi
                 }
             }
         }
+    }
+
+    private fun getFullWeatherTodayResponse(weatherForecast: WeatherForecastResult)
+            : SortedByDateWeatherForecastResult {
+        return geWeatherForecastResponseGroupByDate(weatherForecast)[0]
+    }
+
+    fun updateInformation(city: String) {
+        getAllWeatherForecast(city)
+        _updatingInformation.value = true
     }
 
     fun clickOnMenu(menuItem: MenuItem): Boolean {
