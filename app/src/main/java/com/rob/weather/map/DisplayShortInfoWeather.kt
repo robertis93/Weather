@@ -6,6 +6,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.rob.weather.R
+import com.rob.weather.utils.Utils.BASE_URL_IMAGE
 import com.squareup.picasso.Picasso
 
 class DisplayShortInfoWeather(context: Context) : LinearLayout(context) {
@@ -23,7 +24,7 @@ class DisplayShortInfoWeather(context: Context) : LinearLayout(context) {
     }
 
     fun setIconWeather(icon: String) {
-        val iconUrl = "https://openweathermap.org/img/w/" + icon + ".png"
+        val iconUrl = BASE_URL_IMAGE + icon + ".png"
         Picasso.get().load(iconUrl).into(iconCityWeather)
     }
 

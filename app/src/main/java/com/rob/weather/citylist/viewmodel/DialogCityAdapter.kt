@@ -8,8 +8,6 @@ import com.rob.weather.databinding.CityChipBinding
 class DialogCityAdapter(private var onClickCityListener: OnCityClickListener):
     RecyclerView.Adapter<DialogCityAdapter.WeatherViewHolder>() {
     private var cityList = emptyList<String>()
-
-   // lateinit var onClickAlarmListener: OnAlarmClickListener
    interface OnCityClickListener {
        fun onCityClick(cityName: String, position: Int)
    }

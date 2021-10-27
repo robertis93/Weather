@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
-import com.rob.weather.R
 import com.rob.weather.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {

@@ -1,26 +1,25 @@
 package com.rob.weather.map.fragment
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.rob.weather.citylist.database.WeatherRepository
 import com.rob.weather.citylist.model.City
 import com.rob.weather.citylist.model.WeatherCity
 import com.rob.weather.datasource.retrofit.RetrofitServices
 import com.rob.weather.datasource.retrofit.WeatherDataFromRemoteSource
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 
 class MapViewModel(
     private val repository: WeatherRepository,
     retrofitService: RetrofitServices
 ) : ViewModel() {
 
-    private val _cityList = MutableLiveData<List<City>>()
-    val cityList: LiveData<List<City>> = _cityList
+    private val _cityList = MutableSharedFlow<List<City>>()
+    val cityList: SharedFlow<List<City>> = _cityList.asSharedFlow()
     val dataSource = WeatherDataFromRemoteSource(retrofitService)
-    private val _weatherCity = MutableLiveData<WeatherCity>()
-    val weatherCity: LiveData<WeatherCity> = _weatherCity
+    private val _weatherCity = MutableSharedFlow<WeatherCity>()
+    val weatherCity: SharedFlow<WeatherCity> = _weatherCity.asSharedFlow()
 
     suspend fun getWeatherInCity(latitude: Double, longitude: Double): WeatherCity {
         val weatherForecastResult = repository.getWeatherInCityByCoordinates(latitude, longitude)
@@ -40,14 +39,11 @@ class MapViewModel(
         try {
             val city = City(cityName)
             repository.insert(city)
-            _cityList.value?.let { listCity ->
-                val cityMutableList = listCity.toMutableList()
-                cityMutableList.add(city)
-                _cityList.value = cityMutableList
-                viewModelScope.launch {
-
-                }
-            }
+//            _cityList.value?.let { listCity ->
+//                val cityMutableList = listCity.toMutableList()
+//                cityMutableList.add(city)
+//                _cityList.value = cityMutableList
+//            }
         } catch (e: Exception) {
         }
     }

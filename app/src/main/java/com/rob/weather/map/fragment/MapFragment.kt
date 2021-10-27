@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.location.Location
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,7 +27,6 @@ import com.yandex.mapkit.map.Map
 import com.yandex.mapkit.mapview.MapView
 import com.yandex.runtime.ui_view.ViewProvider
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.properties.Delegates
@@ -78,11 +76,9 @@ class MapFragment : Fragment() {
                 val latitudeSelectedCity = point.latitude
                 val longitudeSelectedCity = point.longitude
                 lifecycleScope.launch(Dispatchers.Main) {
-                  val weatherInCity = mapViewModel.getWeatherInCity(latitudeSelectedCity, longitudeSelectedCity)
-
-                    Log.i("myLogs", "GEoLocation City Click")
-                        showWeatherOnCity(weatherInCity)
-                     //  locationDetermination(latitudeSelectedCity, longitudeSelectedCity, binding, args)
+                    val weatherInCity =
+                        mapViewModel.getWeatherInCity(latitudeSelectedCity, longitudeSelectedCity)
+                    showWeatherOnCity(weatherInCity)
                 }
             }
 
@@ -90,10 +86,7 @@ class MapFragment : Fragment() {
             }
         }
         mapview?.map?.addInputListener(listener)
-
-
-        val view = binding.root
-        return view
+        return binding.root
     }
 
     override fun onStop() {
@@ -186,7 +179,6 @@ class MapFragment : Fragment() {
             Point((weatherCity.latitude + 0.4), weatherCity.longitude),
             ViewProvider(displayShortInfoWeather)
         )
-
 
         val latitude = weatherCity.latitude
         val longitude = weatherCity.longitude

@@ -13,7 +13,7 @@ class App : Application() {
         component = DaggerWeatherAppComponent.builder()
             .remoteModule(RemoteModule(this))
             .applicationModule(ApplicationModule(this))
-            .dataBaseModule(DataBaseModule(this))
+            .dataBaseModule(DataBaseModule())
             .build()
     }
 

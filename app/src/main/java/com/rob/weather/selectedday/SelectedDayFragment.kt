@@ -129,7 +129,7 @@ class SelectedDayFragment :
         lineChart.legend.xOffset = -60f
         lineChart.solidColor
         lineChart.highlighter.getHighlight(22f, 10f)
-        val markerView = AppearingIconWithWeather(context, R.layout.marker_view)
+        val markerView = PopupWeatherInCity(context, R.layout.marker_view)
         lineChart.marker = markerView
     }
 

@@ -3,7 +3,6 @@ package com.rob.weather.generaldaytoday.fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.rob.weather.citylist.database.WeatherRepository
-import com.rob.weather.citylist.viewmodel.CityListViewModel
 import com.rob.weather.datasource.retrofit.RetrofitServices
 import com.rob.weather.map.fragment.MapViewModel
 import javax.inject.Inject
