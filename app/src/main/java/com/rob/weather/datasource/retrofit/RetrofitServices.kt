@@ -1,7 +1,7 @@
 package com.rob.weather.datasource.retrofit
 
 import com.rob.weather.model.WeatherForecastResult
-import com.rob.weather.utils.Utils.id_key
+import com.rob.weather.utils.id_key
 import retrofit2.http.GET
 import retrofit2.http.Query
 
