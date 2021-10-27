@@ -5,6 +5,7 @@ import android.content.Context
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
@@ -81,7 +82,7 @@ class GeneralDayTodayFragment :
 
         val toolbar = binding.toolbar
         toolbar.setOnMenuItemClickListener { menuItem ->
-            generalDayTodayViewModel.clickOnMenu(menuItem)
+            clickOnMenu(menuItem)
         }
 
         lifecycleScope.launchWhenStarted {
@@ -129,6 +130,20 @@ class GeneralDayTodayFragment :
             binding.weatherIcon.visibility = View.VISIBLE
             Picasso.get().load(iconUrl).into(weatherIcon)
         }
+    }
+
+    fun clickOnMenu(menuItem: MenuItem): Boolean {
+        when (menuItem.itemId) {
+            R.id.action_search -> {
+                generalDayTodayViewModel.searchCity()
+                true
+            }
+            R.id.switch_mode -> {
+                generalDayTodayViewModel.changeMode()
+                true
+            }
+        }
+        return true
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

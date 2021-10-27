@@ -145,20 +145,6 @@ class GeneralDayTodayViewModel(val dataSource: WeatherDataFromRemoteSource) : Vi
         _updatingInformation.value = true
     }
 
-    fun clickOnMenu(menuItem: MenuItem): Boolean {
-        when (menuItem.itemId) {
-            R.id.action_search -> {
-                searchCity()
-                true
-            }
-            R.id.switch_mode -> {
-                changeMode()
-                true
-            }
-        }
-        return true
-    }
-
     fun searchCity(): Boolean {
         viewModelScope.launch(Dispatchers.IO) {
             _searchingCity.emit(Unit)
