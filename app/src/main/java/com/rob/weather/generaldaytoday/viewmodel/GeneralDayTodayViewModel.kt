@@ -20,25 +20,32 @@ import java.util.*
 class GeneralDayTodayViewModel(val dataSource: WeatherDataFromRemoteSource) : ViewModel() {
     private val _errorMessage = MutableStateFlow<Int>(R.string.empty)
     val errorMessage: StateFlow<Int> = _errorMessage.asStateFlow()
-    private val _sortedWeatherForecastResult =
+
+    private val _weatherForNextDays =
         MutableSharedFlow<List<SortedByDateWeatherForecastResult>>()
-    val sortedWeatherForecastResult: SharedFlow<List<SortedByDateWeatherForecastResult>> =
-        _sortedWeatherForecastResult.asSharedFlow()
+    val weatherForNextDays: SharedFlow<List<SortedByDateWeatherForecastResult>> =
+        _weatherForNextDays.asSharedFlow()
+
     private val _fullInfoTodayWeather =
         MutableSharedFlow<SortedByDateWeatherForecastResult>()
     val fullInfoTodayWeather: SharedFlow<SortedByDateWeatherForecastResult> =
         _fullInfoTodayWeather.asSharedFlow()
+
     private val _searchingCity = MutableSharedFlow<Unit>(
         replay = 0, extraBufferCapacity = 1,
         onBufferOverflow = BufferOverflow.DROP_OLDEST
     )
     val searchingCity: SharedFlow<Unit> = _searchingCity.asSharedFlow()
+
     private val _changingMode = MutableSharedFlow<Unit>()
     val changingMode: SharedFlow<Unit> = _changingMode.asSharedFlow()
+
     private val _weatherToday = MutableSharedFlow<WeatherToday>()
     val weatherToday: SharedFlow<WeatherToday> = _weatherToday.asSharedFlow()
+
     private var _progressBar = MutableStateFlow<Boolean>(true)
     val progressBar: StateFlow<Boolean> = _progressBar.asStateFlow()
+
     private var _updatingInformation = MutableStateFlow<Boolean>(false)
     val updatingInformation: StateFlow<Boolean> = _updatingInformation.asStateFlow()
 
@@ -51,9 +58,9 @@ class GeneralDayTodayViewModel(val dataSource: WeatherDataFromRemoteSource) : Vi
                         withContext(Dispatchers.Main) {
                             _updatingInformation.value = false
                             _weatherToday.emit(getWeatherToday(weatherForecast))
-                            _sortedWeatherForecastResult
+                            _weatherForNextDays
                                 .emit(
-                                    withoutFirstElementSortedByDateForecastResponseList(
+                                    getWeatherForNextDays(
                                         weatherForecast
                                     )
                                 )
@@ -86,18 +93,18 @@ class GeneralDayTodayViewModel(val dataSource: WeatherDataFromRemoteSource) : Vi
         return todayWeather
     }
 
-    private fun withoutFirstElementSortedByDateForecastResponseList(
+    private fun getWeatherForNextDays(
         weatherForecast: WeatherForecastResult
     ): List<SortedByDateWeatherForecastResult> {
-        val sortedByDateForecastResponseList =
-            geWeatherForecastResponseGroupByDate(weatherForecast)
-        val withoutFirstElementSortedByDateForecastResponseList =
-            sortedByDateForecastResponseList
-                .subList(1, sortedByDateForecastResponseList.size)
-        return withoutFirstElementSortedByDateForecastResponseList
+        val weatherSortedByDate =
+            getWeatherSortedByDate(weatherForecast)
+        val weatherSortedByDateForNextDays =
+            weatherSortedByDate
+                .subList(1, weatherSortedByDate.size)
+        return weatherSortedByDateForNextDays
     }
 
-    private fun geWeatherForecastResponseGroupByDate(
+    private fun getWeatherSortedByDate(
         weatherForecast: WeatherForecastResult
     ): List<SortedByDateWeatherForecastResult> {
         val weatherForecastGroup = weatherForecast.list.groupBy { it.date.changeDateFormat() }
@@ -130,7 +137,7 @@ class GeneralDayTodayViewModel(val dataSource: WeatherDataFromRemoteSource) : Vi
 
     private fun getFullWeatherTodayResponse(weatherForecast: WeatherForecastResult)
             : SortedByDateWeatherForecastResult {
-        return geWeatherForecastResponseGroupByDate(weatherForecast)[0]
+        return getWeatherSortedByDate(weatherForecast)[0]
     }
 
     fun updateInformation(city: String) {

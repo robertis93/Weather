@@ -40,7 +40,7 @@ class GeneralDayTodayFragment :
         recyclerView.adapter = allDaysWeatherListAdapter
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            generalDayTodayViewModel.sortedWeatherForecastResult.collect { list ->
+            generalDayTodayViewModel.weatherForNextDays.collect { list ->
                 allDaysWeatherListAdapter.setData(list)
             }
         }
