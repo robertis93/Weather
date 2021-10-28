@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.rob.weather.citylist.viewmodel.CityListViewModel
 import com.rob.weather.citylist.viewmodel.DialogCityAdapter
 import com.rob.weather.databinding.SearchCityDialogBinding
-import com.rob.weather.utils.Utils.city
 import org.json.JSONObject
 import java.io.IOException
 import java.nio.charset.Charset
@@ -45,7 +44,7 @@ class ShowDialogForChangingCity {
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         cityAdapter.setData(cityName)
         dialogBinding.addBtn.setOnClickListener {
-            city = dialogBinding.searchCityEditText.text.toString()
+         TODO()   //city = dialogBinding.searchCityEditText.text.toString()
             val city = dialogBinding.searchCityEditText.text.toString()
             viewModel.addCity(city)
             alertDialog.dismiss()

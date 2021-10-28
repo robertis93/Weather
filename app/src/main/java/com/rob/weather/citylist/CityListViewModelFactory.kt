@@ -7,7 +7,10 @@ import com.rob.weather.citylist.viewmodel.CityListViewModel
 import com.rob.weather.datasource.retrofit.RetrofitServices
 import javax.inject.Inject
 
-class CityListViewModelFactory @Inject constructor(private val repository: WeatherRepository,private val retrofitService: RetrofitServices) :
+class CityListViewModelFactory @Inject constructor(
+    private val repository: WeatherRepository,
+    private val retrofitService: RetrofitServices
+) :
     ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {

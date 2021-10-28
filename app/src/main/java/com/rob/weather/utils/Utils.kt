@@ -5,7 +5,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 object Utils {
-    var city = "Тамбов"
     @SuppressLint("ConstantLocale")
     val fullDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
     @SuppressLint("ConstantLocale")

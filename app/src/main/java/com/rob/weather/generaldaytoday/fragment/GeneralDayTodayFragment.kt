@@ -19,7 +19,6 @@ import com.rob.weather.generaldaytoday.viewmodel.GeneralDayTodayViewModel
 import com.rob.weather.model.WeatherToday
 import com.rob.weather.utils.BASE_URL_IMAGE
 import com.rob.weather.utils.BaseFragment
-import com.rob.weather.utils.Utils.city
 import com.rob.weather.utils.extensions.getAppComponent
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.flow.collect
@@ -47,7 +46,7 @@ class GeneralDayTodayFragment :
         }
 
         binding.blueRectangleView.setOnClickListener {
-            generalDayTodayViewModel.getMoreInformationToday(city)
+            TODO()// generalDayTodayViewModel.getMoreInformationToday(city)
         }
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
@@ -100,7 +99,7 @@ class GeneralDayTodayFragment :
         }
 
         binding.swipeRefresh.setOnRefreshListener(OnRefreshListener {
-            generalDayTodayViewModel.updateInformation(city)
+            TODO()//   generalDayTodayViewModel.updateInformation(city)
         })
 
         lifecycleScope.launchWhenStarted {
@@ -109,8 +108,8 @@ class GeneralDayTodayFragment :
                     binding.swipeRefresh.isRefreshing = visible
                 }
         }
-
-        generalDayTodayViewModel.getAllWeatherForecast(city)
+        generalDayTodayViewModel.checkDataBase()
+            //        TODO()// generalDayTodayViewModel.getAllWeatherForecast(city)
     }
 
     private fun initializingScreenForToday(weatherToday: WeatherToday) {

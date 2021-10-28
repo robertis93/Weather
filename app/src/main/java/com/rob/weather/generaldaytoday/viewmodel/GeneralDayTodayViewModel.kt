@@ -3,6 +3,7 @@ package com.rob.weather.generaldaytoday.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rob.weather.R
+import com.rob.weather.citylist.database.WeatherRepository
 import com.rob.weather.datasource.retrofit.WeatherDataFromRemoteSource
 import com.rob.weather.generaldaytoday.model.WeatherForecastForNextDays
 import com.rob.weather.model.SortedByDateWeatherForecastResult
@@ -17,7 +18,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.*
 
-class GeneralDayTodayViewModel(val dataSource: WeatherDataFromRemoteSource) : ViewModel() {
+class GeneralDayTodayViewModel(
+    val dataSource: WeatherDataFromRemoteSource,
+    private val repository: WeatherRepository
+) : ViewModel() {
     private val _errorMessage = MutableStateFlow<Int>(R.string.empty)
     val errorMessage: StateFlow<Int> = _errorMessage.asStateFlow()
 
@@ -199,6 +203,22 @@ class GeneralDayTodayViewModel(val dataSource: WeatherDataFromRemoteSource) : Vi
             _changingMode.emit(Unit)
         }
         return true
+    }
+
+    fun checkDataBase() {
+        viewModelScope.launch(Dispatchers.IO)
+        {
+            withContext(Dispatchers.Main) {
+                val cityInDataBase = repository.getAllCities()
+                if (cityInDataBase != null){
+                   val lastCityInDataBase = cityInDataBase.last()
+                    getAllWeatherForecast(lastCityInDataBase.name)
+                }
+                else {
+                    //:TODO определить по геолокации или по ip
+                }
+            }
+        }
     }
 }
 
