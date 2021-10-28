@@ -46,7 +46,14 @@ class GeneralDayTodayFragment :
         }
 
         binding.blueRectangleView.setOnClickListener {
-            TODO()// generalDayTodayViewModel.getMoreInformationToday(city)
+            generalDayTodayViewModel.getCityFromDB()
+        }
+
+        lifecycleScope.launchWhenStarted {
+            generalDayTodayViewModel.cityName
+                .collect { cityName ->
+                    generalDayTodayViewModel.getMoreInformationToday(cityName)
+                }
         }
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
@@ -109,7 +116,6 @@ class GeneralDayTodayFragment :
                 }
         }
         generalDayTodayViewModel.checkDataBase()
-            //        TODO()// generalDayTodayViewModel.getAllWeatherForecast(city)
     }
 
     private fun initializingScreenForToday(weatherToday: WeatherToday) {

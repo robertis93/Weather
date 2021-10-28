@@ -30,6 +30,11 @@ class GeneralDayTodayViewModel(
     val weatherForNextDays: SharedFlow<List<WeatherForecastForNextDays>> =
         _weatherForNextDays.asSharedFlow()
 
+    private val _cityName =
+        MutableSharedFlow<String>()
+    val cityName: SharedFlow<String> =
+        _cityName.asSharedFlow()
+
     private val _fullInfoTodayWeather =
         MutableSharedFlow<WeatherForecastForNextDays>()
     val fullInfoTodayWeather: SharedFlow<WeatherForecastForNextDays> =
@@ -210,21 +215,26 @@ class GeneralDayTodayViewModel(
         {
             withContext(Dispatchers.Main) {
                 val cityInDataBase = repository.getAllCities()
-                if (cityInDataBase != null){
-                   val lastCityInDataBase = cityInDataBase.last()
+                if (cityInDataBase != null) {
+                    val lastCityInDataBase = cityInDataBase.last()
                     getAllWeatherForecast(lastCityInDataBase.name)
-                }
-                else {
+                } else {
                     //:TODO определить по геолокации или по ip
                 }
             }
         }
     }
-}
 
-private fun String.changeDateFormat(): String {
-    val changedDate = fullDateFormat.parse(this)
-    return shortDateFormat.format(changedDate)
+    fun getCityFromDB() {
+        viewModelScope.launch(Dispatchers.IO) {
+            _cityName.emit(repository.getAllCities().last().name)
+        }
+    }
+
+    private fun String.changeDateFormat(): String {
+        val changedDate = fullDateFormat.parse(this)
+        return shortDateFormat.format(changedDate)
+    }
 }
 
 
