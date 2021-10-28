@@ -6,12 +6,13 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.rob.weather.databinding.DayWeatherItemBinding
 import com.rob.weather.generaldaytoday.fragment.GeneralDayTodayFragmentDirections
+import com.rob.weather.generaldaytoday.model.WeatherForecastForNextDays
 import com.rob.weather.model.SortedByDateWeatherForecastResult
 import com.squareup.picasso.Picasso
 
 class GeneralDayTodayAdapter :
     RecyclerView.Adapter<GeneralDayTodayAdapter.WeatherViewHolder>() {
-    private var allDaysWeatherList = emptyList<SortedByDateWeatherForecastResult>()
+    private var allDaysWeatherList = emptyList<WeatherForecastForNextDays>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WeatherViewHolder {
         val binding =
@@ -28,26 +29,21 @@ class GeneralDayTodayAdapter :
         return allDaysWeatherList.size
     }
 
-    fun setData(forecastResponse: List<SortedByDateWeatherForecastResult>) {
-        this.allDaysWeatherList = forecastResponse
+    fun setData(forecastResponse: List<WeatherForecastForNextDays>) {
+        allDaysWeatherList = forecastResponse
         notifyDataSetChanged()
     }
 
     class WeatherViewHolder(private val binding: DayWeatherItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: SortedByDateWeatherForecastResult) {
-            binding.dayTextView.text = item.date.substringBefore(",") + ","
-            binding.dayTextView.text = item.date.substringBefore(",") + ","
-            binding.weekDayTextView.text = item.date.substringAfter(",")
-            val minTemperatureForDay = item.forecastResponseList.stream().min { o1, o2 ->
-                compareValues((o1.main.temp_min), (o2.main.temp_min))
-            }.map { it.main.temp_min }.get().toInt().toString() + "°"
+        fun bind(item: WeatherForecastForNextDays) {
+            binding.dayTextView.text = item.date
+            binding.weekDayTextView.text = item.weekDay
+            val minTemperatureForDay = item.minTemperatureForDay
             binding.minTemperatureTextView.text = minTemperatureForDay
-            val maxTemperatureForDay = item.forecastResponseList.stream().max { o1, o2 ->
-                compareValues((o1.main.temp_min), (o2.main.temp_min))
-            }.map { it.main.temp_max }.get().toInt().toString() + "°"
+            val maxTemperatureForDay = item.maxTemperatureForDay
             binding.maxTemperatureTextView.text = maxTemperatureForDay
-            val iconCode = item.forecastResponseList.first().weather.first().icon
+            val iconCode = item.iconCode
             val iconUrl = "https://openweathermap.org/img/w/" + iconCode + ".png"
             Picasso.get().load(iconUrl).into(binding.imageView)
             val timeAndTemperatureAdapter =

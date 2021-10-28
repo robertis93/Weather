@@ -28,7 +28,7 @@
             app:destination="@id/weatherInformationByDayFragment" />
         <argument
             android:name="weather_forecast_list"
-            app:argType="com.rob.weather.model.SortedByDateWeatherForecastResult" />
+            app:argType="com.rob.weather.generaldaytoday.model.WeatherForecastForNextDays" />
     </fragment>
     <fragment
         android:id="@+id/cityListFragment"

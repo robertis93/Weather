@@ -8,6 +8,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.annotation.NonNull
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.github.mikephil.charting.components.XAxis
@@ -16,7 +17,7 @@ import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.rob.weather.R
 import com.rob.weather.databinding.FragmetChooseDayBinding
-import com.rob.weather.model.SortedByDateWeatherForecastResult
+import com.rob.weather.generaldaytoday.model.WeatherForecastForNextDays
 import com.rob.weather.utils.BASE_URL_IMAGE
 import com.rob.weather.utils.BaseFragment
 import com.rob.weather.utils.Utils.fullDateFormat
@@ -71,7 +72,7 @@ class SelectedDayFragment :
     }
 
     @SuppressLint("ResourceAsColor")
-    private fun drawingGraph(context: Context, todayWeather: SortedByDateWeatherForecastResult) {
+    private fun drawingGraph(context: Context, todayWeather: WeatherForecastForNextDays) {
         val entries = ArrayList<Entry>()
         val xValsOriginalMillis = ArrayList<Long>()
         for (element in todayWeather.forecastResponseList) {

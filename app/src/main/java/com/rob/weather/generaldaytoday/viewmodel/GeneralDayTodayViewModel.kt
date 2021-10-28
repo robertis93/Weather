@@ -1,10 +1,10 @@
 package com.rob.weather.generaldaytoday.viewmodel
 
-import android.view.MenuItem
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rob.weather.R
 import com.rob.weather.datasource.retrofit.WeatherDataFromRemoteSource
+import com.rob.weather.generaldaytoday.model.WeatherForecastForNextDays
 import com.rob.weather.model.SortedByDateWeatherForecastResult
 import com.rob.weather.model.WeatherForecastResult
 import com.rob.weather.model.WeatherToday
@@ -22,13 +22,13 @@ class GeneralDayTodayViewModel(val dataSource: WeatherDataFromRemoteSource) : Vi
     val errorMessage: StateFlow<Int> = _errorMessage.asStateFlow()
 
     private val _weatherForNextDays =
-        MutableSharedFlow<List<SortedByDateWeatherForecastResult>>()
-    val weatherForNextDays: SharedFlow<List<SortedByDateWeatherForecastResult>> =
+        MutableSharedFlow<List<WeatherForecastForNextDays>>()
+    val weatherForNextDays: SharedFlow<List<WeatherForecastForNextDays>> =
         _weatherForNextDays.asSharedFlow()
 
     private val _fullInfoTodayWeather =
-        MutableSharedFlow<SortedByDateWeatherForecastResult>()
-    val fullInfoTodayWeather: SharedFlow<SortedByDateWeatherForecastResult> =
+        MutableSharedFlow<WeatherForecastForNextDays>()
+    val fullInfoTodayWeather: SharedFlow<WeatherForecastForNextDays> =
         _fullInfoTodayWeather.asSharedFlow()
 
     private val _searchingCity = MutableSharedFlow<Unit>(
@@ -60,8 +60,10 @@ class GeneralDayTodayViewModel(val dataSource: WeatherDataFromRemoteSource) : Vi
                             _weatherToday.emit(getWeatherToday(weatherForecast))
                             _weatherForNextDays
                                 .emit(
-                                    getWeatherForNextDays(
-                                        weatherForecast
+                                    convertToWeatherForNextDays(
+                                        getWeatherForNextDays(
+                                            weatherForecast
+                                        )
                                     )
                                 )
                         }
@@ -91,6 +93,46 @@ class GeneralDayTodayViewModel(val dataSource: WeatherDataFromRemoteSource) : Vi
         val todayWeather = WeatherToday(date, cityName, temperature, description, iconCode)
         _progressBar.value = false
         return todayWeather
+    }
+
+    private fun convertToWeatherForNextDays(weatherForNextDays: List<SortedByDateWeatherForecastResult>)
+            : List<WeatherForecastForNextDays> {
+        val weatherForecastForNextDayList = mutableListOf<WeatherForecastForNextDays>()
+        for (weatherForOneDay in weatherForNextDays) {
+            weatherForOneDay
+            val date = weatherForOneDay.date.substringBefore(",") + ","
+            val city = weatherForOneDay.city
+            val weekDay = weatherForOneDay.date.substringAfter(",")
+            val minTemperatureForDay =
+                weatherForOneDay.forecastResponseList
+                    .stream()
+                    .min { o1, o2 ->
+                        compareValues((o1.main.temp_min), (o2.main.temp_min))
+                    }
+                    .map { it.main.temp_min }
+                    .get().toInt().toString() + "°"
+            val maxTemperatureForDay =
+                weatherForOneDay.forecastResponseList
+                    .stream()
+                    .max { o1, o2 ->
+                        compareValues((o1.main.temp_min), (o2.main.temp_min))
+                    }
+                    .map { it.main.temp_max }
+                    .get().toInt().toString() + "°"
+            val iconCode = weatherForOneDay.forecastResponseList.first().weather.first().icon
+            val timeAndTemperatureList = weatherForOneDay.forecastResponseList
+            val weatherForecastForNextDays = WeatherForecastForNextDays(
+                date,
+                city,
+                weekDay,
+                minTemperatureForDay,
+                maxTemperatureForDay,
+                iconCode,
+                timeAndTemperatureList
+            )
+            weatherForecastForNextDayList.add(weatherForecastForNextDays)
+        }
+        return weatherForecastForNextDayList
     }
 
     private fun getWeatherForNextDays(
@@ -123,7 +165,7 @@ class GeneralDayTodayViewModel(val dataSource: WeatherDataFromRemoteSource) : Vi
                 val weatherForecast = dataSource.getWeatherForecastResponse(city)
                 withContext(Dispatchers.Main) {
                     val todayWeather = getFullWeatherTodayResponse(weatherForecast)
-                    _fullInfoTodayWeather.emit(todayWeather)
+                    _fullInfoTodayWeather.emit(convertToWeatherForNextDays(listOf(todayWeather)).first())
                 }
 
             } catch (e: Exception) {
