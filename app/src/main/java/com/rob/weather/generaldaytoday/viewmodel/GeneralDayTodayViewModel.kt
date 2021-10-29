@@ -27,7 +27,7 @@ class GeneralDayTodayViewModel(
     private val repository: WeatherRepository,
     private val app: App
 ) : ViewModel() {
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private var fusedLocationClient: FusedLocationProviderClient
     private val _errorMessage = MutableStateFlow<Int>(R.string.empty)
     val errorMessage: StateFlow<Int> = _errorMessage.asStateFlow()
 

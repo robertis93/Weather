@@ -26,7 +26,7 @@ class WeatherRepository @Inject constructor(
     }
 
     suspend fun getWeatherResponse(city: String): WeatherForecastResult {
-        val weatherForecastResult = dataSource.getWeatherForecastResponse(city)
+        val weatherForecastResult = dataSource. getWeatherForecastResponse(city)
         return weatherForecastResult
     }
 
