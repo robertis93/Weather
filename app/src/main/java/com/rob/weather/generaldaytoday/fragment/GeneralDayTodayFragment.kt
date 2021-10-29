@@ -26,7 +26,9 @@ import kotlinx.coroutines.flow.collect
 class GeneralDayTodayFragment :
     BaseFragment<FragmentGeneralDayTodayBinding>(FragmentGeneralDayTodayBinding::inflate) {
     private lateinit var generalDayTodayViewModelFactory: GeneralDayTodayViewModelFactory
-    private val generalDayTodayViewModel: GeneralDayTodayViewModel by viewModels { generalDayTodayViewModelFactory }
+    private val generalDayTodayViewModel:
+            GeneralDayTodayViewModel by viewModels { generalDayTodayViewModelFactory }
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         generalDayTodayViewModelFactory = getAppComponent().getDependencyGeneralDay()

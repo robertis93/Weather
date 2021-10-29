@@ -1,6 +1,8 @@
 package com.rob.weather.datasource.retrofit
 
+import com.rob.weather.generaldaytoday.model.ResponseByIp
 import com.rob.weather.model.WeatherForecastResult
+import com.rob.weather.utils.URL_TO_GET_IP
 import javax.inject.Inject
 
 class WeatherDataFromRemoteSource @Inject constructor(private val retrofitService: RetrofitServices) {
@@ -13,6 +15,14 @@ class WeatherDataFromRemoteSource @Inject constructor(private val retrofitServic
         lat: Double,
         lon: Double
     ): WeatherForecastResult {
-        return retrofitService.getWeatherInformationByLatitudeAndLongitude(lat.toString(), lon.toString())
+        return retrofitService.getWeatherInformationByLatitudeAndLongitude(
+            lat.toString(),
+            lon.toString()
+        )
     }
+
+    suspend fun getIP(): ResponseByIp {
+        return retrofitService.getIP(URL_TO_GET_IP)
+    }
+
 }

@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.rob.weather.databinding.DayWeatherItemBinding
 import com.rob.weather.generaldaytoday.fragment.GeneralDayTodayFragmentDirections
 import com.rob.weather.generaldaytoday.model.WeatherForecastForNextDays
-import com.rob.weather.model.SortedByDateWeatherForecastResult
 import com.squareup.picasso.Picasso
 
 class GeneralDayTodayAdapter :

@@ -24,7 +24,7 @@ class DataBaseModule {
     @Provides
     fun provideRepository(
         cityDao: CityDao,
-        weatherDataSource: WeatherDataFromRemoteSource
+        weatherDataSource: WeatherDataFromRemoteSource,
     ): WeatherRepository {
         return WeatherRepository(cityDao, weatherDataSource)
     }

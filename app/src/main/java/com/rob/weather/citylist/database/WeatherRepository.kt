@@ -2,12 +2,13 @@ package com.rob.weather.citylist.database
 
 import com.rob.weather.citylist.model.City
 import com.rob.weather.datasource.retrofit.WeatherDataFromRemoteSource
+import com.rob.weather.generaldaytoday.model.ResponseByIp
 import com.rob.weather.model.WeatherForecastResult
 import javax.inject.Inject
 
 class WeatherRepository @Inject constructor(
-    private val cityDao: CityDao, val dataSource:
-    WeatherDataFromRemoteSource
+    private val cityDao: CityDao,
+    val dataSource: WeatherDataFromRemoteSource,
 ) {
 
     suspend fun getAllCities(): List<City> =
@@ -26,7 +27,7 @@ class WeatherRepository @Inject constructor(
     }
 
     suspend fun getWeatherResponse(city: String): WeatherForecastResult {
-        val weatherForecastResult = dataSource. getWeatherForecastResponse(city)
+        val weatherForecastResult = dataSource.getWeatherForecastResponse(city)
         return weatherForecastResult
     }
 
@@ -34,6 +35,15 @@ class WeatherRepository @Inject constructor(
             WeatherForecastResult {
         return dataSource.getWeatherInformationByLatitudeAndLongitude(latitude, longitude)
     }
+
+    suspend fun getIP():
+            ResponseByIp {
+        return dataSource.getIP()
+    }
+
+//    suspend fun getIP(): RetrofitServicesIP {
+//        return iPFromRemoteSource.getIP()
+//    }
 
     suspend fun deleteCity(city: City) {
         cityDao.deleteCity(city)

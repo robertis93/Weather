@@ -202,8 +202,8 @@ class GeneralDayTodayViewModel(
         }
     }
 
-    private fun getFullWeatherTodayResponse(weatherForecast: WeatherForecastResult)
-            : SortedByDateWeatherForecastResult {
+    private fun getFullWeatherTodayResponse(weatherForecast: WeatherForecastResult):
+            SortedByDateWeatherForecastResult {
         return getWeatherSortedByDate(weatherForecast)[0]
     }
 
@@ -236,6 +236,10 @@ class GeneralDayTodayViewModel(
                     fusedLocationClient.lastLocation.addOnCompleteListener { task ->
                         var location: Location? = task.result
                         if (location == null) {
+                            viewModelScope.launch(Dispatchers.IO) {
+                                val cityName = repository.getIP().city
+                                getAllWeatherForecast(cityName)
+                            }
                         } else {
                             val currentLatitude = location.latitude
                             val currentLongitude = location.longitude
@@ -252,7 +256,6 @@ class GeneralDayTodayViewModel(
     }
 
     private fun getWeatherInCity(currentLatitude: Double, currentLongitude: Double) {
-        // suspend fun getWeatherInCity(latitude: Double, longitude: Double): WeatherCity {
         viewModelScope.launch(Dispatchers.Main) {
             val weatherForecastResult = repository
                 .getWeatherInCityByCoordinates(currentLatitude, currentLongitude)

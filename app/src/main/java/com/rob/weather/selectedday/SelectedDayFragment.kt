@@ -8,7 +8,6 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
-import androidx.annotation.NonNull
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.github.mikephil.charting.components.XAxis
