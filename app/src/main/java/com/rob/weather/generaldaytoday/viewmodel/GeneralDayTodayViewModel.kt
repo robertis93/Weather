@@ -1,8 +1,6 @@
 package com.rob.weather.generaldaytoday.viewmodel
 
-import android.content.Context
 import android.location.Location
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -72,7 +70,8 @@ class GeneralDayTodayViewModel(
     val updatingInformation: StateFlow<Boolean> = _updatingInformation.asStateFlow()
 
     init {
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(app.applicationContext)
+        fusedLocationClient =
+            LocationServices.getFusedLocationProviderClient(app.applicationContext)
     }
 
     fun getAllWeatherForecast(city: String?) {
@@ -240,7 +239,7 @@ class GeneralDayTodayViewModel(
                         } else {
                             val currentLatitude = location.latitude
                             val currentLongitude = location.longitude
-                            // locationDetermination(currentLatitude, currentLongitude, binding, args)
+                            getWeatherInCity(currentLatitude, currentLongitude)
                         }
                     }
 
@@ -249,6 +248,16 @@ class GeneralDayTodayViewModel(
                     getAllWeatherForecast(lastCityInDataBase.name)
                 }
             }
+        }
+    }
+
+    private fun getWeatherInCity(currentLatitude: Double, currentLongitude: Double) {
+        // suspend fun getWeatherInCity(latitude: Double, longitude: Double): WeatherCity {
+        viewModelScope.launch(Dispatchers.Main) {
+            val weatherForecastResult = repository
+                .getWeatherInCityByCoordinates(currentLatitude, currentLongitude)
+            val cityName = weatherForecastResult.city.name
+            getAllWeatherForecast(cityName)
         }
     }
 
