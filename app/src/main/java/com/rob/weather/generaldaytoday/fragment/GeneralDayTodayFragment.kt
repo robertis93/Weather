@@ -106,8 +106,23 @@ class GeneralDayTodayFragment :
         }
 
         binding.swipeRefresh.setOnRefreshListener(OnRefreshListener {
-            TODO()//   generalDayTodayViewModel.updateInformation(city)
+            generalDayTodayViewModel.getCityFromDataBase()
         })
+
+        lifecycleScope.launchWhenStarted {
+            generalDayTodayViewModel.cityName
+                .collect { cityName ->
+                    generalDayTodayViewModel.updateInformation(cityName)
+                }
+        }
+
+        lifecycleScope.launchWhenStarted {
+            generalDayTodayViewModel.city
+                .collect { cityName ->
+                    generalDayTodayViewModel.updateInformation(cityName)
+                }
+        }
+
 
         lifecycleScope.launchWhenStarted {
             generalDayTodayViewModel.updatingInformation

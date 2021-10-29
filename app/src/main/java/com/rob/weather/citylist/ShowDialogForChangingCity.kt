@@ -44,7 +44,6 @@ class ShowDialogForChangingCity {
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         cityAdapter.setData(cityName)
         dialogBinding.addBtn.setOnClickListener {
-         TODO()   //city = dialogBinding.searchCityEditText.text.toString()
             val city = dialogBinding.searchCityEditText.text.toString()
             viewModel.addCity(city)
             alertDialog.dismiss()

@@ -1,7 +1,13 @@
 package com.rob.weather.generaldaytoday.viewmodel
 
+import android.content.Context
+import android.location.Location
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import com.rob.weather.App
 import com.rob.weather.R
 import com.rob.weather.citylist.database.WeatherRepository
 import com.rob.weather.datasource.retrofit.WeatherDataFromRemoteSource
@@ -20,8 +26,10 @@ import java.util.*
 
 class GeneralDayTodayViewModel(
     val dataSource: WeatherDataFromRemoteSource,
-    private val repository: WeatherRepository
+    private val repository: WeatherRepository,
+    private val app: App
 ) : ViewModel() {
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val _errorMessage = MutableStateFlow<Int>(R.string.empty)
     val errorMessage: StateFlow<Int> = _errorMessage.asStateFlow()
 
@@ -34,6 +42,11 @@ class GeneralDayTodayViewModel(
         MutableSharedFlow<String>()
     val cityName: SharedFlow<String> =
         _cityName.asSharedFlow()
+
+    private val _city =
+        MutableSharedFlow<String>()
+    val city: SharedFlow<String> =
+        _city.asSharedFlow()
 
     private val _fullInfoTodayWeather =
         MutableSharedFlow<WeatherForecastForNextDays>()
@@ -57,6 +70,10 @@ class GeneralDayTodayViewModel(
 
     private var _updatingInformation = MutableStateFlow<Boolean>(false)
     val updatingInformation: StateFlow<Boolean> = _updatingInformation.asStateFlow()
+
+    init {
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(app.applicationContext)
+    }
 
     fun getAllWeatherForecast(city: String?) {
         if (city != null) {
@@ -215,11 +232,21 @@ class GeneralDayTodayViewModel(
         {
             withContext(Dispatchers.Main) {
                 val cityInDataBase = repository.getAllCities()
-                if (cityInDataBase != null) {
+                val citySizeFromDB = cityInDataBase.size
+                if (citySizeFromDB == 0) {
+                    fusedLocationClient.lastLocation.addOnCompleteListener { task ->
+                        var location: Location? = task.result
+                        if (location == null) {
+                        } else {
+                            val currentLatitude = location.latitude
+                            val currentLongitude = location.longitude
+                            // locationDetermination(currentLatitude, currentLongitude, binding, args)
+                        }
+                    }
+
+                } else {
                     val lastCityInDataBase = cityInDataBase.last()
                     getAllWeatherForecast(lastCityInDataBase.name)
-                } else {
-                    //:TODO определить по геолокации или по ip
                 }
             }
         }
@@ -228,6 +255,12 @@ class GeneralDayTodayViewModel(
     fun getCityFromDB() {
         viewModelScope.launch(Dispatchers.IO) {
             _cityName.emit(repository.getAllCities().last().name)
+        }
+    }
+
+    fun getCityFromDataBase() {
+        viewModelScope.launch(Dispatchers.IO) {
+            _city.emit(repository.getAllCities().last().name)
         }
     }
 
