@@ -3,6 +3,7 @@ package com.rob.weather.generaldaytoday.fragment
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -96,8 +97,10 @@ class GeneralDayTodayFragment :
         lifecycleScope.launchWhenStarted {
             generalDayTodayViewModel.searchingCity
                 .collect {
-                    findNavController()
-                        .navigate(R.id.action_weatherInformationByDayFragment_to_cityListFragment)
+                    val action =
+                        GeneralDayTodayFragmentDirections
+                            .actionWeatherInformationByDayFragmentToCityListFragment()
+                    findNavController().navigate(action)
                 }
         }
 
@@ -108,7 +111,7 @@ class GeneralDayTodayFragment :
         }
 
         binding.swipeRefresh.setOnRefreshListener(OnRefreshListener {
-            generalDayTodayViewModel.getCityFromDataBase()
+            generalDayTodayViewModel.updateWeatherForecastInformation()
         })
 
         lifecycleScope.launchWhenStarted {
@@ -133,6 +136,11 @@ class GeneralDayTodayFragment :
                 }
         }
         generalDayTodayViewModel.checkDataBase()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.i("myLogs", "onResume GeneralDayToday")
     }
 
     private fun initializingScreenForToday(weatherToday: WeatherToday) {

@@ -9,7 +9,7 @@
         android:id="@+id/weatherInformationByDayFragment"
         android:name="com.rob.weather.generaldaytoday.fragment.GeneralDayTodayFragment"
         android:label="fragment_weather_information_by_day"
-        tools:layout="@layout/fragment_general_day_today" >
+        tools:layout="@layout/fragment_general_day_today">
 
         <action
             android:id="@+id/action_weatherInformationByDayFragment_to_chooseDayFragment3"
@@ -21,7 +21,7 @@
     <fragment
         android:id="@+id/chooseDayFragment"
         android:name="com.rob.weather.selectedday.SelectedDayFragment"
-        android:label="ChooseDayFragment" >
+        android:label="ChooseDayFragment">
 
         <action
             android:id="@+id/action_chooseDayFragment_to_weatherInformationByDayFragment4"
@@ -33,11 +33,14 @@
     <fragment
         android:id="@+id/cityListFragment"
         android:name="com.rob.weather.citylist.fragment.CityListFragment"
+        popBackStackInclusive="true"
         android:label="city_list_fragment"
-        tools:layout="@layout/city_list_fragment" >
+        tools:layout="@layout/city_list_fragment">
         <action
             android:id="@+id/action_cityListFragment_to_weatherInformationByDayFragment"
-            app:destination="@id/weatherInformationByDayFragment" />
+            app:destination="@id/weatherInformationByDayFragment"
+            app:popUpTo="@id/weatherInformationByDayFragment"
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_cityListFragment_to_mapsFragment"
             app:destination="@id/mapsFragment" />
@@ -45,7 +48,7 @@
     <fragment
         android:id="@+id/mapsFragment"
         android:name="com.rob.weather.map.fragment.MapFragment"
-        android:label="MapsFragment" >
+        android:label="MapsFragment">
         <action
             android:id="@+id/action_mapsFragment_to_cityListFragment"
             app:destination="@id/cityListFragment" />

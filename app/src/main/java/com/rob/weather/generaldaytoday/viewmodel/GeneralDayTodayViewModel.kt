@@ -16,7 +16,6 @@ import com.rob.weather.model.WeatherToday
 import com.rob.weather.utils.Utils.fullDateFormat
 import com.rob.weather.utils.Utils.shortDateFormat
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -52,8 +51,7 @@ class GeneralDayTodayViewModel(
         _fullInfoTodayWeather.asSharedFlow()
 
     private val _searchingCity = MutableSharedFlow<Unit>(
-        replay = 0, extraBufferCapacity = 1,
-        onBufferOverflow = BufferOverflow.DROP_OLDEST
+        replay = 0
     )
     val searchingCity: SharedFlow<Unit> = _searchingCity.asSharedFlow()
 
@@ -224,6 +222,11 @@ class GeneralDayTodayViewModel(
             _changingMode.emit(Unit)
         }
         return true
+    }
+
+    fun updateWeatherForecastInformation(){
+        _updatingInformation.value = true
+        checkDataBase()
     }
 
     fun checkDataBase() {

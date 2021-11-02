@@ -1,6 +1,7 @@
 package com.rob.weather
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
@@ -21,5 +22,10 @@ class MainActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.fragmentContainer)
         return navController.navigateUp() || super.onSupportNavigateUp()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.i("myLogs", "onResume MainActivity")
     }
 }

@@ -2,6 +2,7 @@ package com.rob.weather.citylist.fragment
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -91,5 +92,10 @@ class CityListFragment : BaseFragment<CityListFragmentBinding>(CityListFragmentB
 
         binding.mapIcon.setOnClickListener {
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.i("myLogs", "onResume CityListFragment")
     }
 }
