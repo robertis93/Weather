@@ -59,13 +59,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun configureToolbarForMap() {
-        binding.toolbar.visibility = View.GONE
-//        binding.imageBtn.setImageDrawable(getDrawable(R.drawable.ic_arrow_back))
-//        binding.imageBtn.isEnabled = true
-//        binding.toolbarToday.text = "Тамбов"
-//        binding.toolbar.menu.clear()
-//        binding.toolbar.inflateMenu(R.menu.map_menu)
-//        binding.toolbar.setBackgroundResource(R.color.line_back)
+        binding.imageBtn.setImageDrawable(getDrawable(R.drawable.ic_arrow_back))
+        binding.imageBtn.isEnabled = true
+        binding.toolbarToday.text = "Тамбов"
+        binding.toolbar.menu.clear()
+        binding.toolbar.inflateMenu(R.menu.map_menu)
     }
 
     override fun onSupportNavigateUp(): Boolean {

@@ -9,6 +9,15 @@
     android:orientation="vertical"
     tools:context=".generaldaytoday.fragment.GeneralDayTodayFragment">
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_alignParentEnd="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+    </View>
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh"
         android:layout_width="match_parent"
@@ -142,7 +151,7 @@
                         android:id="@+id/recyclerView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
                 </androidx.core.widget.NestedScrollView>
             </LinearLayout>
