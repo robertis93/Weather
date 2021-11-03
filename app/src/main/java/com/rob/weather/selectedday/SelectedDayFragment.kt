@@ -8,7 +8,6 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.Entry
@@ -38,7 +37,7 @@ class SelectedDayFragment :
 
     private fun setWeatherData() {
         with(binding) {
-            toolbarToday.text = args.weatherForecastList.city
+            // toolbarToday.text = args.weatherForecastList.city
             currentDateTextview.text = args.weatherForecastList.date
             humidityValueTextview.text =
                 args.weatherForecastList.forecastResponseList.first().main.humidity.toString()
@@ -63,10 +62,6 @@ class SelectedDayFragment :
                 args.weatherForecastList.forecastResponseList.first().weather.first().icon
             val iconUrl = BASE_URL_IMAGE + iconCode + ".png"
             Picasso.get().load(iconUrl).into(weatherIcon)
-
-            arrowBackImageView.setOnClickListener {
-                findNavController().popBackStack()
-            }
         }
     }
 

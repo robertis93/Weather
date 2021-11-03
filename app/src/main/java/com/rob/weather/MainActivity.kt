@@ -4,8 +4,6 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.get
-import androidx.core.view.marginEnd
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
@@ -28,19 +26,46 @@ class MainActivity : AppCompatActivity() {
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
-                R.id.cityListFragment -> configureToolbar()
+                R.id.cityListFragment -> configureToolbarForCityList()
+                R.id.weatherInformationByDayFragment -> configureToolbarForGeneralDayToday()
+                R.id.chooseDayFragment -> configureToolbarForSelectedDay()
+                R.id.mapsFragment -> configureToolbarForMap()
             }
         }
-                binding.imageBtn.setOnClickListener {
+        binding.imageBtn.setOnClickListener {
             navController.popBackStack()
         }
     }
 
-    private fun configureToolbar() {
+    private fun configureToolbarForSelectedDay() {
         binding.imageBtn.setImageDrawable(getDrawable(R.drawable.ic_arrow_back))
+        binding.imageBtn.isEnabled = true
+    }
+
+    private fun configureToolbarForCityList() {
+        binding.imageBtn.setImageDrawable(getDrawable(R.drawable.ic_arrow_back))
+        binding.imageBtn.isEnabled = true
         binding.toolbarToday.text = "Мои города"
         binding.toolbar.menu.clear()
         binding.toolbar.inflateMenu(R.menu.light_menu)
+    }
+
+    private fun configureToolbarForGeneralDayToday() {
+        binding.imageBtn.setImageDrawable(getDrawable(R.drawable.ic_navigation))
+        binding.imageBtn.isEnabled = false
+        binding.toolbarToday.text = ""
+        binding.toolbar.menu.clear()
+        binding.toolbar.inflateMenu(R.menu.toolbar_menu)
+    }
+
+    private fun configureToolbarForMap() {
+        binding.toolbar.visibility = View.GONE
+//        binding.imageBtn.setImageDrawable(getDrawable(R.drawable.ic_arrow_back))
+//        binding.imageBtn.isEnabled = true
+//        binding.toolbarToday.text = "Тамбов"
+//        binding.toolbar.menu.clear()
+//        binding.toolbar.inflateMenu(R.menu.map_menu)
+//        binding.toolbar.setBackgroundResource(R.color.line_back)
     }
 
     override fun onSupportNavigateUp(): Boolean {
