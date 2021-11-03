@@ -89,10 +89,10 @@ class GeneralDayTodayFragment :
                 }
         }
 
-        val toolbar = binding.toolbar
-        toolbar.setOnMenuItemClickListener { menuItem ->
-            clickOnMenu(menuItem)
-        }
+//        val toolbar = binding.toolbar
+//        toolbar.setOnMenuItemClickListener { menuItem ->
+//            clickOnMenu(menuItem)
+//        }
 
         lifecycleScope.launchWhenStarted {
             generalDayTodayViewModel.searchingCity
@@ -128,7 +128,6 @@ class GeneralDayTodayFragment :
                 }
         }
 
-
         lifecycleScope.launchWhenStarted {
             generalDayTodayViewModel.updatingInformation
                 .collect { visible ->
@@ -154,7 +153,7 @@ class GeneralDayTodayFragment :
                         weatherToday.temperature + requireContext().getString(
                     R.string.celsius_icon
                 )
-            toolbarToday.text = weatherToday.city
+            //toolbarToday.text = weatherToday.city
             val iconCode = weatherToday.icon
             val iconUrl = BASE_URL_IMAGE + iconCode + ".png"
             binding.weatherIcon.visibility = View.VISIBLE
@@ -162,23 +161,23 @@ class GeneralDayTodayFragment :
         }
     }
 
-    fun clickOnMenu(menuItem: MenuItem): Boolean {
-        when (menuItem.itemId) {
-            R.id.action_search -> {
-                generalDayTodayViewModel.searchCity()
-                true
-            }
-            R.id.switch_mode -> {
-                generalDayTodayViewModel.changeMode()
-                true
-            }
-        }
-        return true
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.toolbar_menu, menu)
-        super.onCreateOptionsMenu(menu, inflater)
-    }
+//    fun clickOnMenu(menuItem: MenuItem): Boolean {
+//        when (menuItem.itemId) {
+//            R.id.action_search -> {
+//                generalDayTodayViewModel.searchCity()
+//                true
+//            }
+//            R.id.switch_mode -> {
+//                generalDayTodayViewModel.changeMode()
+//                true
+//            }
+//        }
+//        return true
+//    }
+//
+//    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+//        inflater.inflate(R.menu.toolbar_menu, menu)
+//        super.onCreateOptionsMenu(menu, inflater)
+//    }
 }
 

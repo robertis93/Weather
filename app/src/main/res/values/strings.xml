@@ -3,6 +3,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="back">Назад</string>
     <string name="city">Тамбов</string>
+    <string name="city_list">Мои города</string>
     <string name="temperature">25° C</string>
     <string name="clear">ясно</string>
     <string name="today">сегодня</string>

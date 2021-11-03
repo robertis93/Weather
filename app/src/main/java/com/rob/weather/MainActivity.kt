@@ -1,22 +1,46 @@
 package com.rob.weather
 
 import android.os.Bundle
-import android.util.Log
+import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.get
+import androidx.core.view.marginEnd
+import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import com.rob.weather.databinding.ActivityMainBinding
+import com.rob.weather.generaldaytoday.fragment.GeneralDayTodayFragmentDirections
 
 class MainActivity : AppCompatActivity() {
+    lateinit var navController: NavController
     private lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.fragmentContainer) as NavHostFragment
-        val navController = navHostFragment.navController
+        navController = navHostFragment.navController
         val view = binding.getRoot()
         setContentView(view)
+        val toolbar = binding.toolbar
+        toolbar.setOnMenuItemClickListener(this::clickOnMenu)
+
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.cityListFragment -> configureToolbar()
+            }
+        }
+                binding.imageBtn.setOnClickListener {
+            navController.popBackStack()
+        }
+    }
+
+    private fun configureToolbar() {
+        binding.imageBtn.setImageDrawable(getDrawable(R.drawable.ic_arrow_back))
+        binding.toolbarToday.text = "Мои города"
+        binding.toolbar.menu.clear()
+        binding.toolbar.inflateMenu(R.menu.light_menu)
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -24,8 +48,20 @@ class MainActivity : AppCompatActivity() {
         return navController.navigateUp() || super.onSupportNavigateUp()
     }
 
-    override fun onResume() {
-        super.onResume()
-        Log.i("myLogs", "onResume MainActivity")
+    fun clickOnMenu(menuItem: MenuItem): Boolean {
+        when (menuItem.itemId) {
+            R.id.action_search -> {
+                val action =
+                    GeneralDayTodayFragmentDirections
+                        .actionWeatherInformationByDayFragmentToCityListFragment()
+                navController.navigate(action)
+                true
+            }
+            R.id.switch_mode -> {
+                // generalDayTodayViewModel.changeMode()
+                true
+            }
+        }
+        return true
     }
 }

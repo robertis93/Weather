@@ -2,11 +2,9 @@ package com.rob.weather.citylist.fragment
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.rob.weather.App
@@ -82,20 +80,11 @@ class CityListFragment : BaseFragment<CityListFragmentBinding>(CityListFragmentB
         val itemTouchHelper = ItemTouchHelper(actionListCallback)
         itemTouchHelper.attachToRecyclerView(binding.recyclerview)
 
-        binding.arrowBackImageView.setOnClickListener {
-            findNavController().popBackStack()
-        }
-
         binding.addCityButton.setOnClickListener {
             dialog.showDialog(requireContext(), viewModel)
         }
 
         binding.mapIcon.setOnClickListener {
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        Log.i("myLogs", "onResume CityListFragment")
     }
 }
