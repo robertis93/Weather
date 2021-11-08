@@ -1,7 +1,7 @@
 package com.rob.weather.mainactivity
 
 import android.os.Bundle
-import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
@@ -21,8 +21,6 @@ class MainActivity : AppCompatActivity() {
         navController = navHostFragment.navController
         val view = binding.getRoot()
         setContentView(view)
-        val toolbar = binding.toolbar
-        toolbar.setOnMenuItemClickListener(this::clickOnMenu)
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
@@ -43,47 +41,33 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun configureToolbarForCityList() {
-        binding.imageBtn.setImageDrawable(getDrawable(R.drawable.ic_arrow_back))
+        binding.imageBtn.setImageDrawable(getDrawable(R.drawable.ic_chevron_left))
         binding.imageBtn.isEnabled = true
-        binding.toolbar.menu.clear()
-        binding.toolbar.inflateMenu(R.menu.light_menu)
+        binding.imageMenuRightBtn.visibility = View.GONE
+
     }
 
     private fun configureToolbarForGeneralDayToday() {
         binding.imageBtn.setImageDrawable(getDrawable(R.drawable.ic_navigation))
         binding.imageBtn.isEnabled = false
-        binding.toolbarToday.text = ""
-        binding.toolbar.menu.clear()
-        binding.toolbar.inflateMenu(R.menu.toolbar_menu)
+        binding.imageMenuRightBtn.visibility = View.VISIBLE
+        binding.imageMenuLeftBtn.visibility = View.VISIBLE
+        binding.imageMenuRightBtn.setOnClickListener {
+            val action =
+                GeneralDayTodayFragmentDirections
+                    .actionWeatherInformationByDayFragmentToCityListFragment()
+            navController.navigate(action)
+        }
     }
 
     private fun configureToolbarForMap() {
-        binding.imageBtn.setImageDrawable(getDrawable(R.drawable.ic_arrow_back))
+        binding.imageBtn.setImageDrawable(getDrawable(R.drawable.ic_chevron_left))
         binding.imageBtn.isEnabled = true
-        binding.toolbarToday.text = "Тамбов"
-        binding.toolbar.menu.clear()
-        binding.toolbar.inflateMenu(R.menu.map_menu)
+        binding.imageMenuLeftBtn.setImageDrawable(getDrawable(R.drawable.ic_location))
     }
 
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.fragmentContainer)
         return navController.navigateUp() || super.onSupportNavigateUp()
-    }
-
-    fun clickOnMenu(menuItem: MenuItem): Boolean {
-        when (menuItem.itemId) {
-            R.id.action_search -> {
-                val action =
-                    GeneralDayTodayFragmentDirections
-                        .actionWeatherInformationByDayFragmentToCityListFragment()
-                navController.navigate(action)
-                true
-            }
-            R.id.switch_mode -> {
-                // generalDayTodayViewModel.changeMode()
-                true
-            }
-        }
-        return true
     }
 }

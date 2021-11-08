@@ -5,7 +5,7 @@
 
     <item
         android:id="@+id/switch_mode"
-        android:icon="@drawable/ic_my_city_btn"
+        android:icon="@drawable/ic_change_mode"
         android:title="search"
         app:showAsAction="always" />
 </menu>
