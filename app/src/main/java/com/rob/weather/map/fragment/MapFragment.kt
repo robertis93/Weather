@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -84,6 +85,18 @@ class MapFragment : Fragment() {
         }
         mapview?.map?.addInputListener(listener)
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.imageBtn.setOnClickListener {
+            findNavController().popBackStack()
+        }
+
+        binding.locationImageBtn.setOnClickListener {
+            getLastKnownLocation(args, binding)
+        }
+
     }
 
     override fun onStop() {

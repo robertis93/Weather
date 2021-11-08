@@ -39,11 +39,6 @@ class MapViewModel(
         try {
             val city = City(cityName)
             repository.insert(city)
-//            _cityList.value?.let { listCity ->
-//                val cityMutableList = listCity.toMutableList()
-//                cityMutableList.add(city)
-//                _cityList.value = cityMutableList
-//            }
         } catch (e: Exception) {
         }
     }

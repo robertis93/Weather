@@ -43,8 +43,12 @@ class MainActivity : AppCompatActivity() {
     private fun configureToolbarForCityList() {
         binding.imageBtn.setImageDrawable(getDrawable(R.drawable.ic_chevron_left))
         binding.imageBtn.isEnabled = true
-        binding.imageMenuLeftBtn.setImageDrawable(getDrawable(R.drawable.ic_loader_1))
-        binding.imageMenuRightBtn.visibility = View.GONE
+        binding.toolbar.visibility = View.VISIBLE
+        binding.imageMenuLeftBtn.visibility = View.VISIBLE
+        binding.imageBtn.visibility = View.VISIBLE
+        binding.imageMenuRightBtn.visibility = View.VISIBLE
+        binding.imageMenuRightBtn.setImageDrawable(getDrawable(R.drawable.ic_loader_1))
+        binding.imageMenuLeftBtn.visibility = View.GONE
 
     }
 
@@ -54,6 +58,7 @@ class MainActivity : AppCompatActivity() {
         binding.imageMenuRightBtn.visibility = View.VISIBLE
         binding.imageMenuLeftBtn.visibility = View.VISIBLE
         binding.imageMenuLeftBtn.setImageDrawable(getDrawable(R.drawable.ic_loader_1))
+        binding.imageMenuRightBtn.setImageDrawable(getDrawable(R.drawable.ic_search_city))
         binding.imageMenuRightBtn.setOnClickListener {
             val action =
                 GeneralDayTodayFragmentDirections
@@ -65,7 +70,9 @@ class MainActivity : AppCompatActivity() {
     private fun configureToolbarForMap() {
         binding.imageBtn.setImageDrawable(getDrawable(R.drawable.ic_chevron_left))
         binding.imageBtn.isEnabled = true
-        binding.imageMenuLeftBtn.setImageDrawable(getDrawable(R.drawable.ic_location))
+        binding.toolbar.visibility = View.GONE
+        binding.imageMenuRightBtn.visibility = View.GONE
+        binding.imageMenuLeftBtn.visibility = View.GONE
     }
 
     override fun onSupportNavigateUp(): Boolean {
