@@ -43,6 +43,7 @@ class MainActivity : AppCompatActivity() {
     private fun configureToolbarForCityList() {
         binding.imageBtn.setImageDrawable(getDrawable(R.drawable.ic_chevron_left))
         binding.imageBtn.isEnabled = true
+        binding.imageMenuLeftBtn.setImageDrawable(getDrawable(R.drawable.ic_loader_1))
         binding.imageMenuRightBtn.visibility = View.GONE
 
     }
@@ -52,6 +53,7 @@ class MainActivity : AppCompatActivity() {
         binding.imageBtn.isEnabled = false
         binding.imageMenuRightBtn.visibility = View.VISIBLE
         binding.imageMenuLeftBtn.visibility = View.VISIBLE
+        binding.imageMenuLeftBtn.setImageDrawable(getDrawable(R.drawable.ic_loader_1))
         binding.imageMenuRightBtn.setOnClickListener {
             val action =
                 GeneralDayTodayFragmentDirections

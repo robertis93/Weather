@@ -31,9 +31,6 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.properties.Delegates
 
-
-//: TODO при добавлении города который рядом, иконка с информацией закрывает собой другую иконку
-
 class MapFragment : Fragment() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     var currentLatitude by Delegates.notNull<Double>()
@@ -62,7 +59,7 @@ class MapFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         val latitudeOfCity = args.weatherCity.latitude
         val longitudeOfCity = args.weatherCity.longitude
         binding = FragmentMapsBinding.inflate(inflater, container, false)
@@ -96,12 +93,14 @@ class MapFragment : Fragment() {
     }
 
     fun getLastKnownLocation(args: MapFragmentArgs, binding: FragmentMapsBinding) {
+        binding.cityNameTextview.text = args.weatherCity.name
         fusedLocationClient.lastLocation.addOnCompleteListener { task ->
             var location: Location? = task.result
             if (location == null) {
             } else {
                 currentLatitude = location.latitude
                 currentLongitude = location.longitude
+                binding.cityNameTextview.text = args.weatherCity.name
                 locationDetermination(currentLatitude, currentLongitude, binding, args)
             }
         }
@@ -114,6 +113,15 @@ class MapFragment : Fragment() {
         binding: FragmentMapsBinding,
         args: MapFragmentArgs
     ) {
+        lifecycleScope.launch(Dispatchers.Main) {
+            val weatherInCity =
+                mapViewModel.getWeatherInCity(latitudeOfCity, longitudeOfCity)
+            showWeatherOnCity(weatherInCity)
+            launch(Dispatchers.Main) {
+                binding.cityNameTextview.text = weatherInCity.name
+            }
+        }
+
         MapKitFactory.initialize(requireContext())
         mapview = binding.mapCity
         mapview?.map?.move(
@@ -157,6 +165,7 @@ class MapFragment : Fragment() {
     fun showWeatherOnCity(
         weatherCity: WeatherCity
     ) {
+        binding.cityNameTextview.text = weatherCity.name
         MapKitFactory.initialize(requireContext())
         mapview = binding.mapCity
         mapview?.map?.move(
