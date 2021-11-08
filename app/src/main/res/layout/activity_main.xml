@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context=".MainActivity">
+    tools:context=".mainactivity.MainActivity">
 
     <fragment
         android:id="@+id/fragmentContainer"
@@ -22,10 +22,12 @@
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
-        style="@style/Widget.AppCompat.Toolbar"
+        style="@style/ToolbarTheme"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:layout_marginEnd="16dp"
+        android:clickable="true"
+        android:focusable="true"
         app:layout_collapseMode="parallax"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -56,11 +58,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
+                android:foreground="?selectableItemBackground"
                 android:src="@drawable/ic_navigation"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
-            <!--                    </View>-->
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.appcompat.widget.Toolbar>
 
