@@ -37,7 +37,7 @@ class SelectedDayFragment :
 
     private fun setWeatherData() {
         with(binding) {
-            // toolbarToday.text = args.weatherForecastList.city
+            toolbarToday?.text = args.weatherForecastList.city
             currentDateTextview.text = args.weatherForecastList.date
             humidityValueTextview.text =
                 args.weatherForecastList.forecastResponseList.first().main.humidity.toString()

@@ -38,9 +38,8 @@ class CityListFragment : BaseFragment<CityListFragmentBinding>(CityListFragmentB
         val cityAdapter = CityAdapter()
         val measureRecyclerView = binding.recyclerview
         measureRecyclerView.adapter = cityAdapter
-
+        binding.toolbarToday.text = "Мои города"
         viewModel.getCityList()
-
         lifecycleScope.launchWhenStarted {
             viewModel.cityList
                 .collect { listCity ->

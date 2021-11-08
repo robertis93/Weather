@@ -9,21 +9,6 @@
     android:orientation="vertical"
     tools:context=".generaldaytoday.fragment.GeneralDayTodayFragment">
 
-    <!--    <View-->
-    <!--        android:id="@+id/toolbar"-->
-    <!--        style="@style/ToolbarTheme"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="?attr/actionBarSize"-->
-    <!--        android:layout_marginEnd="16dp"-->
-    <!--        android:clickable="true"-->
-    <!--        android:focusable="true"-->
-    <!--        android:background="@color/transparent"-->
-    <!--        app:layout_collapseMode="parallax"-->
-    <!--        app:layout_constraintEnd_toEndOf="parent"-->
-    <!--        app:layout_constraintStart_toStartOf="parent"-->
-    <!--        app:layout_constraintTop_toTopOf="parent"-->
-    <!--        >-->
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize">

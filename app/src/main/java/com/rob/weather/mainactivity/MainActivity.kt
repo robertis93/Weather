@@ -45,7 +45,6 @@ class MainActivity : AppCompatActivity() {
     private fun configureToolbarForCityList() {
         binding.imageBtn.setImageDrawable(getDrawable(R.drawable.ic_arrow_back))
         binding.imageBtn.isEnabled = true
-        binding.toolbarToday.text = "Мои города"
         binding.toolbar.menu.clear()
         binding.toolbar.inflateMenu(R.menu.light_menu)
     }
