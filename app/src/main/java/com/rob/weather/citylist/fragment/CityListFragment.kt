@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.rob.weather.App
@@ -52,6 +53,15 @@ class CityListFragment : BaseFragment<CityListFragmentBinding>(CityListFragmentB
                 .collect { cityList ->
                     cityAdapter.setData(cityList)
                     сityList = cityList
+                    binding.mapIcon.setOnClickListener {
+                        //  перенести во вью модел
+                        val action =
+                            CityListFragmentDirections.actionCityListFragmentToMapsFragment(
+                                cityList.last(),
+                                cityList.toTypedArray()
+                            )
+                        binding.root.findNavController().navigate(action)
+                    }
                 }
         }
 
@@ -81,9 +91,6 @@ class CityListFragment : BaseFragment<CityListFragmentBinding>(CityListFragmentB
 
         binding.addCityButton.setOnClickListener {
             dialog.showDialog(requireContext(), viewModel)
-        }
-
-        binding.mapIcon.setOnClickListener {
         }
     }
 }

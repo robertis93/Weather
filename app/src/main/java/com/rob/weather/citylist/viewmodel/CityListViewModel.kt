@@ -124,6 +124,10 @@ class CityListViewModel(
         } catch (e: Exception) {
         }
     }
+
+    fun showMap(){
+
+    }
 }
 
 
