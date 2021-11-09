@@ -38,6 +38,11 @@ class GeneralDayTodayFragment :
         val recyclerView = binding.recyclerView
         recyclerView.adapter = allDaysWeatherListAdapter
 
+        val text = arguments?.getString("MyArg")
+        if (text != null) {
+            generalDayTodayViewModel.getCityByGeolocation()
+        }
+
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             generalDayTodayViewModel.weatherForNextDays.collect { list ->
                 allDaysWeatherListAdapter.setData(list)

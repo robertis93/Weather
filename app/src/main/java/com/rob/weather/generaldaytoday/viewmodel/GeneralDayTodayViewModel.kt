@@ -224,7 +224,7 @@ class GeneralDayTodayViewModel(
         return true
     }
 
-    fun updateWeatherForecastInformation(){
+    fun updateWeatherForecastInformation() {
         _updatingInformation.value = true
         checkDataBase()
     }
@@ -251,7 +251,7 @@ class GeneralDayTodayViewModel(
                     }
 
                 } else {
-                    val lastCityInDataBase = cityInDataBase.last()
+                    val lastCityInDataBase = cityInDataBase.first()
                     getAllWeatherForecast(lastCityInDataBase.name)
                 }
             }
@@ -276,6 +276,18 @@ class GeneralDayTodayViewModel(
     fun getCityFromDataBase() {
         viewModelScope.launch(Dispatchers.IO) {
             _city.emit(repository.getAllCities().last().name)
+        }
+    }
+
+    fun getCityByGeolocation() {
+        viewModelScope.launch(Dispatchers.IO)
+        {
+            withContext(Dispatchers.Main) {
+                val cityInDataBase = repository.getAllCities()
+                val citySizeFromDB = cityInDataBase.size
+                val lastCityInDataBase = cityInDataBase.first()
+                getAllWeatherForecast(lastCityInDataBase.name)
+            }
         }
     }
 

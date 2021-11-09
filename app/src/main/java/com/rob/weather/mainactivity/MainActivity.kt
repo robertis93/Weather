@@ -2,32 +2,33 @@ package com.rob.weather.mainactivity
 
 import android.os.Bundle
 import android.view.View
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import com.rob.weather.R
 import com.rob.weather.databinding.ActivityMainBinding
 import com.rob.weather.generaldaytoday.fragment.GeneralDayTodayFragmentDirections
-import com.rob.weather.utils.extensions.getAppComponent
+import kotlinx.coroutines.flow.collect
 
 class MainActivity : AppCompatActivity() {
     lateinit var navController: NavController
     private lateinit var binding: ActivityMainBinding
-    private lateinit var mainActivityViewModelFactory: MainActivityViewModelFactory
-    private val mainActivityViewModel:
-            MainActivityViewModel by viewModels { mainActivityViewModelFactory }
+    private val mainActivityViewModel: MainActivityViewModel by lazy {
+        ViewModelProvider(this).get(MainActivityViewModel::class.java)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
-        mainActivityViewModelFactory = getAppComponent().getDependencyMainActivity()
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.fragmentContainer) as NavHostFragment
         navController = navHostFragment.navController
         val view = binding.getRoot()
         setContentView(view)
+
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
@@ -36,6 +37,13 @@ class MainActivity : AppCompatActivity() {
                 R.id.chooseDayFragment -> configureToolbarForSelectedDay()
                 R.id.mapsFragment -> configureToolbarForMap()
             }
+        }
+
+        lifecycleScope.launchWhenStarted {
+            mainActivityViewModel.bundle
+                .collect { bundle ->
+                    navController.navigate(R.id.weatherInformationByDayFragment, bundle)
+                }
         }
     }
 
@@ -59,14 +67,12 @@ class MainActivity : AppCompatActivity() {
         binding.imageBtn.setOnClickListener {
             navController.popBackStack()
         }
-
     }
 
     private fun configureToolbarForGeneralDayToday() {
         binding.imageBtn.setImageDrawable(getDrawable(R.drawable.ic_location))
-        binding.imageBtn.isEnabled = true
         binding.imageBtn.setOnClickListener {
-            mainActivityViewModel.checkDataBase()
+            mainActivityViewModel.putToBundle()
         }
         binding.imageMenuRightBtn.visibility = View.VISIBLE
         binding.imageMenuLeftBtn.visibility = View.VISIBLE
