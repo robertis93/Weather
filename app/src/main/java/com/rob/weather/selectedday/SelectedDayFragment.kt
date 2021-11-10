@@ -3,11 +3,7 @@ package com.rob.weather.selectedday
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.navArgs
 import com.github.mikephil.charting.components.XAxis
@@ -96,7 +92,7 @@ class SelectedDayFragment :
         lineDataSet.setDrawVerticalHighlightIndicator(false)
         lineDataSet.setDrawHorizontalHighlightIndicator(false)
         lineDataSet.lineWidth = 3f
-        lineDataSet.color =  ContextCompat.getColor(requireContext(), R.color.blue)
+        lineDataSet.color = ContextCompat.getColor(requireContext(), R.color.blue)
         val lineChart = binding.linecharttt
         lineChart.baseline
         lineChart.data = LineData(lineDataSet)

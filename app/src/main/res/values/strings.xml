@@ -14,4 +14,6 @@
     <string name="error_server">Ошибка сервера</string>
     <string name="feels_like">", ощущается как "</string>
     <string name="celsius_icon">°</string>
+    <string name="cancel">Отменить</string>
+    <string name="add">Добавить</string>
 </resources>

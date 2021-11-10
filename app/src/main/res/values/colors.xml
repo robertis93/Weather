@@ -5,6 +5,10 @@
     <color name="purple_700">#FF3700B3</color>
     <color name="teal_200">#FF03DAC5</color>
     <color name="icon">#8F96A1</color>
+    <color name="search_city">#E7ECF3</color>
+    <color name="search_city_btn">#2#F3F5F8</color>
+    <color name="search_city_text_cancel_btn">#707782
+    </color>
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="regular_black">#2A2D33</color>

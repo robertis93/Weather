@@ -2,24 +2,25 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rowLayout"
+    android:background="@color/toolbar"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:theme="@style/MyThemeOverlay.MaterialComponents.MaterialAlertDialog"
     app:cardCornerRadius="24dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_width="match_parent"
+        android:background="@color/toolbar"
+        android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout"
-            android:layout_width="311dp"
+            android:layout_width="0dp"
             android:layout_height="40dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
-            android:background="@drawable/search_city_rounded_corners"
+            android:background="@drawable/searching_the_city"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -51,18 +52,19 @@
                 app:layout_constraintStart_toEndOf="@+id/searchImageView"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <ImageButton
+
+            <ImageView
                 android:id="@+id/crossImageBtn"
-                android:layout_width="22dp"
-                android:layout_height="22dp"
-                android:layout_marginTop="9dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="9dp"
-                android:backgroundTint="@color/grey_light"
-                android:src="@drawable/ic_cross_icon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="9dp"
+                android:layout_marginBottom="8dp"
+                android:src="@drawable/ic_pluss"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="1.0" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -84,12 +86,12 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="32dp"
             android:layout_marginBottom="16dp"
-            android:backgroundTint="#F3F5F8"
+            android:backgroundTint="@color/search_city_btn"
             android:fontFamily="@font/manrope_regular"
             android:gravity="center"
             android:textAllCaps="false"
-            android:text="Отменить"
-            android:textColor="#707782"
+            android:text="@string/cancel"
+            android:textColor="@color/search_city_text_cancel_btn"
             android:textFontWeight="700"
             android:textSize="14sp"
             app:cornerRadius="12dp"
@@ -107,7 +109,7 @@
             android:backgroundTint="#3599FF"
             android:fontFamily="@font/manrope_regular"
             android:gravity="center"
-            android:text="Добавить"
+            android:text="@string/add"
             android:textAllCaps="false"
             android:textColor="#FFFFFF"
             android:textFontWeight="700"
