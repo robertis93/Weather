@@ -2,16 +2,16 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rowLayout"
-    android:background="@color/toolbar"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
+    android:background="@color/toolbar"
     app:cardCornerRadius="24dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:background="@color/toolbar"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/toolbar">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout"
@@ -71,10 +71,10 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="0dp"
-            android:visibility="invisible"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="12dp"
+            android:visibility="invisible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
@@ -89,8 +89,8 @@
             android:backgroundTint="@color/search_city_btn"
             android:fontFamily="@font/manrope_regular"
             android:gravity="center"
-            android:textAllCaps="false"
             android:text="@string/cancel"
+            android:textAllCaps="false"
             android:textColor="@color/search_city_text_cancel_btn"
             android:textFontWeight="700"
             android:textSize="14sp"

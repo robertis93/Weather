@@ -1,6 +1,7 @@
 package com.rob.weather
 
 import android.app.Application
+import android.content.SharedPreferences
 import com.rob.weather.di.*
 import com.yandex.mapkit.MapKitFactory
 

@@ -11,6 +11,7 @@ android {
     buildToolsVersion "30.0.3"
 
     defaultConfig {
+        vectorDrawables.useSupportLibrary = true
         applicationId "com.rob.weather"
         minSdkVersion 21
         targetSdkVersion 30
