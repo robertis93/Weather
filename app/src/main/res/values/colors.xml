@@ -9,6 +9,7 @@
     <color name="black">#FF000000</color>
     <color name="regular_black">#2A2D33</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="popup">#FFFFFF</color>
     <color name="toolbar_text">#2A2D33</color>
     <color name="toolbar">#FFFFFF</color>
     <color name="orange">#FF5722</color>
@@ -17,11 +18,14 @@
     <color name="item_recyclerview">#F3F5F8</color>
     <color name="item_date">#2A2D33</color>
     <color name="regular_gray">#8F96A1</color>
-    <color name="blue">#5AADFF</color>
+    <color name="blue">#45A2FF</color>
     <color name="blue_btn">#3599FF</color>
     <color name="grey_item">#EAECEF</color>
+    <color name="gradient_top">#00FFFFFF</color>
+    <color name="gradient_bottom">#FFFFFFFF</color>
     <color name="item_time_temp">#EAECEF</color>
     <color name="grey_storm">#727885</color>
+    <color name="text_chart">#727885</color>
     <color name="grey_lineral">#D9E0EA</color>
     <color name="line">#D9E0EA</color>
     <color name="grey_light">#FFFFFF</color>

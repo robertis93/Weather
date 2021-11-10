@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/toolbar"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
     tools:context=".generaldaytoday.fragment.GeneralDayTodayFragment">
@@ -18,7 +18,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/manrope_regular"
-            android:textColor="#2A2D33"
+            android:textColor="@color/toolbar_text"
             android:textFontWeight="800"
             android:textSize="18sp"
             app:layout_collapseMode="pin"

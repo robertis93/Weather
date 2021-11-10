@@ -11,7 +11,7 @@ import com.rob.weather.R
 import com.rob.weather.utils.BASE_URL_IMAGE
 import com.squareup.picasso.Picasso
 
-class PopupWeatherInCity (context: Context, layoutResource: Int) : MarkerView(context, layoutResource) {
+class PopupWeatherInCity (context: Context, layoutResource: Int) :MarkerView(context, layoutResource) {
     override fun refreshContent(entry: Entry?, highlight: Highlight?) {
         val weatherIcon = findViewById<ImageView>(R.id.weather_icon)
         val iconCode = entry?.data

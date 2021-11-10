@@ -8,6 +8,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.navArgs
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.Entry
@@ -92,11 +93,10 @@ class SelectedDayFragment :
         lineDataSet.setDrawValues(false)
         lineDataSet.setDrawCircles(false)
         lineDataSet.setDrawHighlightIndicators(true)
-        lineDataSet.setDrawVerticalHighlightIndicator(true)
-        lineDataSet.setDrawHorizontalHighlightIndicator(true)
-        lineDataSet.setValueTextColor(R.color.grey_storm)
+        lineDataSet.setDrawVerticalHighlightIndicator(false)
+        lineDataSet.setDrawHorizontalHighlightIndicator(false)
         lineDataSet.lineWidth = 3f
-        lineDataSet.fillColor = R.color.line_blue
+        lineDataSet.color =  ContextCompat.getColor(requireContext(), R.color.blue)
         val lineChart = binding.linecharttt
         lineChart.baseline
         lineChart.data = LineData(lineDataSet)
@@ -114,7 +114,6 @@ class SelectedDayFragment :
         xAxis.setDrawGridLines(false)
         xAxis.textSize = 12f
         xAxis.setDrawAxisLine(false)
-        xAxis.gridDashPathEffect
         xAxis.setLabelCount(entries.size, true)
         xAxis.valueFormatter = XAxisTimeDisplay()
         xAxis.axisMaximum = 21f
@@ -123,25 +122,10 @@ class SelectedDayFragment :
         lineChart.invalidate()
         lineChart.centerOffsets
         lineChart.legend.xOffset = -60f
-        lineChart.solidColor
         lineChart.highlighter.getHighlight(22f, 10f)
         val markerView = PopupWeatherInCity(context, R.layout.marker_view)
         lineChart.marker = markerView
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.toolbar_menu, menu)
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.action_search -> Toast.makeText(
-                context, "Clicked search button",
-                Toast.LENGTH_SHORT
-            ).show()
-        }
-        return true
+        xAxis.textColor = ContextCompat.getColor(requireContext(), R.color.text_chart)
     }
 }
 

@@ -71,7 +71,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun configureToolbarForSelectedDay() {
-        binding.imageBtn.setImageDrawable(getDrawable(R.drawable.ic_arrow_back))
+        binding.imageBtn.setImageDrawable(getDrawable(R.drawable.ic_chevron_left))
         binding.imageBtn.isEnabled = true
         binding.imageBtn.setOnClickListener {
             navController.popBackStack()
