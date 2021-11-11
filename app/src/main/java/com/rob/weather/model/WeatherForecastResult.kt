@@ -103,38 +103,5 @@ data class WeatherToday(
     val icon: String
 ) : Parcelable
 
-@Parcelize
-data class FullWeatherToday(
-    val date: String,
-    var city: String,
-    val temperature: String,
-    val description: String,
-    val icon: String,
-    val windSpeed: Int,
-    val humidity: Int,
-    val clouds: Int,
-    var forecastResponseList: List<ForecastResponse>
-) : Parcelable
-
-@Parcelize
-data class FullWeatherRightToday(
-    val date: String,
-    var city: String,
-    val temperature: String,
-    val description: String,
-    val icon: String,
-    val windSpeed: Int,
-    val humidity: Int,
-    val clouds: Clouds,
-    val list: List<TemperatureByTime>
-) : Parcelable
-
-@Parcelize
-class TemperatureByTime(
-    var date: String,
-    val temperature: Int,
-    var icon: String
-) : Parcelable
-
 
 

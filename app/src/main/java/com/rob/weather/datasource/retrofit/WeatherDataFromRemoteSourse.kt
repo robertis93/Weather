@@ -24,5 +24,4 @@ class WeatherDataFromRemoteSource @Inject constructor(private val retrofitServic
     suspend fun getIP(): ResponseByIp {
         return retrofitService.getIP(URL_TO_GET_IP)
     }
-
 }
