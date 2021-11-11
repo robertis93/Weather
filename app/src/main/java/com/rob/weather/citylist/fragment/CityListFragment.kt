@@ -39,7 +39,6 @@ class CityListFragment : BaseFragment<CityListFragmentBinding>(CityListFragmentB
         val cityAdapter = CityAdapter()
         val measureRecyclerView = binding.recyclerview
         measureRecyclerView.adapter = cityAdapter
-        binding.toolbarToday.text = "Мои города"
         viewModel.getCityList()
         lifecycleScope.launchWhenStarted {
             viewModel.cityList
@@ -54,7 +53,6 @@ class CityListFragment : BaseFragment<CityListFragmentBinding>(CityListFragmentB
                     cityAdapter.setData(cityList)
                     сityList = cityList
                     binding.mapIcon.setOnClickListener {
-                        //  перенести во вью модел
                         val action =
                             CityListFragmentDirections.actionCityListFragmentToMapsFragment(
                                 cityList.last(),
@@ -63,6 +61,10 @@ class CityListFragment : BaseFragment<CityListFragmentBinding>(CityListFragmentB
                         binding.root.findNavController().navigate(action)
                     }
                 }
+        }
+
+        binding.addCityButton.setOnClickListener {
+            dialog.showDialog(requireContext(), viewModel)
         }
 
         val actionListCallback = object : DragAndDropCallback() {
@@ -88,9 +90,5 @@ class CityListFragment : BaseFragment<CityListFragmentBinding>(CityListFragmentB
 
         val itemTouchHelper = ItemTouchHelper(actionListCallback)
         itemTouchHelper.attachToRecyclerView(binding.recyclerview)
-
-        binding.addCityButton.setOnClickListener {
-            dialog.showDialog(requireContext(), viewModel)
-        }
     }
 }

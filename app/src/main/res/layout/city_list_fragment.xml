@@ -9,24 +9,25 @@
     android:orientation="vertical"
     tools:context=".citylist.fragment.CityListFragment">
 
-         <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize">
 
-            <TextView
-                android:id="@+id/toolbarToday"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/manrope_regular"
-                android:textColor="@color/toolbar_text"
-                android:textFontWeight="800"
-                android:textSize="18sp"
-                app:layout_collapseMode="pin"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/name_city_toolbar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/manrope_regular"
+            android:text="@string/city_list"
+            android:textColor="@color/toolbar_text"
+            android:textFontWeight="800"
+            android:textSize="18sp"
+            app:layout_collapseMode="pin"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"

@@ -14,7 +14,7 @@
         android:layout_height="?attr/actionBarSize">
 
         <TextView
-            android:id="@+id/toolbarToday"
+            android:id="@+id/name_city_toolbar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/manrope_regular"
@@ -35,11 +35,11 @@
         android:layout_marginEnd="16dp">
 
         <View
-            android:id="@+id/blueRectangleView"
+            android:id="@+id/background_for_weather_indicators_view"
             android:layout_width="match_parent"
             android:layout_height="386dp"
             android:layout_marginTop="4dp"
-            android:background="@drawable/ic_rectangle_16__2_"
+            android:background="@drawable/rectangle_day"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -66,11 +66,11 @@
             android:layout_width="369dp"
             android:layout_height="170dp"
             android:layout_marginTop="108dp"
-            android:background="@drawable/ic_intersect"
+            android:background="@drawable/intersect_day"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/blueRectangleView"
+            app:layout_constraintEnd_toEndOf="@+id/background_for_weather_indicators_view"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/blueRectangleView"
+            app:layout_constraintTop_toTopOf="@+id/background_for_weather_indicators_view"
             app:layout_constraintVertical_bias="0.0" />
 
         <TextView
@@ -94,7 +94,7 @@
             android:layout_marginStart="120dp"
             android:layout_marginTop="28dp"
             android:layout_marginEnd="123dp"
-            app:layout_constraintEnd_toEndOf="@+id/blueRectangleView"
+            app:layout_constraintEnd_toEndOf="@+id/background_for_weather_indicators_view"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/current_date_textview"
             app:srcCompat="@drawable/ic_group_7" />
@@ -112,7 +112,7 @@
             android:textFontWeight="800"
             android:textSize="48sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/blueRectangleView"
+            app:layout_constraintStart_toStartOf="@+id/background_for_weather_indicators_view"
             app:layout_constraintTop_toBottomOf="@+id/weather_icon" />
 
         <TextView
@@ -124,8 +124,8 @@
             android:layout_marginBottom="74dp"
             android:text="Ветер"
             android:textFontWeight="500"
-            app:layout_constraintBottom_toBottomOf="@+id/blueRectangleView"
-            app:layout_constraintStart_toStartOf="@+id/blueRectangleView" />
+            app:layout_constraintBottom_toBottomOf="@+id/background_for_weather_indicators_view"
+            app:layout_constraintStart_toStartOf="@+id/background_for_weather_indicators_view" />
 
         <TextView
             android:id="@+id/wind_value_textview"
@@ -136,8 +136,8 @@
             android:layout_marginBottom="32dp"
             android:text="5"
             android:textFontWeight="800"
-            app:layout_constraintBottom_toBottomOf="@+id/blueRectangleView"
-            app:layout_constraintStart_toStartOf="@+id/blueRectangleView" />
+            app:layout_constraintBottom_toBottomOf="@+id/background_for_weather_indicators_view"
+            app:layout_constraintStart_toStartOf="@+id/background_for_weather_indicators_view" />
 
         <TextView
             android:id="@+id/humidity_textview"
@@ -149,8 +149,8 @@
             android:layout_marginBottom="74dp"
             android:text="Влажность"
             android:textFontWeight="500"
-            app:layout_constraintBottom_toBottomOf="@+id/blueRectangleView"
-            app:layout_constraintEnd_toEndOf="@+id/blueRectangleView"
+            app:layout_constraintBottom_toBottomOf="@+id/background_for_weather_indicators_view"
+            app:layout_constraintEnd_toEndOf="@+id/background_for_weather_indicators_view"
             app:layout_constraintStart_toStartOf="@+id/view" />
 
         <TextView
@@ -162,8 +162,8 @@
             android:layout_marginBottom="74dp"
             android:text="Осадки"
             android:textFontWeight="500"
-            app:layout_constraintBottom_toBottomOf="@+id/blueRectangleView"
-            app:layout_constraintEnd_toEndOf="@+id/blueRectangleView" />
+            app:layout_constraintBottom_toBottomOf="@+id/background_for_weather_indicators_view"
+            app:layout_constraintEnd_toEndOf="@+id/background_for_weather_indicators_view" />
 
         <TextView
             android:id="@+id/wind_unit_textview"
@@ -175,7 +175,7 @@
             android:paddingBottom="4dp"
             android:text="м/с"
             android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="@+id/blueRectangleView"
+            app:layout_constraintBottom_toBottomOf="@+id/background_for_weather_indicators_view"
             app:layout_constraintStart_toEndOf="@+id/wind_value_textview" />
 
         <TextView
@@ -188,7 +188,7 @@
             android:paddingBottom="4dp"
             android:text="%"
             android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="@+id/blueRectangleView"
+            app:layout_constraintBottom_toBottomOf="@+id/background_for_weather_indicators_view"
             app:layout_constraintStart_toEndOf="@+id/humidity_value_textview" />
 
         <TextView
@@ -201,7 +201,7 @@
             android:paddingBottom="4dp"
             android:text="%"
             android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="@+id/blueRectangleView"
+            app:layout_constraintBottom_toBottomOf="@+id/background_for_weather_indicators_view"
             app:layout_constraintStart_toEndOf="@+id/preciptation_value_textview" />
 
         <TextView
@@ -215,9 +215,9 @@
             android:gravity="center"
             android:text="20"
             android:textFontWeight="800"
-            app:layout_constraintBottom_toBottomOf="@+id/blueRectangleView"
-            app:layout_constraintEnd_toEndOf="@+id/blueRectangleView"
-            app:layout_constraintStart_toStartOf="@+id/blueRectangleView" />
+            app:layout_constraintBottom_toBottomOf="@+id/background_for_weather_indicators_view"
+            app:layout_constraintEnd_toEndOf="@+id/background_for_weather_indicators_view"
+            app:layout_constraintStart_toStartOf="@+id/background_for_weather_indicators_view" />
 
         <TextView
             android:id="@+id/preciptation_value_textview"
@@ -228,8 +228,8 @@
             android:layout_marginBottom="32dp"
             android:text="34"
             android:textFontWeight="800"
-            app:layout_constraintBottom_toBottomOf="@+id/blueRectangleView"
-            app:layout_constraintEnd_toEndOf="@+id/blueRectangleView" />
+            app:layout_constraintBottom_toBottomOf="@+id/background_for_weather_indicators_view"
+            app:layout_constraintEnd_toEndOf="@+id/background_for_weather_indicators_view" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.github.mikephil.charting.charts.LineChart

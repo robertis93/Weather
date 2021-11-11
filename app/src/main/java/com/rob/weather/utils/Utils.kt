@@ -12,4 +12,5 @@ object Utils {
     @SuppressLint("ConstantLocale", "SimpleDateFormat")
     val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
     val hourFormat = SimpleDateFormat("HH", Locale.getDefault())
+
 }

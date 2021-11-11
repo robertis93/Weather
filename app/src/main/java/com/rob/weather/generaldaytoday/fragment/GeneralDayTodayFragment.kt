@@ -38,6 +38,27 @@ class GeneralDayTodayFragment :
         val recyclerView = binding.recyclerView
         recyclerView.adapter = allDaysWeatherListAdapter
 
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            generalDayTodayViewModel.isSunRise.collect {
+                binding.backgroundForWeatherIndicatorsView.setBackgroundResource(R.drawable.rectangle_sunrise_)
+                binding.intersectView.setBackgroundResource(R.drawable.intersect_sunrise)
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            generalDayTodayViewModel.isDay.collect {
+                binding.backgroundForWeatherIndicatorsView.setBackgroundResource(R.drawable.rectangle_day)
+                binding.intersectView.setBackgroundResource(R.drawable.intersect_day)
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            generalDayTodayViewModel.isNight.collect {
+                binding.backgroundForWeatherIndicatorsView.setBackgroundResource(R.drawable.rectangle_night)
+                binding.intersectView.setBackgroundResource(R.drawable.intersect_night)
+            }
+        }
+
         val text = arguments?.getString("MyArg")
         if (text != null) {
             generalDayTodayViewModel.getCityByGeolocation()
@@ -49,7 +70,7 @@ class GeneralDayTodayFragment :
             }
         }
 
-        binding.blueRectangleView.setOnClickListener {
+        binding.backgroundForWeatherIndicatorsView.setOnClickListener {
             generalDayTodayViewModel.getCityFromDB()
         }
 
@@ -130,6 +151,7 @@ class GeneralDayTodayFragment :
                     binding.swipeRefresh.isRefreshing = visible
                 }
         }
+        generalDayTodayViewModel.checkTime()
         generalDayTodayViewModel.checkDataBase()
     }
 
@@ -144,12 +166,14 @@ class GeneralDayTodayFragment :
                         weatherToday.temperature + requireContext().getString(
                     R.string.celsius_icon
                 )
-            toolbarToday.text = weatherToday.city
+            nameCityToolbar.text = weatherToday.city
             val iconCode = weatherToday.icon
             val iconUrl = BASE_URL_IMAGE + iconCode + ".png"
             binding.weatherIcon.visibility = View.VISIBLE
             Picasso.get().load(iconUrl).into(weatherIcon)
         }
     }
+
+
 }
 

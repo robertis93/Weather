@@ -15,6 +15,7 @@ import com.rob.weather.model.WeatherForecastResult
 import com.rob.weather.model.WeatherToday
 import com.rob.weather.utils.Utils.fullDateFormat
 import com.rob.weather.utils.Utils.shortDateFormat
+import com.rob.weather.utils.Utils.timeFormat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -63,6 +64,18 @@ class GeneralDayTodayViewModel(
 
     private var _progressBar = MutableStateFlow<Boolean>(true)
     val progressBar: StateFlow<Boolean> = _progressBar.asStateFlow()
+
+//    private var _isSunRise = MutableStateFlow<Boolean>(true)
+//    val isSunrise: StateFlow<Boolean> = _isSunRise.asStateFlow()
+
+    private val _isSunRise = MutableSharedFlow<Unit>()
+    val isSunRise: SharedFlow<Unit> = _isSunRise.asSharedFlow()
+
+    private val _isDay = MutableSharedFlow<Unit>()
+    val isDay: SharedFlow<Unit> = _isDay.asSharedFlow()
+
+    private val _isNight = MutableSharedFlow<Unit>()
+    val isNight: SharedFlow<Unit> = _isNight.asSharedFlow()
 
     private var _updatingInformation = MutableStateFlow<Boolean>(false)
     val updatingInformation: StateFlow<Boolean> = _updatingInformation.asStateFlow()
@@ -295,6 +308,35 @@ class GeneralDayTodayViewModel(
         val changedDate = fullDateFormat.parse(this)
         return shortDateFormat.format(changedDate)
     }
+
+    fun checkTime() {
+        val dateCalendar: Calendar = GregorianCalendar(TimeZone.getTimeZone("GMT"))
+        val dateTimeStamp = dateCalendar.time.time
+        val currentTime = timestampToDisplayTime(dateTimeStamp)
+        val hour = currentTime.substringBefore(":").trim().toInt()
+        val minute = currentTime.substringAfter(":").trim().toInt()
+        val numberOfMinutes = hour * 60 + minute
+
+        if (numberOfMinutes in 360..480 || numberOfMinutes in 1260..1380
+        ) {
+            viewModelScope.launch(Dispatchers.Main) {
+                _isSunRise.emit(Unit)
+            }
+        } else if (numberOfMinutes in 480..1260) {
+            viewModelScope.launch(Dispatchers.Main) {
+                _isDay.emit(Unit)
+            }
+        } else {
+            viewModelScope.launch(Dispatchers.Main) {
+                _isNight.emit(Unit)
+            }
+        }
+    }
+}
+
+fun timestampToDisplayTime(dayTimeStamp: Long): String {
+    val currentDate = Date(dayTimeStamp)
+    return timeFormat.format(currentDate)
 }
 
 
