@@ -59,11 +59,6 @@ class GeneralDayTodayFragment :
             }
         }
 
-        val text = arguments?.getString("MyArg")
-        if (text != null) {
-            generalDayTodayViewModel.getCityByGeolocation()
-        }
-
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             generalDayTodayViewModel.weatherForNextDays.collect { list ->
                 allDaysWeatherListAdapter.setData(list)
@@ -153,6 +148,7 @@ class GeneralDayTodayFragment :
         }
         generalDayTodayViewModel.checkTime()
         generalDayTodayViewModel.checkDataBase()
+        generalDayTodayViewModel.checkArguments(arguments)
     }
 
     private fun initializingScreenForToday(weatherToday: WeatherToday) {

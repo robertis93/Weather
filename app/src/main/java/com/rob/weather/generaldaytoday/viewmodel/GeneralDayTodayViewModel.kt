@@ -1,6 +1,7 @@
 package com.rob.weather.generaldaytoday.viewmodel
 
 import android.location.Location
+import android.os.Bundle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -330,6 +331,13 @@ class GeneralDayTodayViewModel(
             viewModelScope.launch(Dispatchers.Main) {
                 _isNight.emit(Unit)
             }
+        }
+    }
+
+    fun checkArguments(arguments: Bundle?) {
+        val text = arguments?.getString("MyArg")
+        if (text != null) {
+            getCityByGeolocation()
         }
     }
 }
