@@ -5,6 +5,8 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.Entry
@@ -18,18 +20,44 @@ import com.rob.weather.utils.BaseFragment
 import com.rob.weather.utils.Utils.fullDateFormat
 import com.rob.weather.utils.Utils.hourFormat
 import com.squareup.picasso.Picasso
+import kotlinx.coroutines.flow.collect
 import java.util.*
 import kotlin.collections.ArrayList
 
 class SelectedDayFragment :
     BaseFragment<FragmetChooseDayBinding>(FragmetChooseDayBinding::inflate) {
     private val args by navArgs<SelectedDayFragmentArgs>()
+    private val selectedDayViewModel: SelectedDayViewModel by lazy {
+        ViewModelProvider(this).get(SelectedDayViewModel::class.java)
+    }
 
     @SuppressLint("ResourceAsColor")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            selectedDayViewModel.isSunRise.collect {
+                binding.backgroundForWeatherIndicatorsView.setBackgroundResource(R.drawable.rectangle_sunrise_)
+                binding.intersectView?.setBackgroundResource(R.drawable.intersect_sunrise)
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            selectedDayViewModel.isDay.collect {
+                binding.backgroundForWeatherIndicatorsView.setBackgroundResource(R.drawable.rectangle_day)
+                binding.intersectView?.setBackgroundResource(R.drawable.intersect_day)
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            selectedDayViewModel.isNight.collect {
+                binding.backgroundForWeatherIndicatorsView.setBackgroundResource(R.drawable.rectangle_night)
+                binding.intersectView?.setBackgroundResource(R.drawable.intersect_night)
+            }
+        }
         drawingGraph(requireContext(), args.weatherForecastList)
         setWeatherData()
+        selectedDayViewModel.checkTime()
     }
 
     private fun setWeatherData() {

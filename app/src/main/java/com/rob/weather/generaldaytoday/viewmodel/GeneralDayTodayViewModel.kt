@@ -66,9 +66,6 @@ class GeneralDayTodayViewModel(
     private var _progressBar = MutableStateFlow<Boolean>(true)
     val progressBar: StateFlow<Boolean> = _progressBar.asStateFlow()
 
-//    private var _isSunRise = MutableStateFlow<Boolean>(true)
-//    val isSunrise: StateFlow<Boolean> = _isSunRise.asStateFlow()
-
     private val _isSunRise = MutableSharedFlow<Unit>()
     val isSunRise: SharedFlow<Unit> = _isSunRise.asSharedFlow()
 

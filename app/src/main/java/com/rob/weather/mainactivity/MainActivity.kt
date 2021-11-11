@@ -1,6 +1,5 @@
 package com.rob.weather.mainactivity
 
-import android.annotation.SuppressLint
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
@@ -15,8 +14,6 @@ import com.rob.weather.R
 import com.rob.weather.databinding.ActivityMainBinding
 import com.rob.weather.generaldaytoday.fragment.GeneralDayTodayFragmentDirections
 import kotlinx.coroutines.flow.collect
-import java.text.SimpleDateFormat
-import java.util.*
 import kotlin.properties.Delegates
 
 class MainActivity : AppCompatActivity() {
