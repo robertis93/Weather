@@ -169,7 +169,5 @@ class GeneralDayTodayFragment :
             Picasso.get().load(iconUrl).into(weatherIcon)
         }
     }
-
-
 }
 

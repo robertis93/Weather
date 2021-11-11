@@ -1,6 +1,5 @@
 package com.rob.weather.selectedday
 
-import android.os.Bundle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rob.weather.utils.Utils.timeFormat

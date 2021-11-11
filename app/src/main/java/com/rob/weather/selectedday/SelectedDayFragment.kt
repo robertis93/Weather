@@ -112,41 +112,49 @@ class SelectedDayFragment :
         }
 
         val lineDataSet = LineDataSet(entries, "")
-        lineDataSet.setDrawIcons(false)
-        lineDataSet.mode = LineDataSet.Mode.CUBIC_BEZIER
-        lineDataSet.setDrawValues(false)
-        lineDataSet.setDrawCircles(false)
-        lineDataSet.setDrawHighlightIndicators(true)
-        lineDataSet.setDrawVerticalHighlightIndicator(false)
-        lineDataSet.setDrawHorizontalHighlightIndicator(false)
-        lineDataSet.lineWidth = 3f
-        lineDataSet.color = ContextCompat.getColor(requireContext(), R.color.blue)
+        with(lineDataSet) {
+            setDrawIcons(false)
+            mode = LineDataSet.Mode.CUBIC_BEZIER
+            setDrawValues(false)
+            setDrawCircles(false)
+            setDrawHighlightIndicators(true)
+            setDrawVerticalHighlightIndicator(false)
+            setDrawHorizontalHighlightIndicator(false)
+            lineWidth = 3f
+            color = ContextCompat.getColor(requireContext(), R.color.blue)
+        }
+
         val lineChart = binding.linecharttt
-        lineChart.baseline
-        lineChart.data = LineData(lineDataSet)
-        lineChart.axisRight.isEnabled = false
-        lineChart.axisLeft.isEnabled = false
-        lineChart.setDrawGridBackground(false)
-        lineChart.setBackgroundResource(R.drawable.chart_rounded_corners)
-        lineChart.setTouchEnabled(true)
-        lineChart.setPinchZoom(false)
-        lineChart.isScaleXEnabled = true
-        lineChart.isScaleYEnabled = true
+        with(lineChart) {
+            baseline
+            data = LineData(lineDataSet)
+            axisRight.isEnabled = false
+            axisLeft.isEnabled = false
+            setDrawGridBackground(false)
+            setBackgroundResource(R.drawable.chart_rounded_corners)
+            setTouchEnabled(true)
+            setPinchZoom(false)
+            isScaleXEnabled = true
+            isScaleYEnabled = true
+            description.isEnabled = false
+            setNoDataText("No forex yet!")
+            invalidate()
+            centerOffsets
+            legend.xOffset = -60f
+            highlighter.getHighlight(22f, 10f)
+        }
 
         val xAxis: XAxis = lineChart.xAxis
-        xAxis.position = XAxis.XAxisPosition.BOTTOM
-        xAxis.setDrawGridLines(false)
-        xAxis.textSize = 12f
-        xAxis.setDrawAxisLine(false)
-        xAxis.setLabelCount(entries.size, true)
-        xAxis.valueFormatter = XAxisTimeDisplay()
-        xAxis.axisMaximum = 21f
-        lineChart.description.isEnabled = false
-        lineChart.setNoDataText("No forex yet!")
-        lineChart.invalidate()
-        lineChart.centerOffsets
-        lineChart.legend.xOffset = -60f
-        lineChart.highlighter.getHighlight(22f, 10f)
+        with(xAxis) {
+            position = XAxis.XAxisPosition.BOTTOM
+            setDrawGridLines(false)
+            textSize = 12f
+            setDrawAxisLine(false)
+            setLabelCount(entries.size, true)
+            valueFormatter = XAxisTimeDisplay()
+            axisMaximum = 21f
+        }
+
         val markerView = PopupWeatherInCity(context, R.layout.marker_view)
         lineChart.marker = markerView
         xAxis.textColor = ContextCompat.getColor(requireContext(), R.color.text_chart)
