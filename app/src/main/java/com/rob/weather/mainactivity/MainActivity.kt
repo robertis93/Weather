@@ -13,6 +13,7 @@ import androidx.navigation.fragment.NavHostFragment
 import com.rob.weather.R
 import com.rob.weather.databinding.ActivityMainBinding
 import com.rob.weather.generaldaytoday.fragment.GeneralDayTodayFragmentDirections
+import com.rob.weather.selectedday.SelectedDayFragmentDirections
 import kotlinx.coroutines.flow.collect
 import kotlin.properties.Delegates
 
@@ -82,6 +83,12 @@ class MainActivity : AppCompatActivity() {
         binding.imageBtn.isEnabled = true
         binding.imageBtn.setOnClickListener {
             navController.popBackStack()
+        }
+        binding.imageMenuRightBtn.setOnClickListener {
+            val action =
+                SelectedDayFragmentDirections
+                    .actionChooseDayFragmentToCityListFragment()
+            navController.navigate(action)
         }
     }
 
