@@ -57,9 +57,6 @@ class GeneralDayTodayViewModel(
     )
     val searchingCity: SharedFlow<Unit> = _searchingCity.asSharedFlow()
 
-    private val _changingMode = MutableSharedFlow<Unit>()
-    val changingMode: SharedFlow<Unit> = _changingMode.asSharedFlow()
-
     private val _weatherToday = MutableSharedFlow<WeatherToday>()
     val weatherToday: SharedFlow<WeatherToday> = _weatherToday.asSharedFlow()
 
@@ -155,12 +152,29 @@ class GeneralDayTodayViewModel(
                     .get().toInt().toString() + "°"
             val iconCode = weatherForOneDay.forecastResponseList.first().weather.first().icon
             val timeAndTemperatureList = weatherForOneDay.forecastResponseList
+            val humidity = weatherForOneDay.forecastResponseList.first().main.humidity.toString()
+            val averageTemperature =
+                weatherForOneDay.forecastResponseList.first().main.temp.toInt().toString()
+            val windSpeed =
+                weatherForOneDay.forecastResponseList.first().wind.speed.toInt().toString()
+            val preciptation = weatherForOneDay.forecastResponseList.first().clouds.all.toString()
+            val descriptionWeather =
+                weatherForOneDay.forecastResponseList.first().weather.first().description
+                    .replaceFirstChar {
+                        if (it.isLowerCase()) it.titlecase(Locale.getDefault())
+                        else "$it"
+                    }
             val weatherForecastForNextDays = WeatherForecastForNextDays(
                 date,
                 city,
                 weekDay,
                 minTemperatureForDay,
                 maxTemperatureForDay,
+                humidity,
+                averageTemperature,
+                windSpeed,
+                preciptation,
+                descriptionWeather,
                 iconCode,
                 timeAndTemperatureList
             )
@@ -199,7 +213,11 @@ class GeneralDayTodayViewModel(
                 val weatherForecast = dataSource.getWeatherForecastResponse(city)
                 withContext(Dispatchers.Main) {
                     val todayWeather = getFullWeatherTodayResponse(weatherForecast)
-                    _fullInfoTodayWeather.emit(convertToWeatherForNextDays(listOf(todayWeather)).first())
+                    _fullInfoTodayWeather
+                        .emit(
+                            convertToWeatherForNextDays(listOf(todayWeather))
+                                .first()
+                        )
                 }
 
             } catch (e: Exception) {
@@ -219,20 +237,6 @@ class GeneralDayTodayViewModel(
     fun updateInformation(city: String) {
         getAllWeatherForecast(city)
         _updatingInformation.value = true
-    }
-
-    fun searchCity(): Boolean {
-        viewModelScope.launch(Dispatchers.IO) {
-            _searchingCity.emit(Unit)
-        }
-        return true
-    }
-
-    fun changeMode(): Boolean {
-        viewModelScope.launch(Dispatchers.IO) {
-            _changingMode.emit(Unit)
-        }
-        return true
     }
 
     fun updateWeatherForecastInformation() {
@@ -284,12 +288,6 @@ class GeneralDayTodayViewModel(
         }
     }
 
-    fun getCityFromDataBase() {
-        viewModelScope.launch(Dispatchers.IO) {
-            _city.emit(repository.getAllCities().last().name)
-        }
-    }
-
     fun getCityByGeolocation() {
         viewModelScope.launch(Dispatchers.IO)
         {
@@ -300,11 +298,6 @@ class GeneralDayTodayViewModel(
                 getAllWeatherForecast(lastCityInDataBase.name)
             }
         }
-    }
-
-    private fun String.changeDateFormat(): String {
-        val changedDate = fullDateFormat.parse(this)
-        return shortDateFormat.format(changedDate)
     }
 
     fun checkTime() {
@@ -342,6 +335,11 @@ class GeneralDayTodayViewModel(
 fun timestampToDisplayTime(dayTimeStamp: Long): String {
     val currentDate = Date(dayTimeStamp)
     return timeFormat.format(currentDate)
+}
+
+private fun String.changeDateFormat(): String {
+    val changedDate = fullDateFormat.parse(this)
+    return shortDateFormat.format(changedDate)
 }
 
 

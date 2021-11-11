@@ -116,12 +116,6 @@ class GeneralDayTodayFragment :
                 }
         }
 
-        lifecycleScope.launchWhenStarted {
-            generalDayTodayViewModel.changingMode
-                .collect {
-                }
-        }
-
         binding.swipeRefresh.setOnRefreshListener(OnRefreshListener {
             generalDayTodayViewModel.updateWeatherForecastInformation()
         })
@@ -155,8 +149,7 @@ class GeneralDayTodayFragment :
         with(binding) {
             currentDateTextView.text =
                 requireContext().getString(R.string.today_with_comma) + weatherToday.date
-            currentTemperatureTextview.text = weatherToday.temperature +
-                    requireContext().getString(R.string.celsius_icon)
+            currentTemperatureTextview.text = weatherToday.temperature + requireContext().getString(R.string.celsius_icon)
             currentWeatherDescriptionTextview.text =
                 weatherToday.description + requireContext().getString(R.string.feels_like) +
                         weatherToday.temperature + requireContext().getString(

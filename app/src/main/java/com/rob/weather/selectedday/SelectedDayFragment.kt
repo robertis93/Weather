@@ -21,8 +21,6 @@ import com.rob.weather.utils.Utils.fullDateFormat
 import com.rob.weather.utils.Utils.hourFormat
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.flow.collect
-import java.util.*
-import kotlin.collections.ArrayList
 
 class SelectedDayFragment :
     BaseFragment<FragmetChooseDayBinding>(FragmetChooseDayBinding::inflate) {
@@ -55,8 +53,8 @@ class SelectedDayFragment :
                 binding.intersectView?.setBackgroundResource(R.drawable.intersect_night)
             }
         }
-        drawingGraph(requireContext(), args.weatherForecastList)
         setWeatherData()
+        drawingGraph(requireContext(), args.weatherForecastList)
         selectedDayViewModel.checkTime()
     }
 
@@ -65,24 +63,16 @@ class SelectedDayFragment :
             nameCityToolbar.text = args.weatherForecastList.city
             currentDateTextview.text = args.weatherForecastList.date
             humidityValueTextview.text =
-                args.weatherForecastList.forecastResponseList.first().main.humidity.toString()
+                args.weatherForecastList.humidity
             currentTemperatureTextview.text =
-                args.weatherForecastList.forecastResponseList.first().main.temp.toInt()
-                    .toString() + "°"
-            windValueTextview.text =
-                args.weatherForecastList.forecastResponseList.first().wind.speed.toInt().toString()
+                args.weatherForecastList.averageTemperature + "°"
+            windValueTextview.text = args.weatherForecastList.windSpeed
             preciptationValueTextview.text =
-                args.weatherForecastList.forecastResponseList.first().clouds.all.toString()
+                args.weatherForecastList.preciptation
             currentWeatherDescriptionTextview.text =
-                args.weatherForecastList.forecastResponseList.first().weather.first().description
-                    .replaceFirstChar {
-                        if (it.isLowerCase()) it.titlecase(Locale.getDefault())
-                        else "$it"
-                    } + requireContext().getString(R.string.feels_like) + Math.round(
-                    args.weatherForecastList
-                        .forecastResponseList.first().main.temp_max
-                )
-                    .toString() + "°"
+                args.weatherForecastList.descriptionWeather +
+                        requireContext().getString(R.string.feels_like) +
+                        args.weatherForecastList.maxTemperatureForDay + "°"
             val iconCode =
                 args.weatherForecastList.forecastResponseList.first().weather.first().icon
             val iconUrl = BASE_URL_IMAGE + iconCode + ".png"

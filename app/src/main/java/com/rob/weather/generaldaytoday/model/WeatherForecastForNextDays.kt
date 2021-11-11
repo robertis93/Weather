@@ -12,6 +12,11 @@ data class WeatherForecastForNextDays(
     val weekDay: String,
     val minTemperatureForDay: String,
     val maxTemperatureForDay: String,
+    val humidity : String,
+    val averageTemperature :String,
+    val windSpeed :String,
+    val preciptation :String,
+    val descriptionWeather :String,
     val iconCode: String,
     val forecastResponseList: List<ForecastResponse>
 ) : Parcelable
