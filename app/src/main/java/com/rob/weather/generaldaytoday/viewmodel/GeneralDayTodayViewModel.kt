@@ -269,7 +269,7 @@ class GeneralDayTodayViewModel(
 
     fun getCityFromDB() {
         viewModelScope.launch(Dispatchers.IO) {
-            _cityName.emit(repository.getAllCities().last().name)
+            _cityName.emit(repository.getAllCities().first().name)
         }
     }
 

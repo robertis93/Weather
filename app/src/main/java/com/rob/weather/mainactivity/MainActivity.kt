@@ -14,10 +14,14 @@ import com.rob.weather.R
 import com.rob.weather.databinding.ActivityMainBinding
 import com.rob.weather.generaldaytoday.fragment.GeneralDayTodayFragmentDirections
 import kotlinx.coroutines.flow.collect
+import kotlin.properties.Delegates
 
 class MainActivity : AppCompatActivity() {
     lateinit var navController: NavController
     private lateinit var binding: ActivityMainBinding
+    lateinit var appSettingsPrefs: SharedPreferences
+    lateinit var sharedPrefEdit: SharedPreferences.Editor
+    var isNightModeOn by Delegates.notNull<Boolean>()
     private val mainActivityViewModel: MainActivityViewModel by lazy {
         ViewModelProvider(this).get(MainActivityViewModel::class.java)
     }
@@ -31,10 +35,10 @@ class MainActivity : AppCompatActivity() {
         val view = binding.getRoot()
         setContentView(view)
 
-        val appSettingsPrefs: SharedPreferences = getSharedPreferences("AppSettingsPref", 0)
-        val sharedPrefEdit: SharedPreferences.Editor = appSettingsPrefs.edit()
-        val isNightModeOn: Boolean = appSettingsPrefs.getBoolean("NightMode", false)
 
+        appSettingsPrefs = getSharedPreferences("AppSettingsPref", 0)
+        sharedPrefEdit = appSettingsPrefs.edit()
+        isNightModeOn = appSettingsPrefs.getBoolean("NightMode", false)
         if (isNightModeOn) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
         } else {
@@ -58,15 +62,19 @@ class MainActivity : AppCompatActivity() {
                 }
         }
         binding.imageMenuLeftBtn.setOnClickListener {
-            if (isNightModeOn) {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                sharedPrefEdit.putBoolean("NightMode", false)
-                sharedPrefEdit.apply()
-            } else {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                sharedPrefEdit.putBoolean("NightMode", true)
-                sharedPrefEdit.apply()
-            }
+            nightModeCheck(isNightModeOn, sharedPrefEdit)
+        }
+    }
+
+    private fun nightModeCheck(isNightModeOn: Boolean, sharedPrefEdit: SharedPreferences.Editor) {
+        if (isNightModeOn) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            sharedPrefEdit.putBoolean("NightMode", false)
+            sharedPrefEdit.apply()
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            sharedPrefEdit.putBoolean("NightMode", true)
+            sharedPrefEdit.apply()
         }
     }
 
@@ -90,6 +98,9 @@ class MainActivity : AppCompatActivity() {
         binding.imageBtn.setOnClickListener {
             navController.popBackStack()
         }
+        binding.imageMenuRightBtn.setOnClickListener {
+            nightModeCheck(isNightModeOn, sharedPrefEdit)
+        }
     }
 
     private fun configureToolbarForGeneralDayToday() {
@@ -99,11 +110,6 @@ class MainActivity : AppCompatActivity() {
         }
         binding.imageMenuRightBtn.visibility = View.VISIBLE
         binding.imageMenuLeftBtn.visibility = View.VISIBLE
-
-//        binding.imageMenuLeftBtn.setOnClickListener {
-//            if (isNight)
-//            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-//        }
         binding.imageMenuLeftBtn.setImageDrawable(getDrawable(R.drawable.ic_loader_1))
         binding.imageMenuRightBtn.setImageDrawable(getDrawable(R.drawable.ic_search_city))
         binding.imageMenuRightBtn.setOnClickListener {
