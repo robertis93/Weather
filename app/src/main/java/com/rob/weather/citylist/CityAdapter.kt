@@ -38,7 +38,7 @@ class CityAdapter : RecyclerView.Adapter<CityAdapter.WeatherViewHolder>() {
         RecyclerView.ViewHolder(binding.root) {
         @SuppressLint("SetTextI18n")
         fun bind(item: WeatherCity, cityList:List<WeatherCity>) {
-            binding.dayTextView.text = item.name
+            binding.cityNameTextview.text = item.name
             binding.minTemperatureTextView.text = item.temperatureMin.toString() + "°"
             binding.maxTemperatureTextView.text = item.temperatureMax.toString() + "°"
             val iconCode = item.icon

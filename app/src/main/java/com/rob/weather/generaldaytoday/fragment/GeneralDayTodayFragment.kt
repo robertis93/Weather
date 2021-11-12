@@ -3,6 +3,7 @@ package com.rob.weather.generaldaytoday.fragment
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
@@ -78,12 +79,17 @@ class GeneralDayTodayFragment :
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             generalDayTodayViewModel.fullInfoTodayWeather.collect { currentWeather ->
-                val action =
-                    GeneralDayTodayFragmentDirections
-                        .actionWeatherInformationByDayFragmentToChooseDayFragment3(
-                            currentWeather
-                        )
-                findNavController().navigate(action)
+                try {
+                    val action =
+                        GeneralDayTodayFragmentDirections
+                            .actionWeatherInformationByDayFragmentToChooseDayFragment3(
+                                currentWeather
+                            )
+                    findNavController().navigate(action)
+                } catch (e: Exception) {
+                    Log.e("MYAPP", "exception: " + e.message)
+                    Log.e("MYAPP", "exception: $e")
+                }
             }
         }
 
@@ -149,7 +155,8 @@ class GeneralDayTodayFragment :
         with(binding) {
             currentDateTextView.text =
                 requireContext().getString(R.string.today_with_comma) + weatherToday.date
-            currentTemperatureTextview.text = weatherToday.temperature + requireContext().getString(R.string.celsius_icon)
+            currentTemperatureTextview.text =
+                weatherToday.temperature + requireContext().getString(R.string.celsius_icon)
             currentWeatherDescriptionTextview.text =
                 weatherToday.description + requireContext().getString(R.string.feels_like) +
                         weatherToday.temperature + requireContext().getString(

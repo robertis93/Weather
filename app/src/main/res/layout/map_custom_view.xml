@@ -39,6 +39,7 @@
                     android:layout_height="24dp"
                     android:layout_marginStart="18dp"
                     android:text="22C"
+                    android:textColor="#2A2D33"
                     android:layout_marginBottom="6dp"
                     android:textFontWeight="800" />
 

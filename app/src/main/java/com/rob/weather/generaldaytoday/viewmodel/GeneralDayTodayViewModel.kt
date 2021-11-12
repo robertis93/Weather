@@ -18,6 +18,7 @@ import com.rob.weather.utils.Utils.fullDateFormat
 import com.rob.weather.utils.Utils.shortDateFormat
 import com.rob.weather.utils.Utils.timeFormat
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -48,7 +49,8 @@ class GeneralDayTodayViewModel(
         _city.asSharedFlow()
 
     private val _fullInfoTodayWeather =
-        MutableSharedFlow<WeatherForecastForNextDays>()
+        MutableSharedFlow<WeatherForecastForNextDays>(replay = 0, extraBufferCapacity = 10,
+            BufferOverflow.SUSPEND)
     val fullInfoTodayWeather: SharedFlow<WeatherForecastForNextDays> =
         _fullInfoTodayWeather.asSharedFlow()
 
