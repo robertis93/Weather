@@ -39,11 +39,11 @@ class CityAdapter : RecyclerView.Adapter<CityAdapter.WeatherViewHolder>() {
         @SuppressLint("SetTextI18n")
         fun bind(item: WeatherCity, cityList:List<WeatherCity>) {
             binding.cityNameTextview.text = item.name
-            binding.minTemperatureTextView.text = item.temperatureMin.toString() + "°"
-            binding.maxTemperatureTextView.text = item.temperatureMax.toString() + "°"
+            binding.minTemperatureText.text = item.temperatureMin.toString() + "°"
+            binding.maxTemperatureText.text = item.temperatureMax.toString() + "°"
             val iconCode = item.icon
             val iconUrl = BASE_URL_IMAGE + iconCode + ".png"
-            Picasso.get().load(iconUrl).into(binding.imageView)
+            Picasso.get().load(iconUrl).into(binding.weatherIcon)
             binding.rowLayout.setOnClickListener {
                 val action =
                     CityListFragmentDirections.actionCityListFragmentToMapsFragment(item,

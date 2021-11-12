@@ -10,7 +10,7 @@
     android:foreground="@drawable/custom_rounded_corners"
     android:theme="@style/Theme.MaterialComponents.Light"
     app:cardCornerRadius="16dp"
-    app:cardElevation="5dp"
+    app:cardElevation="0dp"
     app:strokeColor="@color/item_recyclerview"
     app:strokeWidth="2dp">
 
@@ -113,7 +113,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
             android:orientation="horizontal"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>
