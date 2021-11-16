@@ -3,16 +3,18 @@ package com.rob.weather.generaldaytoday.fragment
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
+import com.mikepenz.fastadapter.FastAdapter
+import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.rob.weather.R
 import com.rob.weather.databinding.FragmentGeneralDayTodayBinding
-import com.rob.weather.generaldaytoday.adapters.GeneralDayTodayAdapter
+import com.rob.weather.generaldaytoday.adapters.WeatherForecastForNextDaysItem
 import com.rob.weather.generaldaytoday.viewmodel.GeneralDayTodayViewModel
 import com.rob.weather.model.WeatherToday
 import com.rob.weather.utils.BASE_URL_IMAGE
@@ -21,12 +23,13 @@ import com.rob.weather.utils.extensions.getAppComponent
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.flow.collect
 
+
 class GeneralDayTodayFragment :
     BaseFragment<FragmentGeneralDayTodayBinding>(FragmentGeneralDayTodayBinding::inflate) {
     private lateinit var generalDayTodayViewModelFactory: GeneralDayTodayViewModelFactory
     private val generalDayTodayViewModel:
             GeneralDayTodayViewModel by viewModels { generalDayTodayViewModelFactory }
-
+    private lateinit var fastAdapter: FastAdapter<WeatherForecastForNextDaysItem>
     override fun onAttach(context: Context) {
         super.onAttach(context)
         generalDayTodayViewModelFactory = getAppComponent().getDependencyGeneralDay()
@@ -35,9 +38,17 @@ class GeneralDayTodayFragment :
     @SuppressLint("ResourceAsColor")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val allDaysWeatherListAdapter = GeneralDayTodayAdapter()
-        val recyclerView = binding.recyclerView
-        recyclerView.adapter = allDaysWeatherListAdapter
+
+        binding.weatherForecastRecyclerView.setLayoutManager(
+            LinearLayoutManager(
+                context,
+                LinearLayoutManager.VERTICAL,
+                false
+            )
+        )
+        val itemAdapter = ItemAdapter<WeatherForecastForNextDaysItem>()
+        fastAdapter = FastAdapter.with(itemAdapter)
+        binding.weatherForecastRecyclerView.setAdapter(fastAdapter)
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             generalDayTodayViewModel.isSunRise.collect {
@@ -62,7 +73,9 @@ class GeneralDayTodayFragment :
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             generalDayTodayViewModel.weatherForNextDays.collect { list ->
-                allDaysWeatherListAdapter.setData(list)
+                for (i in 1 until list.size) {
+                    itemAdapter.add(WeatherForecastForNextDaysItem(list[i]))
+                }
             }
         }
 
@@ -79,17 +92,17 @@ class GeneralDayTodayFragment :
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             generalDayTodayViewModel.fullInfoTodayWeather.collect { currentWeather ->
-                try {
-                    val action =
-                        GeneralDayTodayFragmentDirections
-                            .actionWeatherInformationByDayFragmentToChooseDayFragment3(
-                                currentWeather
-                            )
-                    findNavController().navigate(action)
-                } catch (e: Exception) {
-                    Log.e("MYAPP", "exception: " + e.message)
-                    Log.e("MYAPP", "exception: $e")
-                }
+                // try {
+                val action =
+                    GeneralDayTodayFragmentDirections
+                        .actionWeatherInformationByDayFragmentToChooseDayFragment3(
+                            currentWeather
+                        )
+                findNavController().navigate(action)
+//                } catch (e: Exception) {
+//                    Log.e("MYAPP", "exception: " + e.message)
+//                    Log.e("MYAPP", "exception: $e")
+//                }
             }
         }
 
