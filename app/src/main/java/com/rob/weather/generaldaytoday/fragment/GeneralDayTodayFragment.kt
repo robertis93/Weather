@@ -23,13 +23,12 @@ import com.rob.weather.utils.extensions.getAppComponent
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.flow.collect
 
-
 class GeneralDayTodayFragment :
     BaseFragment<FragmentGeneralDayTodayBinding>(FragmentGeneralDayTodayBinding::inflate) {
     private lateinit var generalDayTodayViewModelFactory: GeneralDayTodayViewModelFactory
     private val generalDayTodayViewModel:
             GeneralDayTodayViewModel by viewModels { generalDayTodayViewModelFactory }
-    private lateinit var fastAdapter: FastAdapter<WeatherForecastForNextDaysItem>
+    private lateinit var weatherForecastForNextDaysfastAdapter: FastAdapter<WeatherForecastForNextDaysItem>
     override fun onAttach(context: Context) {
         super.onAttach(context)
         generalDayTodayViewModelFactory = getAppComponent().getDependencyGeneralDay()
@@ -46,9 +45,10 @@ class GeneralDayTodayFragment :
                 false
             )
         )
-        val itemAdapter = ItemAdapter<WeatherForecastForNextDaysItem>()
-        fastAdapter = FastAdapter.with(itemAdapter)
-        binding.weatherForecastRecyclerView.setAdapter(fastAdapter)
+        val weatherForecastForNextDaysItemAdapter = ItemAdapter<WeatherForecastForNextDaysItem>()
+        weatherForecastForNextDaysfastAdapter =
+            FastAdapter.with(weatherForecastForNextDaysItemAdapter)
+        binding.weatherForecastRecyclerView.adapter = weatherForecastForNextDaysfastAdapter
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             generalDayTodayViewModel.isSunRise.collect {
@@ -74,7 +74,7 @@ class GeneralDayTodayFragment :
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             generalDayTodayViewModel.weatherForNextDays.collect { list ->
                 for (i in 1 until list.size) {
-                    itemAdapter.add(WeatherForecastForNextDaysItem(list[i]))
+                    weatherForecastForNextDaysItemAdapter.add(WeatherForecastForNextDaysItem(list[i]))
                 }
             }
         }
@@ -99,10 +99,6 @@ class GeneralDayTodayFragment :
                             currentWeather
                         )
                 findNavController().navigate(action)
-//                } catch (e: Exception) {
-//                    Log.e("MYAPP", "exception: " + e.message)
-//                    Log.e("MYAPP", "exception: $e")
-//                }
             }
         }
 
