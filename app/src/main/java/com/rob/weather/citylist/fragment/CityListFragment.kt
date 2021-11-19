@@ -34,6 +34,10 @@ class CityListFragment : BaseFragment<CityListFragmentBinding>(CityListFragmentB
     val viewModel: CityListViewModel by viewModels { cityListViewModelFactory }
     private val dialog = ShowDialogForChangingCity()
     var сityList = listOf<WeatherCity>()
+    val cityWeatherItemAdapter = ItemAdapter<BindingWeatherInCityItem>()
+    val cityInWeatherFastAdapter =
+        FastAdapter.with(cityWeatherItemAdapter)
+
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -42,9 +46,6 @@ class CityListFragment : BaseFragment<CityListFragmentBinding>(CityListFragmentB
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val cityWeatherItemAdapter = ItemAdapter<BindingWeatherInCityItem>()
-        val cityInWeatherFastAdapter =
-            FastAdapter.with(cityWeatherItemAdapter)
         binding.cityListRecyclerview.adapter = cityInWeatherFastAdapter
         // BindingWeatherInCityItem
 //        val cityAdapter = CityAdapter()
@@ -110,7 +111,12 @@ class CityListFragment : BaseFragment<CityListFragmentBinding>(CityListFragmentB
     }
 
     override fun itemTouchOnMove(oldPosition: Int, newPosition: Int): Boolean {
-        TODO("Not yet implemented")
+        DragDropUtil.onMove(
+            cityWeatherItemAdapter,
+            oldPosition,
+            newPosition
+        ) // change position
+        return true
     }
 
 //    override fun itemTouchOnMove(oldPosition: Int, newPosition: Int): Boolean {

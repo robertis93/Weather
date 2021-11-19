@@ -5,13 +5,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.card.MaterialCardView
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.mikepenz.fastadapter.binding.AbstractBindingItem
 import com.mikepenz.fastadapter.items.AbstractItem
 import com.rob.weather.R
 import com.rob.weather.databinding.TimeTemperatureItemBinding
+import com.rob.weather.generaldaytoday.fragment.GeneralDayTodayFragmentDirections
 import com.rob.weather.generaldaytoday.model.WeatherForecastForNextDays
 import com.rob.weather.model.ForecastResponse
 import com.rob.weather.utils.Utils
@@ -37,6 +40,7 @@ class WeatherForecastForNextDaysItem(var weatherForecastForNextDays: WeatherFore
         var maxTemperature: TextView = view.findViewById(R.id.maxTemperatureTextView)
         var minTemperature: TextView = view.findViewById(R.id.minTemperatureTextView)
         val recyclerView: RecyclerView = view.findViewById(R.id.temperature_during_day_recyclerview)
+        val rowLayout: MaterialCardView = view.findViewById(R.id.day_weather_rowLayout)
         val temperatureDuringDayItemAdapter = ItemAdapter<BindingTemperatureItem>()
         val weatherForecastForNextDaysFastAdapter =
             FastAdapter.with(temperatureDuringDayItemAdapter)
@@ -53,6 +57,13 @@ class WeatherForecastForNextDaysItem(var weatherForecastForNextDays: WeatherFore
             val temperatureWithTineList = item.weatherForecastForNextDays.forecastResponseList
             for (k in 1 until temperatureWithTineList.size) {
                 temperatureDuringDayItemAdapter.add(BindingTemperatureItem(temperatureWithTineList[k]))
+            }
+            rowLayout.setOnClickListener {
+                val action =
+                    GeneralDayTodayFragmentDirections
+                        .actionWeatherInformationByDayFragmentToChooseDayFragment3(item.weatherForecastForNextDays)
+                itemView.findNavController().navigate(action)
+
             }
         }
 
