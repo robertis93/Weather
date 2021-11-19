@@ -8,8 +8,13 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.mikepenz.fastadapter.FastAdapter
+import com.mikepenz.fastadapter.adapters.ItemAdapter
+import com.mikepenz.fastadapter.drag.ItemTouchCallback
+import com.mikepenz.fastadapter.drag.SimpleDragCallback
+import com.mikepenz.fastadapter.utils.DragDropUtil
 import com.rob.weather.App
-import com.rob.weather.citylist.CityAdapter
+import com.rob.weather.citylist.BindingWeatherInCityItem
 import com.rob.weather.citylist.DragAndDropCallback
 import com.rob.weather.citylist.ShowDialogForChangingCity
 import com.rob.weather.citylist.model.WeatherCity
@@ -21,7 +26,8 @@ import kotlinx.coroutines.flow.collect
 import java.util.*
 import javax.inject.Inject
 
-class CityListFragment : BaseFragment<CityListFragmentBinding>(CityListFragmentBinding::inflate) {
+class CityListFragment : BaseFragment<CityListFragmentBinding>(CityListFragmentBinding::inflate),
+    ItemTouchCallback {
 
     @Inject
     lateinit var cityListViewModelFactory: CityListViewModelFactory
@@ -36,9 +42,14 @@ class CityListFragment : BaseFragment<CityListFragmentBinding>(CityListFragmentB
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val cityAdapter = CityAdapter()
-        val measureRecyclerView = binding.recyclerview
-        measureRecyclerView.adapter = cityAdapter
+        val cityWeatherItemAdapter = ItemAdapter<BindingWeatherInCityItem>()
+        val cityInWeatherFastAdapter =
+            FastAdapter.with(cityWeatherItemAdapter)
+        binding.cityListRecyclerview.adapter = cityInWeatherFastAdapter
+        // BindingWeatherInCityItem
+//        val cityAdapter = CityAdapter()
+//        val measureRecyclerView = binding.recyclerview
+//        measureRecyclerView.adapter = cityAdapter
         viewModel.getCityList()
         lifecycleScope.launchWhenStarted {
             viewModel.cityList
@@ -50,7 +61,10 @@ class CityListFragment : BaseFragment<CityListFragmentBinding>(CityListFragmentB
         lifecycleScope.launchWhenStarted {
             viewModel.cityListWithWeather
                 .collect { cityList ->
-                    cityAdapter.setData(cityList)
+                    for (element in cityList) {
+                        cityWeatherItemAdapter.add(BindingWeatherInCityItem(element))
+                    }
+                    // cityAdapter.setData(cityList)
                     сityList = cityList
                     binding.mapIcon.setOnClickListener {
                         val action =
@@ -71,7 +85,7 @@ class CityListFragment : BaseFragment<CityListFragmentBinding>(CityListFragmentB
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val pos = viewHolder.adapterPosition
                 viewModel.deleteTheCity(pos)
-                cityAdapter.notifyItemRemoved(pos)
+                //   cityAdapter.notifyItemRemoved(pos)
             }
 
             override fun onMove(
@@ -82,13 +96,25 @@ class CityListFragment : BaseFragment<CityListFragmentBinding>(CityListFragmentB
                 val from = viewHolder.adapterPosition
                 val to = target.adapterPosition
                 Collections.swap(сityList, from, to)
-                cityAdapter.notifyItemMoved(viewHolder.adapterPosition, target.adapterPosition)
+                // cityAdapter.notifyItemMoved(viewHolder.adapterPosition, target.adapterPosition)
                 viewModel.updateCity(сityList)
                 return true
             }
         }
 
-        val itemTouchHelper = ItemTouchHelper(actionListCallback)
-        itemTouchHelper.attachToRecyclerView(binding.recyclerview)
+//        val itemTouchHelper = ItemTouchHelper(actionListCallback)
+//        itemTouchHelper.attachToRecyclerView(binding.cityListRecyclerview)
+        val dragCallback = SimpleDragCallback()
+        val touchHelper = ItemTouchHelper(dragCallback)
+        touchHelper.attachToRecyclerView(binding.cityListRecyclerview)
     }
+
+    override fun itemTouchOnMove(oldPosition: Int, newPosition: Int): Boolean {
+        TODO("Not yet implemented")
+    }
+
+//    override fun itemTouchOnMove(oldPosition: Int, newPosition: Int): Boolean {
+////        DragDropUtil.onMove(cityWeatherItemAdapter.itemAdapter, oldPosition, newPosition) // change position
+////        return true
+//    }
 }

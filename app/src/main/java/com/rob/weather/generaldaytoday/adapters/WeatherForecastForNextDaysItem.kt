@@ -14,6 +14,7 @@ import com.rob.weather.R
 import com.rob.weather.databinding.TimeTemperatureItemBinding
 import com.rob.weather.generaldaytoday.model.WeatherForecastForNextDays
 import com.rob.weather.model.ForecastResponse
+import com.rob.weather.utils.Utils
 import com.squareup.picasso.Picasso
 
 class WeatherForecastForNextDaysItem(var weatherForecastForNextDays: WeatherForecastForNextDays) :
@@ -48,9 +49,7 @@ class WeatherForecastForNextDaysItem(var weatherForecastForNextDays: WeatherFore
             val iconUrl = "https://openweathermap.org/img/w/" +
                     item.weatherForecastForNextDays.iconCode + ".png"
             Picasso.get().load(iconUrl).into(iconWeather)
-
             recyclerView.adapter = weatherForecastForNextDaysFastAdapter
-
             val temperatureWithTineList = item.weatherForecastForNextDays.forecastResponseList
             for (k in 1 until temperatureWithTineList.size) {
                 temperatureDuringDayItemAdapter.add(BindingTemperatureItem(temperatureWithTineList[k]))
@@ -74,7 +73,9 @@ class BindingTemperatureItem(val forecastResponse: ForecastResponse) :
         get() = R.id.temperature_during_day_recyclerview
 
     override fun bindView(binding: TimeTemperatureItemBinding, payloads: List<Any>) {
-        binding.temperatureTextView.text = forecastResponse.main.temp_max.toString()
+        binding.timeTextView.text = (forecastResponse.date).returnTime()
+        binding.temperatureTextView.text =
+            forecastResponse.main.temp_max.toInt().toString() + "${"°"}"
         val iconCode = forecastResponse.weather.first().icon
         val iconUrl = "https://openweathermap.org/img/w/" + iconCode + ".png"
         Picasso.get().load(iconUrl).into(binding.weatherIcon)
@@ -93,4 +94,8 @@ class BindingTemperatureItem(val forecastResponse: ForecastResponse) :
     }
 }
 
+fun String.returnTime(): String {
+    val changedDate = Utils.fullDateFormat.parse(this)
+    return Utils.timeFormat.format(changedDate)
+}
 
