@@ -86,30 +86,22 @@ class GeneralDayTodayViewModel(
     val updatingInformation: StateFlow<Boolean> = _updatingInformation.asStateFlow()
 
     @RequiresApi(Build.VERSION_CODES.N)
-    fun getAllWeatherForecast(city: String?) {
-        if (city != null) {
-            viewModelScope.launch(Dispatchers.IO) {
-                try {
-                    val weatherForecast = dataSource.getWeatherForecastResponse(city)
-                    if (weatherForecast != null) {
-                        withContext(Dispatchers.Main) {
-                            _updatingInformation.value = false
-                            _weatherToday.emit(getWeatherToday(weatherForecast))
-                            _weatherForNextDays
-                                .emit(
-                                    convertToWeatherForNextDays(
-                                        getWeatherForNextDays(
-                                            weatherForecast
-                                        )
-                                    )
-                                )
-                        }
-                    }
-                } catch (e: Exception) {
-                    withContext(Dispatchers.Main) {
-                        _errorMessage.value = R.string.error_server
-                        _progressBar.value = false
-                    }
+    fun getAllWeatherForecast(city: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val weatherForecast = dataSource.getWeatherForecastResponse(city) ?: return@launch
+                withContext(Dispatchers.Main) {
+                    _updatingInformation.value = false
+                    _weatherToday.emit(getWeatherToday(weatherForecast))
+                    val nextDaysForecast = getWeatherForNextDays(weatherForecast)
+                    val nextDaysWeather = convertToWeatherForNextDays(nextDaysForecast)
+                    _weatherForNextDays.emit(nextDaysWeather)
+                }
+
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    _errorMessage.value = R.string.error_server
+                    _progressBar.value = false
                 }
             }
         }
@@ -149,21 +141,11 @@ class GeneralDayTodayViewModel(
         val city = weatherForOneDay.city
         val weekDay = weatherForOneDay.date.substringAfter(",")
         val minTemperatureForDay =
-            weatherForOneDay.forecastResponseList
-                .stream()
-                .min { o1, o2 ->
-                    compareValues((o1.main.temp_min), (o2.main.temp_min))
-                }
-                .map { it.main.temp_min }
-                .get().toInt().toString() + "°"
+            weatherForOneDay.forecastResponseList.asSequence().minOf { it.main.temp_min }.toInt()
+                .toString() + "°"
         val maxTemperatureForDay =
-            weatherForOneDay.forecastResponseList
-                .stream()
-                .max { o1, o2 ->
-                    compareValues((o1.main.temp_min), (o2.main.temp_min))
-                }
-                .map { it.main.temp_max }
-                .get().toInt().toString() + "°"
+            weatherForOneDay.forecastResponseList.asSequence().minOf { it.main.temp_max }.toInt()
+                .toString() + "°"
         val iconCode = weatherForOneDay.forecastResponseList.first().weather.first().icon
         val timeAndTemperatureList = weatherForOneDay.forecastResponseList
         val humidity = weatherForOneDay.forecastResponseList.first().main.humidity.toString()
