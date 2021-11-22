@@ -66,9 +66,7 @@ class MapViewModel(
         val tempMax = weatherForecastResult.list.first().main.temp_max
         val tempMin = weatherForecastResult.list.first().main.temp_min
         val icon = weatherForecastResult.list.first().weather.first().icon
-        val weatherCity =
-            WeatherCity(cityName, tempMax.toInt(), tempMin.toInt(), icon, latitude, longitude)
-        return weatherCity
+        return WeatherCity(cityName, tempMax.toInt(), tempMin.toInt(), icon, latitude, longitude)
     }
 
     suspend fun getWeatherInCity(latitude: Double, longitude: Double): WeatherCity {
