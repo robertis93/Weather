@@ -58,8 +58,5 @@
         <argument
             android:name="weatherCity"
             app:argType="com.rob.weather.citylist.model.WeatherCity" />
-        <argument
-            android:name="cityWeatherList"
-            app:argType="com.rob.weather.citylist.model.WeatherCity[]" />
     </fragment>
 </navigation>

@@ -33,7 +33,7 @@
 
                 <TextView
                     android:layout_gravity="center"
-                    android:id="@+id/min_temperature_text"
+                    android:id="@+id/min_temperature_weather_city_text"
                     style="@style/Text.Manrope16"
                     android:layout_width="26dp"
                     android:layout_height="24dp"

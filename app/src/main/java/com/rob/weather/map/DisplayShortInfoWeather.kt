@@ -19,7 +19,7 @@ class DisplayShortInfoWeather(context: Context) : LinearLayout(context) {
         val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val view = inflater.inflate(R.layout.map_custom_view, this, true)
         iconCityWeather = view.findViewById(R.id.weather_map_icon)
-        minTemperatureInCity = view.findViewById(R.id.min_temperature_text)
+        minTemperatureInCity = view.findViewById(R.id.min_temperature_weather_city_text)
         maxTemperatureInCity = view.findViewById(R.id.max_temperature_text)
     }
 

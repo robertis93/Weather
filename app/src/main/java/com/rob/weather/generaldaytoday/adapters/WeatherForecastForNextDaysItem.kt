@@ -63,7 +63,6 @@ class WeatherForecastForNextDaysItem(var weatherForecastForNextDays: WeatherFore
                     GeneralDayTodayFragmentDirections
                         .actionWeatherInformationByDayFragmentToChooseDayFragment3(item.weatherForecastForNextDays)
                 itemView.findNavController().navigate(action)
-
             }
         }
 

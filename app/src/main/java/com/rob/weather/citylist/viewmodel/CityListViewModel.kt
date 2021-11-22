@@ -105,7 +105,7 @@ class CityListViewModel(
             val city = City(cityName.name)
             repository.deleteCity(city)
             val cityListRefresh = repository.getAllCities()
-            _cityList.emit(cityListRefresh)
+            // _cityList.emit(cityListRefresh)
             getAllWeatherForecast(cityListRefresh)
         }
     }
@@ -123,10 +123,6 @@ class CityListViewModel(
             }
         } catch (e: Exception) {
         }
-    }
-
-    fun showMap(){
-
     }
 }
 

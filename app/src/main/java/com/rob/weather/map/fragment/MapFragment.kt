@@ -158,21 +158,21 @@ class MapFragment : Fragment() {
             Point((latitudeOfCity + 0.4), longitudeOfCity),
             ViewProvider(displayShortInfoWeather)
         )
-        val weatherInfoInCityList = args.cityWeatherList
-        for (weatherInfoInCity in weatherInfoInCityList) {
-            val latitude = weatherInfoInCity.latitude
-            val longitude = weatherInfoInCity.longitude
-            val minTemperature = weatherInfoInCity.temperatureMin
-            val maxTemperature = weatherInfoInCity.temperatureMax
-            val displayInfoWeather =
-                DisplayShortInfoWeather(requireContext())
-            displayInfoWeather.setTemperature(minTemperature, maxTemperature)
-            displayInfoWeather.setIconWeather(weatherInfoInCity.icon)
-            mapview?.map?.mapObjects?.addPlacemark(
-                Point((latitude + 0.4), longitude),
-                ViewProvider(displayInfoWeather)
-            )
-        }
+//        val weatherInfoInCityList = args.cityWeatherList
+//        for (weatherInfoInCity in weatherInfoInCityList) {
+//            val latitude = weatherInfoInCity.latitude
+//            val longitude = weatherInfoInCity.longitude
+//            val minTemperature = weatherInfoInCity.temperatureMin
+//            val maxTemperature = weatherInfoInCity.temperatureMax
+//            val displayInfoWeather =
+//                DisplayShortInfoWeather(requireContext())
+//            displayInfoWeather.setTemperature(minTemperature, maxTemperature)
+//            displayInfoWeather.setIconWeather(weatherInfoInCity.icon)
+//            mapview?.map?.mapObjects?.addPlacemark(
+//                Point((latitude + 0.4), longitude),
+//                ViewProvider(displayInfoWeather)
+//            )
+//        }
     }
 
     fun showWeatherOnCity(
