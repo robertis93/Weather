@@ -49,8 +49,10 @@ class GeneralDayTodayViewModel(
         _city.asSharedFlow()
 
     private val _fullInfoTodayWeather =
-        MutableSharedFlow<WeatherForecastForNextDays>(replay = 0, extraBufferCapacity = 10,
-            BufferOverflow.SUSPEND)
+        MutableSharedFlow<WeatherForecastForNextDays>(
+            replay = 0, extraBufferCapacity = 10,
+            BufferOverflow.SUSPEND
+        )
     val fullInfoTodayWeather: SharedFlow<WeatherForecastForNextDays> =
         _fullInfoTodayWeather.asSharedFlow()
 
@@ -132,57 +134,61 @@ class GeneralDayTodayViewModel(
             : List<WeatherForecastForNextDays> {
         val weatherForecastForNextDayList = mutableListOf<WeatherForecastForNextDays>()
         for (weatherForOneDay in weatherForNextDays) {
-            weatherForOneDay
-            val date = weatherForOneDay.date.substringBefore(",") + ","
-            val city = weatherForOneDay.city
-            val weekDay = weatherForOneDay.date.substringAfter(",")
-            val minTemperatureForDay =
-                weatherForOneDay.forecastResponseList
-                    .stream()
-                    .min { o1, o2 ->
-                        compareValues((o1.main.temp_min), (o2.main.temp_min))
-                    }
-                    .map { it.main.temp_min }
-                    .get().toInt().toString() + "°"
-            val maxTemperatureForDay =
-                weatherForOneDay.forecastResponseList
-                    .stream()
-                    .max { o1, o2 ->
-                        compareValues((o1.main.temp_min), (o2.main.temp_min))
-                    }
-                    .map { it.main.temp_max }
-                    .get().toInt().toString() + "°"
-            val iconCode = weatherForOneDay.forecastResponseList.first().weather.first().icon
-            val timeAndTemperatureList = weatherForOneDay.forecastResponseList
-            val humidity = weatherForOneDay.forecastResponseList.first().main.humidity.toString()
-            val averageTemperature =
-                weatherForOneDay.forecastResponseList.first().main.temp.toInt().toString()
-            val windSpeed =
-                weatherForOneDay.forecastResponseList.first().wind.speed.toInt().toString()
-            val preciptation = weatherForOneDay.forecastResponseList.first().clouds.all.toString()
-            val descriptionWeather =
-                weatherForOneDay.forecastResponseList.first().weather.first().description
-                    .replaceFirstChar {
-                        if (it.isLowerCase()) it.titlecase(Locale.getDefault())
-                        else "$it"
-                    }
-            val weatherForecastForNextDays = WeatherForecastForNextDays(
-                date,
-                city,
-                weekDay,
-                minTemperatureForDay,
-                maxTemperatureForDay,
-                humidity,
-                averageTemperature,
-                windSpeed,
-                preciptation,
-                descriptionWeather,
-                iconCode,
-                timeAndTemperatureList
-            )
-            weatherForecastForNextDayList.add(weatherForecastForNextDays)
+            weatherForecastForNextDayList.add(convertToWeatherForecastForNextDays(weatherForOneDay))
         }
         return weatherForecastForNextDayList
+    }
+
+    private fun convertToWeatherForecastForNextDays(weatherForOneDay: SortedByDateWeatherForecastResult):
+            WeatherForecastForNextDays {
+        val date = weatherForOneDay.date.substringBefore(",") + ","
+        val city = weatherForOneDay.city
+        val weekDay = weatherForOneDay.date.substringAfter(",")
+        val minTemperatureForDay =
+            weatherForOneDay.forecastResponseList
+                .stream()
+                .min { o1, o2 ->
+                    compareValues((o1.main.temp_min), (o2.main.temp_min))
+                }
+                .map { it.main.temp_min }
+                .get().toInt().toString() + "°"
+        val maxTemperatureForDay =
+            weatherForOneDay.forecastResponseList
+                .stream()
+                .max { o1, o2 ->
+                    compareValues((o1.main.temp_min), (o2.main.temp_min))
+                }
+                .map { it.main.temp_max }
+                .get().toInt().toString() + "°"
+        val iconCode = weatherForOneDay.forecastResponseList.first().weather.first().icon
+        val timeAndTemperatureList = weatherForOneDay.forecastResponseList
+        val humidity = weatherForOneDay.forecastResponseList.first().main.humidity.toString()
+        val averageTemperature =
+            weatherForOneDay.forecastResponseList.first().main.temp.toInt().toString()
+        val windSpeed =
+            weatherForOneDay.forecastResponseList.first().wind.speed.toInt().toString()
+        val preciptation = weatherForOneDay.forecastResponseList.first().clouds.all.toString()
+        val descriptionWeather =
+            weatherForOneDay.forecastResponseList.first().weather.first().description
+                .replaceFirstChar {
+                    if (it.isLowerCase()) it.titlecase(Locale.getDefault())
+                    else "$it"
+                }
+        val weatherForecastForNextDays = WeatherForecastForNextDays(
+            date,
+            city,
+            weekDay,
+            minTemperatureForDay,
+            maxTemperatureForDay,
+            humidity,
+            averageTemperature,
+            windSpeed,
+            preciptation,
+            descriptionWeather,
+            iconCode,
+            timeAndTemperatureList
+        )
+        return weatherForecastForNextDays
     }
 
     private fun getWeatherForNextDays(

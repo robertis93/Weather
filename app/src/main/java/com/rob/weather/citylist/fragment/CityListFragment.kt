@@ -14,8 +14,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.adapters.FastItemAdapter
 import com.mikepenz.fastadapter.drag.ItemTouchCallback
 import com.mikepenz.fastadapter.drag.SimpleDragCallback
-import com.mikepenz.fastadapter.swipe.SimpleSwipeCallback
-import com.mikepenz.fastadapter.swipe.SimpleSwipeDrawerCallback
 import com.mikepenz.fastadapter.swipe_drag.SimpleSwipeDrawerDragCallback
 import com.mikepenz.fastadapter.utils.DragDropUtil
 import com.rob.weather.App
@@ -32,12 +30,12 @@ import java.util.function.Consumer
 import javax.inject.Inject
 
 class CityListFragment : BaseFragment<CityListFragmentBinding>(CityListFragmentBinding::inflate),
-    ItemTouchCallback, SimpleSwipeCallback.ItemSwipeCallback,
-    SimpleSwipeDrawerCallback.ItemSwipeCallback {
+    ItemTouchCallback {
     var сityList = listOf<WeatherCity>()
     private lateinit var cityWeatherItemFastAdapter: FastItemAdapter<CityWeatherItem>
     private lateinit var touchHelper: ItemTouchHelper
     private lateinit var touchCallback: SimpleDragCallback
+
     @Inject
     lateinit var cityListViewModelFactory: CityListViewModelFactory
     val viewModel: CityListViewModel by viewModels { cityListViewModelFactory }
@@ -89,8 +87,7 @@ class CityListFragment : BaseFragment<CityListFragmentBinding>(CityListFragmentB
 
         touchCallback = SimpleSwipeDrawerDragCallback(
             this,
-            ItemTouchHelper.LEFT,
-            this
+            ItemTouchHelper.LEFT
         )
             .withNotifyAllDrops(true)
             .withSwipeLeft(80) // Width of delete button
@@ -137,17 +134,5 @@ class CityListFragment : BaseFragment<CityListFragmentBinding>(CityListFragmentB
         if (viewHolder is IDraggableViewHolder) {
             (viewHolder as IDraggableViewHolder).onDragged()
         }
-    }
-
-
-    override fun itemSwiped(position: Int, direction: Int) {
-        var directionStr = ""
-        if (ItemTouchHelper.LEFT == direction) directionStr = "left"
-        else if (ItemTouchHelper.RIGHT == direction) directionStr = "right"
-        println("Item $position swiped $directionStr")
-    }
-
-    override fun itemUnswiped(position: Int) {
-        println("Item $position unswiped")
     }
 }
