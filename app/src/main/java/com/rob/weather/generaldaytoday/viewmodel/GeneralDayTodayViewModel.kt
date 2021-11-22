@@ -1,7 +1,12 @@
 package com.rob.weather.generaldaytoday.viewmodel
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.location.Location
+import android.os.Build
 import android.os.Bundle
+import androidx.annotation.RequiresApi
+import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -29,8 +34,9 @@ class GeneralDayTodayViewModel(
     private val repository: WeatherRepository,
     private val app: App
 ) : ViewModel() {
-    private var fusedLocationClient: FusedLocationProviderClient
-    private val _errorMessage = MutableStateFlow<Int>(R.string.empty)
+    private var fusedLocationClient: FusedLocationProviderClient =
+        LocationServices.getFusedLocationProviderClient(app.applicationContext)
+    private val _errorMessage = MutableStateFlow(R.string.empty)
     val errorMessage: StateFlow<Int> = _errorMessage.asStateFlow()
 
     private val _weatherForNextDays =
@@ -64,7 +70,7 @@ class GeneralDayTodayViewModel(
     private val _weatherToday = MutableSharedFlow<WeatherToday>()
     val weatherToday: SharedFlow<WeatherToday> = _weatherToday.asSharedFlow()
 
-    private var _progressBar = MutableStateFlow<Boolean>(true)
+    private var _progressBar = MutableStateFlow(true)
     val progressBar: StateFlow<Boolean> = _progressBar.asStateFlow()
 
     private val _isSunRise = MutableSharedFlow<Unit>()
@@ -76,14 +82,10 @@ class GeneralDayTodayViewModel(
     private val _isNight = MutableSharedFlow<Unit>()
     val isNight: SharedFlow<Unit> = _isNight.asSharedFlow()
 
-    private var _updatingInformation = MutableStateFlow<Boolean>(false)
+    private var _updatingInformation = MutableStateFlow(false)
     val updatingInformation: StateFlow<Boolean> = _updatingInformation.asStateFlow()
 
-    init {
-        fusedLocationClient =
-            LocationServices.getFusedLocationProviderClient(app.applicationContext)
-    }
-
+    @RequiresApi(Build.VERSION_CODES.N)
     fun getAllWeatherForecast(city: String?) {
         if (city != null) {
             viewModelScope.launch(Dispatchers.IO) {
@@ -130,6 +132,7 @@ class GeneralDayTodayViewModel(
         return todayWeather
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     private fun convertToWeatherForNextDays(weatherForNextDays: List<SortedByDateWeatherForecastResult>)
             : List<WeatherForecastForNextDays> {
         val weatherForecastForNextDayList = mutableListOf<WeatherForecastForNextDays>()
@@ -139,6 +142,7 @@ class GeneralDayTodayViewModel(
         return weatherForecastForNextDayList
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     private fun convertToWeatherForecastForNextDays(weatherForOneDay: SortedByDateWeatherForecastResult):
             WeatherForecastForNextDays {
         val date = weatherForOneDay.date.substringBefore(",") + ","
@@ -215,6 +219,7 @@ class GeneralDayTodayViewModel(
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     fun getMoreInformationToday(city: String) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -242,16 +247,19 @@ class GeneralDayTodayViewModel(
         return getWeatherSortedByDate(weatherForecast)[0]
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     fun updateInformation(city: String) {
         getAllWeatherForecast(city)
         _updatingInformation.value = true
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     fun updateWeatherForecastInformation() {
         _updatingInformation.value = true
         checkDataBase()
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     fun checkDataBase() {
         viewModelScope.launch(Dispatchers.IO)
         {
@@ -259,6 +267,23 @@ class GeneralDayTodayViewModel(
                 val cityInDataBase = repository.getAllCities()
                 val citySizeFromDB = cityInDataBase.size
                 if (citySizeFromDB == 0) {
+                    if (ActivityCompat.checkSelfPermission(
+                            app.applicationContext,
+                            Manifest.permission.ACCESS_FINE_LOCATION
+                        ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                            app.applicationContext,
+                            Manifest.permission.ACCESS_COARSE_LOCATION
+                        ) != PackageManager.PERMISSION_GRANTED
+                    ) {
+                        // TODO: Consider calling
+                        //    ActivityCompat#requestPermissions
+                        // here to request the missing permissions, and then overriding
+                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                        //                                          int[] grantResults)
+                        // to handle the case where the user grants the permission. See the documentation
+                        // for ActivityCompat#requestPermissions for more details.
+                        return@withContext
+                    }
                     fusedLocationClient.lastLocation.addOnCompleteListener { task ->
                         var location: Location? = task.result
                         if (location == null) {
@@ -281,6 +306,7 @@ class GeneralDayTodayViewModel(
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     private fun getWeatherInCity(currentLatitude: Double, currentLongitude: Double) {
         viewModelScope.launch(Dispatchers.Main) {
             val weatherForecastResult = repository
@@ -296,6 +322,7 @@ class GeneralDayTodayViewModel(
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     fun getCityByGeolocation() {
         viewModelScope.launch(Dispatchers.IO)
         {
@@ -332,6 +359,7 @@ class GeneralDayTodayViewModel(
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     fun checkArguments(arguments: Bundle?) {
         val text = arguments?.getString("MyArg")
         if (text != null) {
