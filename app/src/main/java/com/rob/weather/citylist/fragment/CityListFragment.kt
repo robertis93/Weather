@@ -83,11 +83,9 @@ class CityListFragment : BaseFragment<CityListFragmentBinding>(CityListFragmentB
         binding.addCityButton.setOnClickListener {
             dialog.showDialog(requireContext(), viewModel)
         }
-
         binding.cityListRecyclerview.layoutManager = LinearLayoutManager(requireContext())
         binding.cityListRecyclerview.itemAnimator = DefaultItemAnimator()
         binding.cityListRecyclerview.adapter = cityWeatherItemFastAdapter
-
 
         touchCallback = SimpleSwipeDrawerDragCallback(
             this,
@@ -102,7 +100,6 @@ class CityListFragment : BaseFragment<CityListFragmentBinding>(CityListFragmentB
         touchHelper =
             ItemTouchHelper(touchCallback)
         touchHelper.attachToRecyclerView(binding.cityListRecyclerview)
-
         cityWeatherItemFastAdapter.withSavedInstanceState(savedInstanceState)
     }
 
@@ -128,6 +125,7 @@ class CityListFragment : BaseFragment<CityListFragmentBinding>(CityListFragmentB
     }
 
     override fun itemTouchDropped(oldPosition: Int, newPosition: Int) {
+
         val vh: RecyclerView.ViewHolder? =
             binding.cityListRecyclerview.findViewHolderForAdapterPosition(newPosition)
         if (vh is IDraggableViewHolder) {

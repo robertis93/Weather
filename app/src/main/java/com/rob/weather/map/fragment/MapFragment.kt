@@ -28,6 +28,7 @@ import com.yandex.mapkit.map.Map
 import com.yandex.mapkit.mapview.MapView
 import com.yandex.runtime.ui_view.ViewProvider
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.properties.Delegates
@@ -97,6 +98,34 @@ class MapFragment : Fragment() {
             getLastKnownLocation(args, binding)
         }
 
+        mapViewModel.getCityList()
+        lifecycleScope.launchWhenStarted {
+            mapViewModel.cityList
+                .collect { listCity ->
+                    mapViewModel.getWeatherByCity(listCity)
+                }
+        }
+
+        lifecycleScope.launchWhenStarted {
+            mapViewModel.cityListWithWeather
+                .collect { weatherCityList ->
+                    val weatherInfoInCityList = weatherCityList
+                    for (weatherInfoInCity in weatherInfoInCityList) {
+                        val latitude = weatherInfoInCity.latitude
+                        val longitude = weatherInfoInCity.longitude
+                        val minTemperature = weatherInfoInCity.temperatureMin
+                        val maxTemperature = weatherInfoInCity.temperatureMax
+                        val displayInfoWeather =
+                            DisplayShortInfoWeather(requireContext())
+                        displayInfoWeather.setTemperature(minTemperature, maxTemperature)
+                        displayInfoWeather.setIconWeather(weatherInfoInCity.icon)
+                        mapview?.map?.mapObjects?.addPlacemark(
+                            Point((latitude + 0.4), longitude),
+                            ViewProvider(displayInfoWeather)
+                        )
+                    }
+                }
+        }
     }
 
     override fun onStop() {
@@ -149,8 +178,8 @@ class MapFragment : Fragment() {
             DisplayShortInfoWeather(requireContext())
 
         displayShortInfoWeather.setTemperature(
-            args.weatherCity!!.temperatureMin,
-            args.weatherCity!!.temperatureMax
+            args.weatherCity.temperatureMin,
+            args.weatherCity.temperatureMax
         )
         displayShortInfoWeather.setIconWeather(args.weatherCity.icon)
 
@@ -158,21 +187,6 @@ class MapFragment : Fragment() {
             Point((latitudeOfCity + 0.4), longitudeOfCity),
             ViewProvider(displayShortInfoWeather)
         )
-//        val weatherInfoInCityList = args.cityWeatherList
-//        for (weatherInfoInCity in weatherInfoInCityList) {
-//            val latitude = weatherInfoInCity.latitude
-//            val longitude = weatherInfoInCity.longitude
-//            val minTemperature = weatherInfoInCity.temperatureMin
-//            val maxTemperature = weatherInfoInCity.temperatureMax
-//            val displayInfoWeather =
-//                DisplayShortInfoWeather(requireContext())
-//            displayInfoWeather.setTemperature(minTemperature, maxTemperature)
-//            displayInfoWeather.setIconWeather(weatherInfoInCity.icon)
-//            mapview?.map?.mapObjects?.addPlacemark(
-//                Point((latitude + 0.4), longitude),
-//                ViewProvider(displayInfoWeather)
-//            )
-//        }
     }
 
     fun showWeatherOnCity(
