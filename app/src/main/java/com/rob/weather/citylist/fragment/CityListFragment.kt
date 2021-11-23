@@ -7,16 +7,17 @@ import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
-import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.adapters.FastItemAdapter
+import com.mikepenz.fastadapter.diff.FastAdapterDiffUtil
 import com.mikepenz.fastadapter.drag.ItemTouchCallback
 import com.mikepenz.fastadapter.drag.SimpleDragCallback
 import com.mikepenz.fastadapter.swipe_drag.SimpleSwipeDrawerDragCallback
 import com.mikepenz.fastadapter.utils.DragDropUtil
 import com.rob.weather.App
+import com.rob.weather.citylist.CityWeatherItemDiffCallback
 import com.rob.weather.citylist.IDraggableViewHolder
 import com.rob.weather.citylist.ShowDialogForChangingCity
 import com.rob.weather.citylist.model.WeatherCity
@@ -66,7 +67,16 @@ class CityListFragment : BaseFragment<CityListFragmentBinding>(CityListFragmentB
                         swipeableItem.deleteAction = Consumer { item -> delete(item) }
                         items.add(swipeableItem)
                     }
-                    cityWeatherItemFastAdapter.add(items)
+                    cityWeatherItemFastAdapter.set(items)
+
+                    val diffCallback = CityWeatherItemDiffCallback()
+                    val diffResult = FastAdapterDiffUtil.calculateDiff(
+                        cityWeatherItemFastAdapter.itemAdapter,
+                        items,
+                        diffCallback
+                    )
+                    FastAdapterDiffUtil[cityWeatherItemFastAdapter.itemAdapter] = diffResult
+
                     сityList = weatherCityList
                     binding.mapIcon.setOnClickListener {
                         val action =
@@ -82,7 +92,6 @@ class CityListFragment : BaseFragment<CityListFragmentBinding>(CityListFragmentB
             dialog.showDialog(requireContext(), viewModel)
         }
         binding.cityListRecyclerview.layoutManager = LinearLayoutManager(requireContext())
-        binding.cityListRecyclerview.itemAnimator = DefaultItemAnimator()
         binding.cityListRecyclerview.adapter = cityWeatherItemFastAdapter
 
         touchCallback = SimpleSwipeDrawerDragCallback(

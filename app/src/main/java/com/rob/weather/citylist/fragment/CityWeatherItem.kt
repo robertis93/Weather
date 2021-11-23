@@ -6,6 +6,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.navigation.findNavController
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.drag.IDraggable
 import com.mikepenz.fastadapter.items.AbstractItem
@@ -105,5 +106,7 @@ class CityWeatherItem() : AbstractItem<CityWeatherItem.ViewHolder>(), ISwipeable
 
         override val swipeableView: View
             get() = itemContent
+
+
     }
 }
